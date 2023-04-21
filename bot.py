@@ -2,6 +2,7 @@ import asyncio
 import logging
 from aiogram import Bot, Dispatcher
 
+from keyboards.main_menu import set_main_menu
 from database.database import Admin
 from database.dataclassData import AdminData
 from config_data.config import Config, load_config
@@ -32,6 +33,7 @@ async def main():
     dp: Dispatcher = Dispatcher()
 
     Admin().set_data(AdminData(int(config.tg_bot.admin_ids[0]), config.tg_bot.admin_ids[1]))
+    #await set_main_menu(bot)
 
     # Регистрируем роутер в диспетчере
     dp.include_router(user_handlers.router)
