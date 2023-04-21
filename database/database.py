@@ -1,6 +1,8 @@
 import sqlite3
 from itertools import chain
-from dataclasses import dataclass, astuple, asdict
+from dataclasses import astuple, asdict
+
+from dataclass import AdminData, ColumnsData, ShopData
 
 
 class DataBase:
@@ -37,22 +39,13 @@ class DataBase:
     #    self._connection.close()
 
 
-@dataclass
-class ColumnsUserDC:
-    user_id: int = 0
-    name_user: str = "None"
-    balance: float = 0.0
-    card_name: str = "None"
-    datetime_to_buy: str = "None"
-
-
 class Users(DataBase):
     """DataBase for Users"""
 
     def __init__(self):
-        super().__init__(name_db="User", columns_db=list(asdict(ColumnsUserDC()).keys())) #Иничиализирует датакласс и вытягивает ключи
+        super().__init__(name_db="User", columns_db=list(asdict(ColumnsData()).keys())) #Иничиализирует датакласс и вытягивает ключи
 
-    def set_data(self, data: ColumnsUserDC):
+    def set_data(self, data: ColumnsData):
         self._cursor.execute('INSERT INTO User VALUES (NULL, ?, ?, ?, ?, ?)', astuple(data))
         self._connection.commit()
 
@@ -61,12 +54,22 @@ class Users(DataBase):
         return list(chain(*item))
 
 
+class Admin(DataBase):
+    def __init__(self):
+        super().__init__(name_db="Admins", columns_db=list(asdict(AdminData()).keys()))
+
+    def set_data(self, data: AdminData):
+        self._cursor.execute('INSERT INTO User VALUES (NULL, ?, ?)', astuple(data))
+        self._connection.commit()
+
+
 class Shop(DataBase):
     """DataBase for Shop"""
-
     def __init__(self):
-        super().__init__("Shop", ["name", "price", "time_action", "description"])
+        super().__init__(name_db="Shop", columns_db=list(asdict(ShopData()).keys()))
 
-    def set_data(self, data: list or dict or tuple):
-        self._cursor.execute('INSERT INTO User VALUES (NULL, ?, ?, ?, ?)', data)
+    def set_data(self, data: ShopData):
+        self._cursor.execute('INSERT INTO User VALUES (NULL, ?, ?, ?, ?)', astuple(data))
         self._connection.commit()
+
+

@@ -13,7 +13,7 @@ database_user = database.Users()
 async def process_start_command(message: Message):
     await message.answer(LEXICON[message.text])
     if message.from_user.id not in database_user.get_data_user_id(message.from_user.id):
-        database_user.set_data(database.ColumnsUserDC(message.from_user.id, message.from_user.username, 0, "None", "None"))
+        database_user.set_data(database.ColumnsData(message.from_user.id, message.from_user.username, 0, "None", "None"))
 
 
 @router.message(Command(commands='help'))
