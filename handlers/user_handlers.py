@@ -16,4 +16,8 @@ async def process_start_command(message: Message):
         database_user.set_data(database.ColumnsUserDC(message.from_user.id, message.from_user.username, 0, "None", "None"))
 
 
+@router.message(Command(commands='help'))
+async def process_help_command(message: Message):
+    await message.answer(LEXICON[message.text])
+
 
