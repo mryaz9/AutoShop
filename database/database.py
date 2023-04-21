@@ -2,7 +2,7 @@ import sqlite3
 from itertools import chain
 from dataclasses import astuple, asdict
 
-from dataclass import AdminData, ColumnsData, ShopData
+from .dataclassData import AdminData, ColumnsData, ShopData
 
 
 class DataBase:
@@ -31,6 +31,10 @@ class DataBase:
         item = self._cursor.execute(f'SELECT * FROM {self._name_db} WHERE name == ?', (name,)).fetchall()
         return list(chain(*item))
 
+    def get_data_user_id(self, user_id: int):
+        item = self._cursor.execute(f'SELECT * FROM {self._name_db} WHERE user_id == ?', (user_id,)).fetchall()
+        return list(chain(*item))
+
     def del_data_name(self, name: str):
         self._cursor.execute('DELETE FROM shop WHERE name == ?', (name,))
         self._connection.commit()
@@ -49,17 +53,13 @@ class Users(DataBase):
         self._cursor.execute('INSERT INTO User VALUES (NULL, ?, ?, ?, ?, ?)', astuple(data))
         self._connection.commit()
 
-    def get_data_user_id(self, user_id: int):
-        item = self._cursor.execute(f'SELECT * FROM {self._name_db} WHERE user_id == ?', (user_id,)).fetchall()
-        return list(chain(*item))
-
 
 class Admin(DataBase):
     def __init__(self):
         super().__init__(name_db="Admins", columns_db=list(asdict(AdminData()).keys()))
 
     def set_data(self, data: AdminData):
-        self._cursor.execute('INSERT INTO User VALUES (NULL, ?, ?)', astuple(data))
+        self._cursor.execute('INSERT INTO Admins VALUES (NULL, ?, ?)', astuple(data))
         self._connection.commit()
 
 
@@ -69,7 +69,7 @@ class Shop(DataBase):
         super().__init__(name_db="Shop", columns_db=list(asdict(ShopData()).keys()))
 
     def set_data(self, data: ShopData):
-        self._cursor.execute('INSERT INTO User VALUES (NULL, ?, ?, ?, ?)', astuple(data))
+        self._cursor.execute('INSERT INTO Shop VALUES (NULL, ?, ?, ?, ?)', astuple(data))
         self._connection.commit()
 
 

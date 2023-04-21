@@ -4,7 +4,7 @@ from dataclasses import dataclass
 @dataclass
 class ColumnsData:
     user_id: int = 0
-    name_user: str = "None"
+    username: str = "None"
     balance: float = 0.0
     card_name: str = "None"
     datetime_to_buy: str = "None"
@@ -12,7 +12,7 @@ class ColumnsData:
 
 @dataclass
 class AdminData:
-    admin_id: int = 0
+    user_id: int = 0
     username: str = "None"
 
 
