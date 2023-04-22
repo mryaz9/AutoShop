@@ -37,7 +37,7 @@ async def button_profile(message: Message):
 
 
 @router.message(F.text == LEXICON_BUTTON_MAIN["️orders"])
-async def button_️orders(message: Message):
+async def button_orders(message: Message):
     await message.answer(text=LEXICON["️orders"])
 
 
