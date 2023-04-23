@@ -31,6 +31,10 @@ class DataBase:
         item = self._cursor.execute(f'SELECT * FROM {self._name_db} WHERE name == ?', (name,)).fetchall()
         return list(chain(*item))
 
+    def get_full_data(self):
+        item = self._cursor.execute(f'SELECT * FROM {self._name_db}').fetchall()
+        return list(chain(*item))
+
     def get_data_user_id(self, user_id: int):
         item = self._cursor.execute(f'SELECT * FROM {self._name_db} WHERE user_id == ?', (user_id,)).fetchall()
         return list(chain(*item))

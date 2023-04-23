@@ -21,3 +21,14 @@ LEXICON_BUTTON_MAIN: dict[str, str] = {
     '️orders': '⚙️Заказы',
     'information': 'ℹ️Информация'
 }
+
+LEXICON_BUTTON_ADMIN: dict[str, str] = {
+    'add_assortment': 'Добавить ассортимент',
+    'del_assortment': 'Удалить ассортимент',
+    'see_admin': 'Администраторы'
+}
+
+LEXICON_NAME_CATALOG: dict[str, str] = {
+    'services': 'Услуги',
+    'product': 'Товары'
+}

@@ -1,11 +1,10 @@
-from aiogram import Router
+from aiogram import Router, F, types
 from aiogram.filters import Command, CommandStart, Text
-from aiogram.types import CallbackQuery, Message
-from aiogram import F
+from aiogram.types import CallbackQuery, Message, callback_query
 
-from lexicon.lexicon_ru import LEXICON, LEXICON_BUTTON_MAIN
+from lexicon.lexicon_ru import LEXICON, LEXICON_BUTTON_MAIN, LEXICON_NAME_CATALOG
 from database import database
-from keyboards.kb_main import create_reply_keyboard
+from keyboards.kb_main import create_reply_keyboard, create_inline_keyboard
 
 router: Router = Router()
 database_user = database.Users()
@@ -28,7 +27,8 @@ async def process_help_command(message: Message):
 
 @router.message(F.text == LEXICON_BUTTON_MAIN["assortment"])
 async def button_assortment(message: Message):
-    await message.answer(text=LEXICON["assortment"])
+    await message.answer(text=LEXICON["assortment"],
+                         reply_markup=create_inline_keyboard(list(LEXICON_NAME_CATALOG.values())))
 
 
 @router.message(F.text == LEXICON_BUTTON_MAIN["profile"])
@@ -44,3 +44,10 @@ async def button_orders(message: Message):
 @router.message(F.text == LEXICON_BUTTON_MAIN["information"])
 async def button_information(message: Message):
     await message.answer(text=LEXICON["information"])
+
+
+@router.callback_query(lambda x:x.data and x.data.startswith("set"))
+async def catalog_callback(callback: types.CallbackQuery):
+    replace = callback.data.replace("set", "")
+    await callback.message.answer(text=replace)
+    await callback.answer()
