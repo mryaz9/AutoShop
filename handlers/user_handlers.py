@@ -46,8 +46,26 @@ async def button_information(message: Message):
     await message.answer(text=LEXICON["information"])
 
 
-@router.callback_query(lambda x:x.data and x.data.startswith("set"))
+@router.callback_query(lambda x:x.data and x.data.startswith("set"))#TODO: Поменять на нормальный фильтр
 async def catalog_callback(callback: types.CallbackQuery):
     replace = callback.data.replace("set", "")
-    await callback.message.edit_text(text=replace)
+    shop_list = database.Shop().get_data_catalog(replace)
+
+    shop_list_format = []
+    for i in shop_list:
+        string = f"{i[0]}. {i[2]}  {i[3]}руб."
+        shop_list_format.append(string)
+
+    keyboard = create_inline_keyboard(shop_list_format)
+    await callback.message.edit_text(text=replace, reply_markup=keyboard)
     await callback.answer()
+
+
+@router.callback_query(F.text == 'back')
+async def catalog_callback(callback: types.CallbackQuery):
+    pass
+
+
+@router.callback_query(F.text == 'to_main')
+async def catalog_callback(callback: types.CallbackQuery):
+    pass

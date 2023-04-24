@@ -27,10 +27,6 @@ class DataBase:
             f'CREATE TABLE IF NOT EXISTS {self._name_db}(Id integer primary key autoincrement, {self._str_columns} TEXT)')
         self._connection.commit()
 
-    def get_data_name(self, name: str):
-        item = self._cursor.execute(f'SELECT * FROM {self._name_db} WHERE name == ?', (name,)).fetchall()
-        return list(chain(*item))
-
     def get_full_data(self):
         item = self._cursor.execute(f'SELECT * FROM {self._name_db}').fetchall()
         return list(chain(*item))
@@ -75,5 +71,13 @@ class Shop(DataBase):
     def set_data(self, data: ShopData):
         self._cursor.execute('INSERT INTO Shop VALUES (NULL, ?, ?, ?, ?, ?)', astuple(data))
         self._connection.commit()
+
+    def get_data_catalog(self, catalog: str):
+        list_item = []
+        item = self._cursor.execute(f'SELECT * FROM {self._name_db} WHERE catalog == ?', (catalog,)).fetchall()
+        for ret in item:
+            list_item.append(ret)
+        return list_item
+        #return list(chain(*item))
 
 
