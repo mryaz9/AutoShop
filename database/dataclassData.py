@@ -18,6 +18,7 @@ class AdminData:
 
 @dataclass
 class ShopData:
+    catalog: str = "None"
     name: str = "None"
     price: int = 0
     time_action: str = "None"

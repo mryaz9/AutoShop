@@ -36,3 +36,15 @@ def create_inline_keyboard(buttons: list) -> InlineKeyboardMarkup:
         callback_data='to_main'))
 
     return kb_builder.as_markup()
+
+
+#TODO: Можно поменять верхнюю функцию, что бы она принимала и параметр колбека и надо ли добавлять кнопки домой и назад
+def view_inline_keyboard(buttons: list) -> InlineKeyboardMarkup:
+    kb_builder: InlineKeyboardBuilder = InlineKeyboardBuilder()
+    # Наполняем клавиатуру кнопками-закладками в порядке возрастания
+    for button in buttons:
+        kb_builder.row(InlineKeyboardButton(
+            text=button,
+            callback_data=button))
+
+    return kb_builder.as_markup()

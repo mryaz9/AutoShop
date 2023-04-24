@@ -32,3 +32,17 @@ LEXICON_NAME_CATALOG: dict[str, str] = {
     'services': 'Услуги',
     'product': 'Товары'
 }
+
+LEXICON_FSM_SHOP: dict[str, str] = {
+    'done': 'Товар успешно создан\nВсе правильно?',
+    'done_yes': 'Товар добавлен в магазин',
+    'done_no': 'Товар удален',
+    'cancel': 'Отмена',
+    'unknown': 'Неверный ввод\nЧто бы отменить создание используйте команду /cancel',
+
+    'catalog': 'Каталог:',
+    'name': 'Наименование:',
+    'price': 'Цена:',
+    'time_action': 'Время использования (в днях):',
+    'description': 'Описание:'
+}

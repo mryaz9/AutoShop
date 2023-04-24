@@ -7,12 +7,12 @@ from database import database
 from keyboards.kb_main import create_reply_keyboard, create_inline_keyboard
 
 router: Router = Router()
-database_user = database.Users()
 
 
 @router.message(CommandStart())
 async def process_start_command(message: Message):
-    if message.from_user.id not in database_user.get_data_user_id(message.from_user.id):
+    database_user = database.Users()
+    if str(message.from_user.id) not in database_user.get_data_user_id(message.from_user.id):
         database_user.set_data(
             database.ColumnsData(message.from_user.id, message.from_user.username, 0, "None", "None"))
 
@@ -49,5 +49,5 @@ async def button_information(message: Message):
 @router.callback_query(lambda x:x.data and x.data.startswith("set"))
 async def catalog_callback(callback: types.CallbackQuery):
     replace = callback.data.replace("set", "")
-    await callback.message.answer(text=replace)
+    await callback.message.edit_text(text=replace)
     await callback.answer()

@@ -73,7 +73,7 @@ class Shop(DataBase):
         super().__init__(name_db="Shop", columns_db=list(asdict(ShopData()).keys()))
 
     def set_data(self, data: ShopData):
-        self._cursor.execute('INSERT INTO Shop VALUES (NULL, ?, ?, ?, ?)', astuple(data))
+        self._cursor.execute('INSERT INTO Shop VALUES (NULL, ?, ?, ?, ?, ?)', astuple(data))
         self._connection.commit()
 
 
