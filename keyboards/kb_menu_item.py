@@ -10,19 +10,13 @@ from lexicon.lexicon_ru import LEXICON
 
 class MenuCD(CallbackData, prefix="show_menu"):
     level: int
-    category: str
-    subcategory: str
-    item_id: int
+    category: str = "0"
+    subcategory: str = "0"
+    item_id: int = 0
 
 
 class BuyItemCD(CallbackData, prefix="buy"):
-    item_id: int
-
-
-# С помощью этой функции будем формировать коллбек дату для каждого элемента меню, в зависимости от
-# переданных параметров. Если Подкатегория, или айди товара не выбраны - они по умолчанию равны нулю
-def make_callback_data(level, category="0", subcategory="0", item_id="0"):
-    return MenuCD(level=level, category=category, subcategory=subcategory, item_id=item_id).pack()
+    item_id: int = 0
 
 
 # Создаем функцию, которая отдает клавиатуру с доступными категориями
@@ -43,7 +37,7 @@ async def categories_keyboard() -> InlineKeyboardBuilder:
         button_text = f"{category.category_name} ({number_of_items} шт)"
 
         # Сформируем колбек дату, которая будет на кнопке. Следующий уровень - текущий + 1, и перечисляем категории
-        callback_data = make_callback_data(level=CURRENT_LEVEL + 1, category=category.category_code)
+        callback_data = MenuCD(level=CURRENT_LEVEL + 1, category=category.category_code).pack()
         # Вставляем кнопку в клавиатуру
         markup.add(
             InlineKeyboardButton(text=button_text, callback_data=callback_data)
@@ -69,8 +63,8 @@ async def subcategories_keyboard(category) -> InlineKeyboardBuilder:
         button_text = f"{subcategory.subcategory_name} ({number_of_items} шт)"
 
         # Сформируем колбек дату, которая будет на кнопке
-        callback_data = make_callback_data(level=CURRENT_LEVEL + 1,
-                                           category=category, subcategory=subcategory.subcategory_code)
+        callback_data = MenuCD(level=CURRENT_LEVEL + 1, category=category,
+                               subcategory=subcategory.subcategory_code).pack()
         markup.add(
             InlineKeyboardButton(text=button_text, callback_data=callback_data)
         )
@@ -94,9 +88,8 @@ async def items_keyboard(category, subcategory) -> InlineKeyboardBuilder:
         button_text = f"{item.name} - ${item.price}"
 
         # Сформируем колбек дату, которая будет на кнопке
-        callback_data = make_callback_data(level=CURRENT_LEVEL + 1,
-                                           category=category, subcategory=subcategory,
-                                           item_id=item.id)
+        callback_data = MenuCD(level=CURRENT_LEVEL + 1, category=category,
+                               subcategory=subcategory, item_id=item.id).pack()
         markup.add(
             InlineKeyboardButton(
                 text=button_text, callback_data=callback_data)
@@ -123,16 +116,16 @@ def item_keyboard(category, subcategory, item_id) -> InlineKeyboardBuilder:
 
 def add_back_and_main(markup: InlineKeyboardBuilder, current_level,
                       category="0", subcategory="0", item_id="0") -> InlineKeyboardMarkup:
-    #TODO: Изменить функцию без передачи всех аргументов
+    # TODO: Изменить функцию без передачи всех аргументов
     markup.row(
         InlineKeyboardButton(
             text=LEXICON["to_main"],
-            callback_data=make_callback_data(level=0))
+            callback_data=MenuCD(level=0).pack())
     )
     markup.add(
         InlineKeyboardButton(
             text=LEXICON["back"],
-            callback_data=make_callback_data(level=current_level - 1, category=category,
-                                             subcategory=subcategory, item_id=item_id))
+            callback_data=MenuCD(level=current_level - 1, category=category,
+                                 subcategory=subcategory, item_id=item_id).pack())
     )
     return markup.as_markup()

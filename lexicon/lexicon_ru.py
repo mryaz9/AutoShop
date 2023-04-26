@@ -39,12 +39,13 @@ LEXICON_FSM_SHOP: dict[str, str] = {
     'done_no': 'Товар удален',
     'cancel': 'Отмена',
     'unknown': 'Неверный ввод\nЧто бы отменить создание используйте команду /cancel',
+    'add_new_category': "Добавить",
 
     'category': 'Каталог:',
     'subcategory': 'Подкаталог:',
     'name': 'Наименование:',
     'price': 'Цена:',
-    'photo': 'Цена:',
+    'photo': 'Фото:',
     'time_action': 'Время использования (в днях):',
     'description': 'Описание:'
 }
