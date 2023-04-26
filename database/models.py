@@ -46,6 +46,8 @@ class Items(db.Model):
     name = Column(String(50))
     photo = Column(String(250))
     price = Column(Integer)
+    time_action = Column(TIMESTAMP)
+    fill_description = Column(String(255))
 
     admin_id_add = Column(BigInteger)
 

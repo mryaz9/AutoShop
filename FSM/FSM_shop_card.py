@@ -8,15 +8,23 @@ from aiogram.types import (CallbackQuery, InlineKeyboardButton,
                            InlineKeyboardMarkup, Message, PhotoSize)
 
 from filters import filters
-from lexicon.lexicon_ru import LEXICON_BUTTON_ADMIN, LEXICON_FSM_SHOP, LEXICON_NAME_CATALOG
+from keyboards import kb_inline
+from database.command import database_item
+from lexicon.lexicon_ru import LEXICON_BUTTON_ADMIN, LEXICON_FSM_SHOP
 
 router: Router = Router()
-router.message.filter(filters.IsAdmin())
+
+
+# .message.filter(filters.IsAdmin())
 
 
 class FSMFillCard(StatesGroup):
-    fill_catalog = State()
+    fill_category_code = State()
+    fill_category = State()
+    fill_subcategory_code = State()
+    fill_subcategory = State()
     fill_name = State()
+    fill_photo = State()
     fill_price = State()
     fill_time_action = State()
     fill_description = State()
@@ -30,23 +38,18 @@ async def process_cancel_command_state(message: Message, state: FSMContext):
 
 @router.message(Text(text=LEXICON_BUTTON_ADMIN["add_assortment"]), StateFilter(default_state))
 async def process_fill_command(message: Message, state: FSMContext):
-    #keyboards = view_inline_keyboard(list(LEXICON_NAME_CATALOG.values()))
-    #await message.answer(text=LEXICON_FSM_SHOP["catalog"], reply_markup=keyboards)
-    await state.set_state(FSMFillCard.fill_catalog)
+    markup = kb_inline.create_inline_keyboard(database_item.get_categories())
+    await message.answer(text=LEXICON_FSM_SHOP["category"], reply_markup=markup)
+    await state.set_state(FSMFillCard.fill_category_code)
 
 
-@router.callback_query(StateFilter(FSMFillCard.fill_catalog),
-                       Text(text=list(LEXICON_NAME_CATALOG.values())))
+@router.callback_query(StateFilter(FSMFillCard.fill_category),
+                       Text(text=list(LEXICON_FSM_SHOP.values())))
 async def process_fill_catalog(callback: CallbackQuery, state: FSMContext):
     await state.update_data(catalog=callback.data)
     await callback.message.delete()
     await callback.message.answer(text=LEXICON_FSM_SHOP["name"])
     await state.set_state(FSMFillCard.fill_name)
-
-
-@router.message(StateFilter(FSMFillCard.fill_catalog))
-async def warning_not_fill_catalog(message: Message):
-    await message.answer(text=LEXICON_FSM_SHOP["unknown"])
 
 
 @router.message(StateFilter(FSMFillCard.fill_name), F.text)
@@ -56,21 +59,11 @@ async def process_fill_name(message: Message, state: FSMContext):
     await state.set_state(FSMFillCard.fill_price)
 
 
-@router.message(StateFilter(FSMFillCard.fill_name))
-async def warning_not_fill_name(message: Message):
-    await message.answer(text=LEXICON_FSM_SHOP["unknown"])
-
-
 @router.message(StateFilter(FSMFillCard.fill_price), F.text.isdigit())
 async def process_fill_price(message: Message, state: FSMContext):
     await state.update_data(price=message.text)
     await message.answer(text=LEXICON_FSM_SHOP["time_action"])
     await state.set_state(FSMFillCard.fill_time_action)
-
-
-@router.message(StateFilter(FSMFillCard.fill_price), F.text)
-async def warning_not_fill_price(message: Message):
-    await message.answer(text=LEXICON_FSM_SHOP["unknown"])
 
 
 @router.message(StateFilter(FSMFillCard.fill_time_action), F.text.isdigit())
@@ -80,15 +73,10 @@ async def process_fill_time_action(message: Message, state: FSMContext):
     await state.set_state(FSMFillCard.fill_description)
 
 
-@router.message(StateFilter(FSMFillCard.fill_time_action))
-async def warning_not_fill_time_action(message: Message):
-    await message.answer(text=LEXICON_FSM_SHOP["unknown"])
-
-
 @router.message(StateFilter(FSMFillCard.fill_description), F.text)
 async def process_fill_description(message: Message, state: FSMContext):
     await state.update_data(description=message.text)
-    #keyboard = view_inline_keyboard(["Да", "Нет"])
+    # keyboard = view_inline_keyboard(["Да", "Нет"])
     data = await state.get_data()
     await message.answer(text=f"{LEXICON_FSM_SHOP['done']} {[*data.values()]}", reply_markup=keyboard)
 
@@ -98,7 +86,7 @@ async def process_fill_description(message: Message, state: FSMContext):
 async def process_check(callback: CallbackQuery, state: FSMContext):
     if callback.data == "Да":
         data = await state.get_data()
-        #Shop().set_data(ShopData(*data.values()))
+        # Shop().set_data(ShopData(*data.values()))
         await state.clear()
         await callback.answer(text=LEXICON_FSM_SHOP["done_yes"], show_alert=True)
 
@@ -109,6 +97,6 @@ async def process_check(callback: CallbackQuery, state: FSMContext):
     await callback.message.delete()
 
 
-@router.message(StateFilter(FSMFillCard.fill_description))
-async def warning_not_fill_description(message: Message):
+@router.message(~StateFilter(default_state))
+async def warning_not(message: Message):
     await message.answer(text=LEXICON_FSM_SHOP["unknown"])

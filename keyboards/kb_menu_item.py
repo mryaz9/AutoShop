@@ -3,6 +3,7 @@ from aiogram.utils.keyboard import InlineKeyboardBuilder
 from aiogram.filters.callback_data import CallbackData
 
 from database.command.database_item import get_subcategories, count_items, get_items, get_categories
+from lexicon.lexicon_ru import LEXICON
 
 
 # Создаем CallbackData-объекты, которые будут нужны для работы с менюшкой
@@ -21,11 +22,11 @@ class BuyItemCD(CallbackData, prefix="buy"):
 # С помощью этой функции будем формировать коллбек дату для каждого элемента меню, в зависимости от
 # переданных параметров. Если Подкатегория, или айди товара не выбраны - они по умолчанию равны нулю
 def make_callback_data(level, category="0", subcategory="0", item_id="0"):
-    return MenuCD(level=level, category=category, subcategory=subcategory, item_id=item_id)
+    return MenuCD(level=level, category=category, subcategory=subcategory, item_id=item_id).pack()
 
 
 # Создаем функцию, которая отдает клавиатуру с доступными категориями
-async def categories_keyboard() -> InlineKeyboardMarkup:
+async def categories_keyboard() -> InlineKeyboardBuilder:
     # Указываем, что текущий уровень меню - 0
     CURRENT_LEVEL: int = 0
 
@@ -49,11 +50,11 @@ async def categories_keyboard() -> InlineKeyboardMarkup:
         )
 
     # Возвращаем созданную клавиатуру в хендлер
-    return markup.as_markup()
+    return markup
 
 
 # Создаем функцию, которая отдает клавиатуру с доступными подкатегориями, исходя из выбранной категории
-async def subcategories_keyboard(category) -> InlineKeyboardMarkup:
+async def subcategories_keyboard(category) -> InlineKeyboardBuilder:
     # Текущий уровень - 1
     CURRENT_LEVEL: int = 1
     markup: InlineKeyboardBuilder = InlineKeyboardBuilder()
@@ -76,16 +77,11 @@ async def subcategories_keyboard(category) -> InlineKeyboardMarkup:
 
     # Создаем Кнопку "Назад", в которой прописываем колбек дату такую, которая возвращает
     # пользователя на уровень назад - на уровень 0.
-    markup.row(
-        InlineKeyboardButton(
-            text="Назад",
-            callback_data=make_callback_data(level=CURRENT_LEVEL - 1))
-    )
-    return markup.as_markup()
+    return markup
 
 
 # Создаем функцию, которая отдает клавиатуру с доступными товарами, исходя из выбранной категории и подкатегории
-async def items_keyboard(category, subcategory) -> InlineKeyboardMarkup:
+async def items_keyboard(category, subcategory) -> InlineKeyboardBuilder:
     CURRENT_LEVEL: int = 2
 
     # Устанавливаю row_width = 1, чтобы показывалась одна кнопка в строке на товар
@@ -108,36 +104,35 @@ async def items_keyboard(category, subcategory) -> InlineKeyboardMarkup:
 
     # Создаем Кнопку "Назад", в которой прописываем колбек дату такую, которая возвращает
     # пользователя на уровень назад - на уровень 1 - на выбор подкатегории
-    markup.row(
-        InlineKeyboardButton(
-            text="Назад",
-            callback_data=make_callback_data(level=CURRENT_LEVEL - 1,
-                                             category=category))
-    )
-    return markup.as_markup(row_width=1)
+    return markup
 
 
 # Создаем функцию, которая отдает клавиатуру с кнопками "купить" и "назад" для выбранного товара
-def item_keyboard(category, subcategory, item_id) -> InlineKeyboardMarkup:
+def item_keyboard(category, subcategory, item_id) -> InlineKeyboardBuilder:
     CURRENT_LEVEL: int = 3
 
     markup: InlineKeyboardBuilder = InlineKeyboardBuilder()
     markup.row(
         InlineKeyboardButton(
             text=f"Купить",
-            callback_data=BuyItemCD(item_id=item_id)
+            callback_data=BuyItemCD(item_id=item_id).pack()
         )
     )
+    return markup
+
+
+def add_back_and_main(markup: InlineKeyboardBuilder, current_level,
+                      category="0", subcategory="0", item_id="0") -> InlineKeyboardMarkup:
+    #TODO: Изменить функцию без передачи всех аргументов
     markup.row(
         InlineKeyboardButton(
-            text="Домой",
-            callback_data=make_callback_data(level=0,
-                                             category=category, subcategory=subcategory))
+            text=LEXICON["to_main"],
+            callback_data=make_callback_data(level=0))
     )
-    markup.row(
+    markup.add(
         InlineKeyboardButton(
-            text="Назад",
-            callback_data=make_callback_data(level=CURRENT_LEVEL - 1,
-                                             category=category, subcategory=subcategory))
+            text=LEXICON["back"],
+            callback_data=make_callback_data(level=current_level - 1, category=category,
+                                             subcategory=subcategory, item_id=item_id))
     )
     return markup.as_markup()
