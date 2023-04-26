@@ -4,12 +4,12 @@ from database.init_database import db
 from database.models import Users
 
 
-async def get_user(user_id):
+async def get_user(user_id) -> Users:
     user = await Users.query.where(Users.user_id == user_id).gino.first()
     return user
 
 
-async def add_new_user():
+async def add_new_user() -> Users:
     user = types.User.get_current()
     old_user = await get_user(user.id)
     if old_user:

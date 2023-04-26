@@ -1,14 +1,12 @@
 from aiogram import Router, F, types
-from aiogram.filters import Command, CommandStart, Text
-from aiogram.types import CallbackQuery, Message, callback_query
-from typing import Union
-
+from aiogram.filters import Command, CommandStart
+from aiogram.types import CallbackQuery, Message
 
 from keyboards.kb_menu_item import MenuCD, categories_keyboard, subcategories_keyboard, \
     items_keyboard, item_keyboard
 from keyboards.kb_reply import create_reply_keyboard
-from database.command_database_item import get_item
-from database.command_database_user import add_new_user
+from database.command.database_item import get_item
+from database.command.database_user import add_new_user
 from lexicon.lexicon_ru import LEXICON, LEXICON_BUTTON_MAIN
 
 from typing import Union

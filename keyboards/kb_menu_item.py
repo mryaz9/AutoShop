@@ -2,7 +2,7 @@ from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
 from aiogram.utils.keyboard import InlineKeyboardBuilder
 from aiogram.filters.callback_data import CallbackData
 
-from database.command_database_item import get_subcategories, count_items, get_items, get_categories
+from database.command.database_item import get_subcategories, count_items, get_items, get_categories
 
 
 # Создаем CallbackData-объекты, которые будут нужны для работы с менюшкой

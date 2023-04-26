@@ -7,7 +7,7 @@ from database.models import Items
 
 
 # Функция для создания нового товара в базе данных. Принимает все возможные аргументы, прописанные в Item
-async def add_item(self, **kwargs):
+async def add_item(**kwargs):
     new_item = await Items(**kwargs).create()
     return new_item
 
