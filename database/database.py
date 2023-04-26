@@ -2,7 +2,7 @@ import sqlite3
 from itertools import chain
 from dataclasses import astuple, asdict
 
-from .dataclassData import AdminData, ColumnsData, ShopData
+from .Models import AdminData, ColumnsData, ShopData
 
 
 class DataBase:
@@ -81,3 +81,74 @@ class Shop(DataBase):
         #return list(chain(*item))
 
 
+from aiogram import types, Bot
+from gino import Gino
+from gino.schema import GinoSchemaVisitor
+
+
+from config import db_pass, db_user, host
+
+db = Gino()
+
+
+# Документация
+# http://gino.fantix.pro/en/latest/tutorials/tutorial.html
+
+
+
+
+class DBCommands:
+
+    async def get_user(self, user_id):
+        user = await User.query.where(User.user_id == user_id).gino.first()
+        return user
+
+    async def add_new_user(self, referral=None):
+        user = types.User.get_current()
+        old_user = await self.get_user(user.id)
+        if old_user:
+            return old_user
+        new_user = User()
+        new_user.user_id = user.id
+        new_user.username = user.username
+        new_user.full_name = user.full_name
+
+        if referral:
+            new_user.referral = int(referral)
+        await new_user.create()
+        return new_user
+
+    async def set_language(self, language):
+        user_id = types.User.get_current().id
+        user = await self.get_user(user_id)
+        await user.update(language=language).apply()
+
+    async def count_users(self) -> int:
+        total = await db.func.count(User.id).gino.scalar()
+        return total
+
+    async def check_referrals(self):
+        bot = Bot.get_current()
+        user_id = types.User.get_current().id
+
+        user = await User.query.where(User.user_id == user_id).gino.first()
+        referrals = await User.query.where(User.referral == user.id).gino.all()
+
+        return ", ".join([
+            f"{num + 1}. " + (await bot.get_chat(referral.user_id)).get_mention(as_html=True)
+            for num, referral in enumerate(referrals)
+        ])
+
+    async def show_items(self):
+        items = await Item.query.gino.all()
+
+        return items
+
+
+async def create_db():
+    await db.set_bind(f'postgresql://{db_user}:{db_pass}@{host}/gino')
+
+    # Create tables
+    db.gino: GinoSchemaVisitor
+    #await db.gino.drop_all()
+    await db.gino.create_all()

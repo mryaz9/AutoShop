@@ -11,7 +11,7 @@ from filters import filters
 from lexicon.lexicon_ru import LEXICON_BUTTON_ADMIN, LEXICON_FSM_SHOP, LEXICON_NAME_CATALOG
 from keyboards.kb_main import view_inline_keyboard
 from database.database import Shop
-from database.dataclassData import ShopData
+from database.Models import ShopData
 
 router: Router = Router()
 router.message.filter(filters.IsAdmin())

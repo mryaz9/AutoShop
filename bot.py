@@ -5,7 +5,7 @@ from aiogram.fsm.storage.redis import RedisStorage, Redis
 
 from keyboards.main_menu import set_main_menu
 from database.database import Admin
-from database.dataclassData import AdminData
+from database.Models import AdminData
 from config_data.config import Config, load_config
 from handlers import other_handlers, user_handlers, admin_handlers
 from FSM import FSM_shop_card
