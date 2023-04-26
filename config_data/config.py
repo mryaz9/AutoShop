@@ -7,6 +7,10 @@ from environs import Env
 class TgBot:
     token: str  # Токен для доступа к телеграм-боту
     admin_ids: dict[int, str]  # Список id администраторов бота
+    PGUSER: str
+    PGPASSWORD: str
+    DATABASE: str
+    ip: str
 
 
 @dataclass
@@ -14,11 +18,14 @@ class Config:
     tg_bot: TgBot
 
 
-# Создаем функцию, которая будет читать файл .env и возвращать
-# экземпляр класса Config с заполненными полями token и admin_ids
 def load_config(path: str | None = None) -> Config:
     env = Env()
     env.read_env(path)
     return Config(tg_bot=TgBot(
         token=env('BOT_TOKEN'),
-        admin_ids=env.list('ADMIN_IDS')))
+        admin_ids=env.list('ADMIN_IDS'),
+        PGUSER=env('PGUSER'),
+        PGPASSWORD=env('PGPASSWORD'),
+        DATABASE=env('DATABASE'),
+        ip=env('ip'),
+    ))

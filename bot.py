@@ -4,11 +4,10 @@ from aiogram import Bot, Dispatcher
 from aiogram.fsm.storage.redis import RedisStorage, Redis
 
 from keyboards.main_menu import set_main_menu
-from database.database import Admin
-from database.Models import AdminData
 from config_data.config import Config, load_config
 from handlers import other_handlers, user_handlers, admin_handlers
 from FSM import FSM_shop_card
+from database.init_database import create_db
 
 # Инициализируем логгер
 logger = logging.getLogger(__name__)
@@ -28,19 +27,14 @@ async def main():
     # Загружаем конфиг в переменную config
     config: Config = load_config()
 
-    redis: Redis = Redis(host='localhost')
+    redis: Redis = Redis(host=config.tg_bot.ip)
     storage: RedisStorage = RedisStorage(redis=redis)
+    await create_db()
 
     # Инициализируем бот и диспетчер
     bot: Bot = Bot(token=config.tg_bot.token,
                    parse_mode='HTML')
     dp: Dispatcher = Dispatcher(storage=storage)
-
-    #TODO: Можно при деплое сразу поместить себя в бд
-    database_user = Admin()
-    ids = int(config.tg_bot.admin_ids[0])
-    if str(ids) not in database_user.get_data_user_id(ids):
-        database_user.set_data(AdminData(ids, config.tg_bot.admin_ids[1]))
 
     # await set_main_menu(bot)
 

@@ -1,9 +1,8 @@
 from sqlalchemy import (Column, Integer, BigInteger, String,
                         Sequence, TIMESTAMP, Boolean, JSON, Float)
 from sqlalchemy import sql
-from sqlalchemy.orm import relationship
 
-from inti_databasae import db
+from database.init_database import db
 
 
 class Users(db.Model):
@@ -13,7 +12,7 @@ class Users(db.Model):
     user_id = Column(BigInteger)
     full_name = Column(String(100))
     username = Column(String(50))
-    balance = Column(Float)
+    balance = Column(Float, default=0)
 
     query: sql.Select
 
@@ -22,11 +21,11 @@ class Users(db.Model):
             self.id, self.full_name, self.username, self.balance)
 
 
-class Admins(db.models):
+class Admins(db.Model):
     __tablename__ = 'admins'
 
     id = Column(Integer, Sequence('user_id_seq'), primary_key=True)
-    user_id = relationship("Users", back_populates="user_id")
+    user_id = Column(BigInteger)
 
     def __repr__(self):
         return "<Admins(id='{}', user_id='{}')>".format(
@@ -48,7 +47,7 @@ class Items(db.Model):
     photo = Column(String(250))
     price = Column(Integer)
 
-    admin_add = relationship("Admins", back_populaters="user_id")
+    admin_id_add = Column(BigInteger)
 
     def __repr__(self):
         return "<Items(id='{}', show='{}', category_code='{}', subcategory_code='{}', name='{}', price='{}')>".format(
@@ -60,8 +59,8 @@ class Purchases(db.Model):
     query: sql.Select
 
     id = Column(Integer, Sequence('user_id_seq'), primary_key=True)
-    buyer = relationship("Users", back_populaters="user_id")
-    item_id = relationship("Items", back_populaters="id")
+    buyer_id = Column(BigInteger)
+    item_id = Column(BigInteger)
     purchase_time = Column(TIMESTAMP)
     successful = Column(Boolean, default=False)
 
