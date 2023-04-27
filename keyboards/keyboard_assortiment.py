@@ -23,7 +23,7 @@ main_window = Window(
 dialog = Dialog(main_window)
 
 storage = MemoryStorage()
-bot = Bot(token='789267899:AAE7YbObi6q2v1uiu2H3f7qZ8RIq9UYDLlY')
+
 dp = Dispatcher(storage=storage)
 dp.include_router(dialog)
 setup_dialogs(dp)
