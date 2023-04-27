@@ -11,15 +11,16 @@ from aiogram.utils.keyboard import InlineKeyboardBuilder
 
 from database.command.database_item import add_item
 from filters import filters
-from keyboards import kb_inline
+from keyboards import kb_menu_item
 from database.command import database_item
-from keyboards.kb_inline import MenuCD, create_inline_keyboard
+from keyboards.kb_menu_item import MenuCD
 from lexicon.lexicon_ru import LEXICON_BUTTON_ADMIN, LEXICON_FSM_SHOP
 
 router: Router = Router()
 
 
-# .message.filter(filters.IsAdmin())
+router.message.filter(filters.IsAdmin())
+
 
 class FSMFillCard(StatesGroup):
     fill_category_code = State()
@@ -41,8 +42,8 @@ async def process_cancel_command_state(message: Message, state: FSMContext):
 
 @router.message(Text(text=LEXICON_BUTTON_ADMIN["add_assortment"]), StateFilter(default_state))
 async def process_fill_command(message: Message, state: FSMContext):
-    markup = add_new_category(await kb_inline.categories_keyboard()).as_markup()
-    await message.answer(text=LEXICON_FSM_SHOP["category"], reply_markup=markup)
+    markup = add_new_category(await kb_menu_item.categories_keyboard()).as_markup()
+    await message.answer(text=LEXICON_FSM_SHOP["category_code"], reply_markup=markup)
     await state.set_state(FSMFillCard.fill_category_code)
 
 

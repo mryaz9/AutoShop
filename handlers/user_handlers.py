@@ -57,7 +57,7 @@ async def navigate(call: CallbackQuery, callback_data: MenuCD):
     current_level = int(callback_data.get("level"))
 
     # Получаем категорию, которую выбрал пользователь (Передается всегда)
-    category = callback_data.get("category")
+    category = callback_data.get("category_code")
 
     # Получаем подкатегорию, которую выбрал пользователь (Передается НЕ ВСЕГДА - может быть 0)
     subcategory = callback_data.get("subcategory")

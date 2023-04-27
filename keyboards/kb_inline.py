@@ -29,7 +29,7 @@ async def categories_keyboard() -> InlineKeyboardBuilder:
         markup.add(
             InlineKeyboardButton(text=button_text, callback_data=callback_data)
         )
-
+    markup.adjust(3, 2)
     # Возвращаем созданную клавиатуру в хендлер
     return markup
 
@@ -62,5 +62,4 @@ def create_inline_keyboard(*args: str) -> InlineKeyboardBuilder:
         markup.row(InlineKeyboardButton(
             text=button,
             callback_data=button))
-
     return markup

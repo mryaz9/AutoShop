@@ -9,7 +9,7 @@ from lexicon.lexicon_ru import LEXICON_INLINE_MENU
 
 
 # Та самая функция, которая отдает категории. Она может принимать как CallbackQuery, так и Message
-# Помимо этого, мы в нее можем отправить и другие параметры - category, subcategory, item_id,
+# Помимо этого, мы в нее можем отправить и другие параметры - category_code, subcategory, item_id,
 # Поэтому ловим все остальное в **kwargs
 async def list_categories(message: Union[CallbackQuery, Message], **kwargs):
     # Клавиатуру формируем с помощью следующей функции (где делается запрос в базу данных)
@@ -17,12 +17,12 @@ async def list_categories(message: Union[CallbackQuery, Message], **kwargs):
 
     # Проверяем, что за тип апдейта. Если Message - отправляем новое сообщение
     if isinstance(message, Message):
-        await message.answer(text=LEXICON_INLINE_MENU["category"], reply_markup=markup.as_markup())
+        await message.answer(text=LEXICON_INLINE_MENU["category_code"], reply_markup=markup.as_markup())
 
     # Если CallbackQuery - изменяем это сообщение
     elif isinstance(message, CallbackQuery):
         call = message
-        await call.message.edit_text(text=LEXICON_INLINE_MENU["category"], reply_markup=markup.as_markup())
+        await call.message.edit_text(text=LEXICON_INLINE_MENU["category_code"], reply_markup=markup.as_markup())
 
 
 # Функция, которая отдает кнопки с подкатегориями, по выбранной пользователем категории

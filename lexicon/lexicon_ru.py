@@ -9,13 +9,19 @@ LEXICON: dict[str, str] = {
     'to_main': '🏚',
     'back': '<--',
 }
+
+LEXICON_ADMIN: dict[str, str] = {
+    'in_admin': 'Режим администратора',
+    'exit_admin': 'Выход из режима администратора'
+}
+
 LEXICON_ADMIN_INFO: dict[str, str] = {
     'startup': 'Бот запущен!',
     'shutdown': 'Бот остановлен!'
 }
 
 LEXICON_INLINE_MENU: dict[str, str] = {
-    'category': 'Каталог:',
+    'category_code': 'Каталог:',
     'subcategory': 'Подкаталог:',
     'name': 'Наименование:',
     'card': 'Товар'
@@ -35,7 +41,8 @@ LEXICON_BUTTON_MAIN: dict[str, str] = {
 LEXICON_BUTTON_ADMIN: dict[str, str] = {
     'add_assortment': 'Добавить ассортимент',
     'del_assortment': 'Удалить ассортимент',
-    'see_admin': 'Администраторы'
+    'see_admin': 'Администраторы',
+    'back': 'Выйти'
 }
 
 LEXICON_FSM_SHOP: dict[str, str] = {
@@ -46,7 +53,7 @@ LEXICON_FSM_SHOP: dict[str, str] = {
     'unknown': 'Неверный ввод\nЧто бы отменить создание используйте команду /cancel',
     'add_new_category': "Добавить",
 
-    'category': 'Каталог:',
+    'category_code': 'Каталог:',
     'subcategory': 'Подкаталог:',
     'name': 'Наименование:',
     'price': 'Цена:',
