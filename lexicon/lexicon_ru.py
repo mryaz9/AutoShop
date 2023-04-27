@@ -9,6 +9,11 @@ LEXICON: dict[str, str] = {
     'to_main': '🏚',
     'back': '<--',
 }
+LEXICON_ADMIN_INFO: dict[str, str] = {
+    'startup': 'Бот запущен!',
+    'shutdown': 'Бот остановлен!'
+}
+
 LEXICON_INLINE_MENU: dict[str, str] = {
     'category': 'Каталог:',
     'subcategory': 'Подкаталог:',

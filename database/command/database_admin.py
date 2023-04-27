@@ -9,14 +9,16 @@ async def get_admin(user_id):
     return user
 
 
-async def add_new_admin():
-    user = types.User.get_current()
-    old_user = await get_admin(user.id)
+async def get_all_admin():
+    return await Admins.query.distinct(Admins.user_id).gino.all()
+
+
+async def add_new_admin(id_user: int):
+    old_user = await get_admin(id_user)
     if old_user:
         return old_user
     new_user = Admins()
-    new_user.user_id = user.id
-    new_user.username = user.username
+    new_user.user_id = id_user
 
     await new_user.create()
     return new_user
