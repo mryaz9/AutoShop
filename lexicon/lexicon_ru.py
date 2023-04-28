@@ -23,7 +23,8 @@ LEXICON_INLINE_MENU: dict[str, str] = {
     'category': 'Каталог:',
     'subcategory': 'Подкаталог:',
     'name': 'Наименование:',
-    'card': 'Товар'
+    'card': 'Товар',
+    'item': '{name}\n{price}руб.\nОписание: {description}'
 }
 LEXICON_COMMANDS: dict[str, str] = {
     '/start': 'Начало работы',
@@ -68,6 +69,5 @@ LEXICON_FSM_SHOP: dict[str, str] = {
     'description': 'Описание:',
 
     'done_1': 'Каталог: {category_name}\nПодкаталог: {subcategory_name}',
-    'done_2': '''{name}\n{price}руб\nОписание: {description}
-    '''
+    'done_2': '{name}\n{price}руб\nОписание: {description}'
 }

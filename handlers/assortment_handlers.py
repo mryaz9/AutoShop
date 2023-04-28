@@ -1,6 +1,6 @@
 from typing import Union
 
-from aiogram.types import CallbackQuery, Message
+from aiogram.types import CallbackQuery, Message, InputFile, FSInputFile, InputMediaPhoto
 
 from database.command.database_item import get_item
 from keyboards.kb_menu_item import categories_keyboard, add_back_and_main, subcategories_keyboard, items_keyboard, \
@@ -17,12 +17,12 @@ async def list_categories(message: Union[CallbackQuery, Message], **kwargs):
 
     # Проверяем, что за тип апдейта. Если Message - отправляем новое сообщение
     if isinstance(message, Message):
-        await message.answer(text=LEXICON_INLINE_MENU["category"], reply_markup=markup.as_markup())
+        await message.answer_photo(photo=FSInputFile('/home/mryaz/Рабочий стол/Tg_Bot_tgc/handlers/test.jpg'), caption=LEXICON_INLINE_MENU["category"], reply_markup=markup.as_markup())
 
     # Если CallbackQuery - изменяем это сообщение
     elif isinstance(message, CallbackQuery):
         call = message
-        await call.message.edit_text(text=LEXICON_INLINE_MENU["category"], reply_markup=markup.as_markup())
+        await call.message.answer_photo(photo=FSInputFile('/home/mryaz/Рабочий стол/Tg_Bot_tgc/handlers/test.jpg'), caption=LEXICON_INLINE_MENU["category"], reply_markup=markup.as_markup())
 
 
 # Функция, которая отдает кнопки с подкатегориями, по выбранной пользователем категории
@@ -30,7 +30,7 @@ async def list_subcategories(callback: CallbackQuery, current_level, category, *
     markup = add_back_and_main(await subcategories_keyboard(category), current_level, category)
 
     # Изменяем сообщение, и отправляем новые кнопки с подкатегориями
-    await callback.message.edit_text(text=LEXICON_INLINE_MENU["subcategory"], reply_markup=markup)
+    await callback.message.answer_photo(photo=FSInputFile('/home/mryaz/Рабочий стол/Tg_Bot_tgc/handlers/test.jpg'), caption=LEXICON_INLINE_MENU["subcategory"], reply_markup=markup)
 
 
 # Функция, которая отдает кнопки с Названием и ценой товара, по выбранной категории и подкатегории
@@ -38,7 +38,7 @@ async def list_items(callback: CallbackQuery, current_level, category, subcatego
     markup = add_back_and_main(await items_keyboard(category, subcategory), current_level, category, subcategory)
 
     # Изменяем сообщение, и отправляем новые кнопки с подкатегориями
-    await callback.message.edit_text(text=LEXICON_INLINE_MENU["name"], reply_markup=markup)
+    await callback.message.answer_photo(photo=FSInputFile('/home/mryaz/Рабочий стол/Tg_Bot_tgc/handlers/test.jpg'), caption=LEXICON_INLINE_MENU["name"], reply_markup=markup)
 
 
 # Функция, которая отдает уже кнопку Купить товар по выбранному товару
@@ -48,5 +48,6 @@ async def show_item(callback: CallbackQuery, current_level, category, subcategor
 
     # Берем запись о нашем товаре из базы данных
     item = await get_item(item_id)
-    text = f"{LEXICON_INLINE_MENU['card']} {item.name}"
-    await callback.message.edit_text(text=text, reply_markup=markup)
+    text = LEXICON_INLINE_MENU['item'].format(name=item.name, price=item.price, description=item.description)
+    await callback.message.edit_media(media=InputMediaPhoto(media=item.photo), caption=text, reply_markup=markup)
+
