@@ -3,9 +3,17 @@ from aiogram.utils.keyboard import InlineKeyboardBuilder
 from aiogram.filters.callback_data import CallbackData
 
 from database.command.database_item import get_categories, count_items, get_subcategories
+from lexicon.lexicon_ru import LEXICON_FSM_SHOP
 
 
 class MenuCD(CallbackData, prefix="FSM"):
+    category_code: str = "0"
+    category_name: str = "0"
+    subcategory_code: str = "0"
+    subcategory_name: str = "0"
+
+
+class MenuCDNEW(CallbackData, prefix="FSM_new"):
     category_code: str = "0"
     category_name: str = "0"
     subcategory_code: str = "0"
@@ -65,4 +73,24 @@ def create_inline_keyboard(*args: str) -> InlineKeyboardBuilder:
             text=button,
             callback_data=button))
 
+    return markup
+
+
+def add_new_category(markup: InlineKeyboardBuilder) -> InlineKeyboardBuilder:
+    markup.row(
+        InlineKeyboardButton(
+            text=LEXICON_FSM_SHOP["add_new_category"],
+            callback_data="add_new_category"
+        )
+    )
+    return markup
+
+
+def add_new_subcategory(markup: InlineKeyboardBuilder) -> InlineKeyboardBuilder:
+    markup.row(
+        InlineKeyboardButton(
+            text=LEXICON_FSM_SHOP["add_new_category"],
+            callback_data="add_new_subcategory"
+        )
+    )
     return markup
