@@ -24,13 +24,14 @@ async def categories_keyboard() -> InlineKeyboardBuilder:
         # Сформируем текст, который будет на кнопке
         button_text = f"{category.category_name} ({number_of_items} шт)"
 
-        callback_data = MenuCD(category_code=category.category_code, category_name=category.category_name).pack()
+        callback_data = MenuCD(category_code=category.category_code, category_name=category.category_name).pack() #  НАХУЙ ПЕРЕДАВАТЬ NAME
         # Вставляем кнопку в клавиатуру
         markup.add(
             InlineKeyboardButton(text=button_text, callback_data=callback_data)
         )
 
     # Возвращаем созданную клавиатуру в хендлер
+    markup.adjust(4)
     return markup
 
 
@@ -52,6 +53,7 @@ async def subcategories_keyboard(category_code) -> InlineKeyboardBuilder:
         markup.add(
             InlineKeyboardButton(text=button_text, callback_data=callback_data)
         )
+    markup.adjust(4)
     return markup
 
 

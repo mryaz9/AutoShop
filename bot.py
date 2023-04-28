@@ -48,13 +48,10 @@ async def main():
     # Пропускаем накопившиеся адепты и запускаем polling
     await bot.delete_webhook(drop_pending_updates=True)
 
-    dp.startup.register(startup)
-    dp.shutdown.register(shutdown)
+    # dp.startup.register(startup)
+    # dp.shutdown.register(shutdown)
 
     await dp.start_polling(bot)
-
-
-
 
 
     #Проверяет станые апдейты с учетом имеющихся хендлеров

@@ -44,6 +44,7 @@ async def categories_keyboard() -> InlineKeyboardBuilder:
         )
 
     # Возвращаем созданную клавиатуру в хендлер
+    markup.adjust(4)
     return markup
 
 
@@ -71,6 +72,7 @@ async def subcategories_keyboard(category) -> InlineKeyboardBuilder:
 
     # Создаем Кнопку "Назад", в которой прописываем колбек дату такую, которая возвращает
     # пользователя на уровень назад - на уровень 0.
+    markup.adjust(4)
     return markup
 
 
@@ -97,6 +99,7 @@ async def items_keyboard(category, subcategory) -> InlineKeyboardBuilder:
 
     # Создаем Кнопку "Назад", в которой прописываем колбек дату такую, которая возвращает
     # пользователя на уровень назад - на уровень 1 - на выбор подкатегории
+    markup.adjust(4)
     return markup
 
 
@@ -111,6 +114,7 @@ def item_keyboard(category, subcategory, item_id) -> InlineKeyboardBuilder:
             callback_data=BuyItemCD(item_id=item_id).pack()
         )
     )
+    markup.adjust(4)
     return markup
 
 

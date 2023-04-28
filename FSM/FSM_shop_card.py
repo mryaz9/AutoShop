@@ -3,7 +3,7 @@ from aiogram import F
 from aiogram.fsm.context import FSMContext
 from aiogram.filters.state import State, StatesGroup
 from aiogram.fsm.state import default_state
-from aiogram.filters import Command, Text, StateFilter
+from aiogram.filters import Command, Text, StateFilter, or_f
 from aiogram.types import (CallbackQuery, InlineKeyboardButton,
                            InlineKeyboardMarkup, Message, PhotoSize)
 from aiogram.utils.keyboard import InlineKeyboardBuilder
@@ -14,12 +14,14 @@ from filters import filters
 from keyboards import kb_inline
 from database.command import database_item
 from keyboards.kb_inline import MenuCD, create_inline_keyboard
-from lexicon.lexicon_ru import LEXICON_BUTTON_ADMIN, LEXICON_FSM_SHOP
+from keyboards.kb_reply import create_reply_keyboard
+from lexicon.lexicon_ru import LEXICON_BUTTON_ADMIN, LEXICON_FSM_SHOP, LEXICON_ADMIN
 
 router: Router = Router()
 
 
-# .message.filter(filters.IsAdmin())
+router.message.filter(filters.IsAdmin())
+
 
 class FSMFillCard(StatesGroup):
     fill_category_code = State()
@@ -33,15 +35,21 @@ class FSMFillCard(StatesGroup):
     fill_description = State()
 
 
-@router.message(Command(commands='cancel'), ~StateFilter(default_state))
+@router.message(or_f(Command(commands='cancel'), Text(text=LEXICON_FSM_SHOP['cancel'])), ~StateFilter(default_state))
 async def process_cancel_command_state(message: Message, state: FSMContext):
     await message.answer(text=LEXICON_FSM_SHOP["cancel"])
     await state.clear()
+    await message.answer(text=LEXICON_ADMIN['in_admin'],
+                         reply_markup=create_reply_keyboard(list(LEXICON_BUTTON_ADMIN.values())))
 
 
 @router.message(Text(text=LEXICON_BUTTON_ADMIN["add_assortment"]), StateFilter(default_state))
 async def process_fill_command(message: Message, state: FSMContext):
     markup = add_new_category(await kb_inline.categories_keyboard()).as_markup()
+
+    await message.answer(text=LEXICON_FSM_SHOP["start"],
+                         reply_markup=create_reply_keyboard(list([LEXICON_FSM_SHOP['cancel']])))
+
     await message.answer(text=LEXICON_FSM_SHOP["category"], reply_markup=markup)
     await state.set_state(FSMFillCard.fill_category_code)
 
