@@ -44,6 +44,7 @@ class Items(db.Model):
     subcategory_name = Column(String(20))
 
     name = Column(String(50))
+    amount = Column(Integer)
     photo = Column(String(250))
     price = Column(Integer)
     time_action = Column(TIMESTAMP)

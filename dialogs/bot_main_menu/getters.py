@@ -1,6 +1,7 @@
 from aiogram_dialog import DialogManager
 
 from database.command import database_item
+from database.command.database_item import count_items
 from dialogs.bot_main_menu.states import BotMenu
 
 
@@ -8,7 +9,7 @@ async def get_categories(dialog_manager: DialogManager, **kwargs):
     db_categories = await database_item.get_categories()
     data = {
         "categories": [
-            (f'{category.name} ({len(category.items)})', category.category_id)
+            (f'{category.category_name} ({await count_items(category.category_code)})', category.category_code)
             for category in db_categories
         ]
     }
@@ -27,7 +28,8 @@ async def get_subcategories(dialog_manager: DialogManager, **kwargs):
 
     data = {
         "subcategories": [
-            (f'{subcategories.name} ({len(subcategories.items)})', subcategories.category_id)
+            (f'{subcategories.subcategory_name} ({await count_items(category_id, subcategories.subcategory_code)})',
+             subcategories.subcategory_code)
             for subcategories in db_subcategories
         ]
     }
@@ -47,7 +49,7 @@ async def get_product(dialog_manager: DialogManager, **kwargs):
     db_product = await database_item.get_items(category_code=category_id, subcategory_code=subcategory_id)
     data = {
         "product": [
-            (f'{product.name} ({len(product.items)})', product.category_id)
+            (f'{product.name} {product.amount} {product.price}', product.id)  # TODO: Добавить количество товара
             for product in db_product
         ]
     }
@@ -62,8 +64,29 @@ async def get_product_info(dialog_manager: DialogManager, **kwargs):
         await dialog_manager.switch_to(BotMenu.select_categories)
         return
 
-    db_product_info = await database_item.get_item(product_id)
+    db_product_info = await database_item.get_item(int(product_id))
 
     data = {
         "product": db_product_info
     }
+    return data
+
+
+async def get_buy_product(dialog_manager: DialogManager, **kwargs):
+    ctx = dialog_manager.current_context()
+    product_id = ctx.start_data.get("product_id")
+    if not product_id:
+        await dialog_manager.event.answer("Сначала выберете продукт")
+        await dialog_manager.switch_to(BotMenu.select_categories)
+        return
+
+    db_product_info = await database_item.get_item(int(product_id))
+    amount = ctx.dialog_data.get("amount")
+
+    data = {
+        "product": db_product_info.name,
+        "amount": db_product_info.amount,
+        "amount_user": amount,
+        "total_amount": db_product_info.price * amount if amount else None
+    }
+    return data

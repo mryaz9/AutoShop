@@ -3,7 +3,7 @@ import logging
 from aiogram import Router
 from aiogram.filters import CommandStart, ExceptionTypeFilter
 from aiogram.types import Message
-from aiogram_dialog import DialogManager, StartMode, ShowMode
+from aiogram_dialog import DialogManager, StartMode, ShowMode, setup_dialogs
 from aiogram_dialog.api.exceptions import UnknownState, UnknownIntent
 
 from dialogs.bot_main_menu.states import BotMenu
@@ -39,3 +39,4 @@ router.errors.register(
         on_unknown_state,
         ExceptionTypeFilter(UnknownState),
     )
+
