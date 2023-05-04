@@ -5,7 +5,7 @@ from aiogram_dialog import DialogManager
 from aiogram_dialog.widgets.input import TextInput
 
 from database.command.database_item import get_item
-from dialogs.bot_main_menu.states import BotMenu, BuyProduct
+from dialogs.assortiment.states import BotMenu, BuyProduct
 
 
 async def on_chosen_category(callback: CallbackQuery, widget: Any, manager: DialogManager, item_id: str):

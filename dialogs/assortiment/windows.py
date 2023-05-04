@@ -1,17 +1,17 @@
 from aiogram_dialog import Window, Data, DialogManager
 from aiogram_dialog.widgets.input import TextInput
-from aiogram_dialog.widgets.kbd import Cancel, Back, Button
+from aiogram_dialog.widgets.kbd import Cancel, Back, Button, Column, Row
 from aiogram_dialog.widgets.text import Const, Format
 
-from dialogs.bot_main_menu import keyboards, selected, states, getters
+from dialogs.assortiment import keyboard, selected, states, getters
 from lexicon.lexicon_ru import LEXICON_INLINE_MENU, LEXICON_MAIN
 
 
 def categories_window():
     return Window(
         Const(LEXICON_INLINE_MENU["category"]),
-        keyboards.paginated_categories(selected.on_chosen_category),
-        # Cancel(Const(LEXICON_MAIN["back"])),
+        keyboard.paginated_categories(selected.on_chosen_category),
+        Cancel(Const(LEXICON_MAIN["exit"])),
         state=states.BotMenu.select_categories,
         getter=getters.get_categories
     )
@@ -20,8 +20,11 @@ def categories_window():
 def subcategories_window():
     return Window(
         Const(LEXICON_INLINE_MENU["subcategory"]),
-        keyboards.paginated_subcategories(selected.on_chosen_subcategories),
-        Back(Const(LEXICON_MAIN["back"])),
+        keyboard.paginated_subcategories(selected.on_chosen_subcategories),
+        Row(
+            Cancel(Const(LEXICON_MAIN["exit"])),
+            Back(Const(LEXICON_MAIN["back"])),
+        ),
         state=states.BotMenu.select_subcategories,
         getter=getters.get_subcategories
     )
@@ -30,8 +33,11 @@ def subcategories_window():
 def product_window():
     return Window(
         Const(LEXICON_INLINE_MENU["name"]),
-        keyboards.paginated_product(selected.on_chosen_product),
-        Back(Const(LEXICON_MAIN["back"])),
+        keyboard.paginated_product(selected.on_chosen_product),
+        Row(
+            Cancel(Const(LEXICON_MAIN["exit"])),
+            Back(Const(LEXICON_MAIN["back"])),
+        ),
         state=states.BotMenu.select_product,
         getter=getters.get_product
     )
@@ -45,7 +51,10 @@ def product_info_window():
             id="buy_product",
             on_click=selected.on_chosen_product_info,
         ),
-        Back(Const(LEXICON_MAIN["back"])),
+        Row(
+            Cancel(Const(LEXICON_MAIN["exit"])),
+            Back(Const(LEXICON_MAIN["back"])),
+        ),
         state=states.BotMenu.select_product_info,
         getter=getters.get_product_info
     )

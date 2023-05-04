@@ -6,7 +6,10 @@ from dialogs.admin import windows
 def admin_dialogs():
     return [
         Dialog(
-            windows.select_utils_window(),
-
+            windows.categories_window(),
+            windows.subcategories_window(),
+        ),
+        Dialog(
+            windows.product_window(),
         )
     ]

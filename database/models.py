@@ -64,6 +64,7 @@ class Purchases(db.Model):
     id = Column(Integer, Sequence('user_id_seq'), primary_key=True)
     buyer_id = Column(BigInteger)
     item_id = Column(BigInteger)
+    amount = Column(Integer)
     purchase_time = Column(TIMESTAMP)
     successful = Column(Boolean, default=False)
 

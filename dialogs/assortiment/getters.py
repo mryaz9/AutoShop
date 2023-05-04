@@ -2,7 +2,7 @@ from aiogram_dialog import DialogManager
 
 from database.command import database_item
 from database.command.database_item import count_items
-from dialogs.bot_main_menu.states import BotMenu
+from dialogs.assortiment.states import BotMenu
 
 
 async def get_categories(dialog_manager: DialogManager, **kwargs):

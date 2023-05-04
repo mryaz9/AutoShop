@@ -1,6 +1,6 @@
 from aiogram_dialog import Dialog
 
-from dialogs.bot_main_menu import windows
+from dialogs.assortiment import windows
 
 
 def bot_menu_dialogs():
