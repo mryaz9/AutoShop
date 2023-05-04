@@ -2,6 +2,17 @@ from aiogram.fsm.state import StatesGroup, State
 
 
 class AdminMenu(StatesGroup):
+    admin_menu = State()
+
+
+class AddAssortiment(StatesGroup):
     select_categories = State()
     select_subcategories = State()
-    select_product = State()
+    name = State()
+    amount = State()
+    photo = State()
+    price = State()
+    time_action = State()
+    description = State()
+
+    confirm = State()
