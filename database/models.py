@@ -47,7 +47,7 @@ class Items(db.Model):
     amount = Column(Integer)
     photo = Column(String(250))
     price = Column(Integer)
-    time_action = Column(TIMESTAMP)
+    time_action = Column(Integer)
     description = Column(String(255))
 
     admin_id_add = Column(BigInteger)

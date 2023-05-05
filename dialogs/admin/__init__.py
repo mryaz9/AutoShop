@@ -10,6 +10,10 @@ def admin_dialogs():
         ),
         Dialog(
             windows.categories_window(),
+            windows.add_categories_code_window(),
+            windows.add_categories_name_window(),
+            windows.add_subcategories_code_window(),
+            windows.add_subcategories_name_window(),
             windows.subcategories_window(),
             windows.name_window(),
             windows.amount_window(),

@@ -72,6 +72,6 @@ LEXICON_FSM_SHOP: dict[str, str] = {
     'time_action': 'Время использования (в днях):',
     'description': 'Описание:',
 
-    'done_1': 'Каталог: {category_name}\nПодкаталог: {subcategory_name}',
-    'done_2': '{name}\n{price}руб\nОписание: {description}'
+    'done_1': 'Каталог: {category_id}\nПодкаталог: {subcategory_id}',
+    'done_2': 'Название: {name}\nКол-во: {amount}\n{price} руб.\nВремя действия: {time_action}\nОписание: {description}'
 }

@@ -1,5 +1,3 @@
-from typing import List
-
 from sqlalchemy import and_
 
 from database.init_database import db
@@ -13,12 +11,12 @@ async def add_item(**kwargs):
 
 
 # Функция для вывода товаров с РАЗНЫМИ категориями
-async def get_categories() -> List[Items]:
+async def get_categories() -> list[Items]:
     return await Items.query.distinct(Items.category_name).gino.all()
 
 
 # Функция для вывода товаров с РАЗНЫМИ подкатегориями в выбранной категории
-async def get_subcategories(category) -> List[Items]:
+async def get_subcategories(category) -> list[Items]:
     return await Items.query.distinct(Items.subcategory_name).where(Items.category_code == category).gino.all()
 
 
@@ -39,7 +37,7 @@ async def count_items(category_code, subcategory_code=None):
 
 
 # Функция вывода всех товаров, которые есть в переданных категории и подкатегории
-async def get_items(category_code, subcategory_code) -> List[Items]:
+async def get_items(category_code, subcategory_code) -> list[Items]:
     item = await Items.query.where(
         and_(Items.category_code == category_code,
              Items.subcategory_code == subcategory_code)

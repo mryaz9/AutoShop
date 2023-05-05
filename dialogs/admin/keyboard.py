@@ -1,7 +1,9 @@
 import operator
 
-from aiogram_dialog.widgets.kbd import ScrollingGroup, Select
-from aiogram_dialog.widgets.text import Format
+from aiogram_dialog.widgets.kbd import ScrollingGroup, Select, Row, Button, Back
+from aiogram_dialog.widgets.text import Format, Const
+
+from lexicon.lexicon_ru import LEXICON_MAIN
 
 SCROLLING_HEIGHT = 6
 SCROLLING_WIDTH = 1
@@ -49,4 +51,15 @@ def paginated_product(on_click):
         id="product_id",
         width=SCROLLING_WIDTH,
         height=SCROLLING_HEIGHT,
+    )
+
+
+def confirm_kb(on_click):
+    return Row(
+        Button(
+            Const("Да"),
+            id="confirm_yes",
+            on_click=on_click
+        ),
+        Back(Const(LEXICON_MAIN["back"])),
     )
