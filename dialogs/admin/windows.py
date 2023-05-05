@@ -41,7 +41,7 @@ def subcategories_window():
         Const(LEXICON_INLINE_MENU["subcategory"]),
         keyboard.paginated_subcategories(selected.on_chosen_subcategories),
         Button(Const(
-            LEXICON_FSM_SHOP["add_new_category"]), id="add_new_subcategory", on_click=selected.on_add_new_category
+            LEXICON_FSM_SHOP["add_new_category"]), id="add_new_subcategory", on_click=selected.on_add_new_subcategory
         ),
         Back(Const(LEXICON_MAIN["back"])),
         Cancel(Const(LEXICON_MAIN["exit"])),
