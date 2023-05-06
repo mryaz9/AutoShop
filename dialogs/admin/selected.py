@@ -4,12 +4,15 @@ from aiogram.types import CallbackQuery, Message
 from aiogram_dialog import DialogManager, DialogProtocol
 from aiogram_dialog.widgets.input import MessageInput
 
-from database.command.database_item import add_item, get_categories, get_subcategories
-from dialogs.admin.states import AddAssortiment
+from database.command.category import get_categories, get_subcategories
+from database.command.item import add_item
+from dialogs.admin.states import AddItem, Category
 from lexicon.lexicon_ru import LEXICON_FSM_SHOP
 
 
-async def on_chosen_category(callback: CallbackQuery, widget: Any, manager: DialogManager, item_id: str):
+async def on_chosen_category(callback: CallbackQuery, widget: Any, manager: DialogManager):
+    print(manager.current_context().dialog_data)
+    print(manager.current_context().widget_data)
     categories = await get_categories()
     category_name = ""
     for i in categories:
@@ -19,7 +22,7 @@ async def on_chosen_category(callback: CallbackQuery, widget: Any, manager: Dial
     ctx = manager.current_context()
     ctx.dialog_data.update(category_id=item_id)
     ctx.dialog_data.update(category_name=category_name)
-    await manager.switch_to(AddAssortiment.select_subcategories)
+    await manager.switch_to(AddItem.select_subcategories)
 
 
 async def on_chosen_subcategories(callback: CallbackQuery, widget: Any, manager: DialogManager, item_id: str):
@@ -33,46 +36,63 @@ async def on_chosen_subcategories(callback: CallbackQuery, widget: Any, manager:
 
     ctx.dialog_data.update(subcategory_id=item_id)
     ctx.dialog_data.update(subcategory_name=subcategories_name)
-    await manager.switch_to(AddAssortiment.name)
+    await manager.switch_to(AddItem.name)
+
+
+
 
 
 async def on_chosen_name(message: Message, input_message: MessageInput, manager: DialogManager):
     ctx = manager.current_context()
     ctx.dialog_data.update(name=message.text)
-    await manager.switch_to(AddAssortiment.amount)
+    await manager.switch_to(AddItem.amount)
 
 
 async def on_chosen_amount(message: Message, input_message: MessageInput, manager: DialogManager):
     if message.text.isdigit():
         ctx = manager.current_context()
         ctx.dialog_data.update(amount=message.text)
-        await manager.switch_to(AddAssortiment.photo)
+        await manager.switch_to(AddItem.files)
+
+
+async def on_chosen_files(message: Message, input_message: MessageInput, manager: DialogManager):
+    print(message)
+    if message.text.isdigit() and message.text == "0":
+        ctx = manager.current_context()
+        ctx.dialog_data.update(files=None)
+        await manager.switch_to(AddItem.photo)
+
+    else:
+        ctx = manager.current_context()
+        ctx.dialog_data.update(files=message.document.file_id)
+        print(message.document.file_id)
+        await manager.switch_to(AddItem.photo)
 
 
 async def on_chosen_photo(message: Message, input_message: MessageInput, manager: DialogManager):
     ctx = manager.current_context()
     ctx.dialog_data.update(photo=message.photo[-1].file_id)
-    await manager.switch_to(AddAssortiment.price)
+    await manager.switch_to(AddItem.price)
 
 
 async def on_chosen_price(message: Message, input_message: MessageInput, manager: DialogManager):
     if message.text.isdigit():
         ctx = manager.current_context()
         ctx.dialog_data.update(price=message.text)
-        await manager.switch_to(AddAssortiment.time_action)
+        await manager.switch_to(AddItem.time_action)
 
 
 async def on_chosen_time_action(message: Message, input_message: MessageInput, manager: DialogManager):
     if message.text.isdigit():
         ctx = manager.current_context()
         ctx.dialog_data.update(time_action=message.text)
-        await manager.switch_to(AddAssortiment.description)
+        await manager.switch_to(AddItem.description)
 
 
 async def on_chosen_description(message: Message, input_message: MessageInput, manager: DialogManager):
     ctx = manager.current_context()
     ctx.dialog_data.update(description=message.text)
-    await manager.switch_to(AddAssortiment.confirm)
+    await manager.switch_to(AddItem.confirm)
 
 
 async def on_chosen_confirm(callback: CallbackQuery, widget: Any, manager: DialogManager):
@@ -91,36 +111,22 @@ async def on_chosen_confirm(callback: CallbackQuery, widget: Any, manager: Dialo
     await manager.done()
 
 
-async def on_add_new_category(callback: CallbackQuery, widget: Any, manager: DialogManager):
-    await manager.switch_to(AddAssortiment.add_new_categories_code)
-
-
-async def on_add_new_category_code(message: Message, input_message: MessageInput, manager: DialogManager):
-    ctx = manager.current_context()
-    ctx.dialog_data.update(category_id=message.text)
-    await manager.switch_to(AddAssortiment.add_new_categories_name)
-
 
 async def on_add_new_category_name(message: Message, input_message: MessageInput, manager: DialogManager):
     ctx = manager.current_context()
     ctx.dialog_data.update(category_name=message.text)
-    await manager.switch_to(AddAssortiment.add_new_subcategories_code)
-
-
-async def on_add_new_subcategory(callback: CallbackQuery, widget: Any, manager: DialogManager):
-    await manager.switch_to(AddAssortiment.add_new_subcategories_code)
+    await manager.switch_to(Category.add_new_subcategories_code)
 
 
 async def on_add_new_subcategory_code(message: Message, input_message: MessageInput, manager: DialogManager):
     ctx = manager.current_context()
     ctx.dialog_data.update(subcategory_id=message.text)
-    await manager.switch_to(AddAssortiment.add_new_subcategories_name)
+    await manager.switch_to(AddItem.add_new_subcategories_name)
 
 
 async def on_add_new_subcategory_name(message: Message, input_message: MessageInput, manager: DialogManager):
     ctx = manager.current_context()
     ctx.dialog_data.update(subcategory_name=message.text)
-    await manager.switch_to(AddAssortiment.name)
-
+    await manager.switch_to(AddItem.name)
 
 

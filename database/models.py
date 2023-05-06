@@ -24,7 +24,7 @@ class Users(db.Model):
 class Admins(db.Model):
     __tablename__ = 'admins'
 
-    id = Column(Integer, Sequence('user_id_seq'), primary_key=True)
+    id = Column(Integer, Sequence('admin_id_seq'), primary_key=True)
     user_id = Column(BigInteger)
 
     def __repr__(self):
@@ -32,19 +32,34 @@ class Admins(db.Model):
             self.id, self.user_id)
 
 
+class Category(db.Model):
+    __tablename__ = 'category'
+
+    id = Column(Integer, Sequence('category_id_seq'), primary_key=True)
+    category_name = Column(String(50))
+
+
+class SubCategory(db.Model):
+    __tablename__ = 'subcategory'
+
+    id = Column(Integer, Sequence('subcategory_id_seq'), primary_key=True)
+    category_name = Column(String(250))
+    subcategory_name = Column(String(250))
+
+
 class Items(db.Model):
     __tablename__ = 'items'
     query: sql.Select
 
-    id = Column(Integer, Sequence('user_id_seq'), primary_key=True)
+    id = Column(Integer, Sequence('item_id_seq'), primary_key=True)
     show = Column(Boolean, default=False)
-    category_code = Column(String(20))
-    category_name = Column(String(50))
-    subcategory_code = Column(String(50))
-    subcategory_name = Column(String(20))
+
+    category_name = Column(String(250))
+    subcategory_name = Column(String(250))
 
     name = Column(String(50))
     amount = Column(Integer)
+    files = Column(JSON)
     photo = Column(String(250))
     price = Column(Integer)
     time_action = Column(Integer)
@@ -61,7 +76,7 @@ class Purchases(db.Model):
     __tablename__ = 'purchases'
     query: sql.Select
 
-    id = Column(Integer, Sequence('user_id_seq'), primary_key=True)
+    id = Column(Integer, Sequence('purchases_id_seq'), primary_key=True)
     buyer_id = Column(BigInteger)
     item_id = Column(BigInteger)
     amount = Column(Integer)

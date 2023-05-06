@@ -6,7 +6,7 @@ from aiogram.types import Message
 from aiogram_dialog import DialogManager, StartMode, ShowMode
 from aiogram_dialog.api.exceptions import UnknownState, UnknownIntent
 
-from database.command.database_user import add_new_user
+from database.command.user import add_new_user
 from dialogs.assortiment.states import BotMenu
 from dialogs.main_menu.windows import MainMenu
 from lexicon.lexicon_ru import LEXICON_BUTTON_MAIN, LEXICON_MAIN

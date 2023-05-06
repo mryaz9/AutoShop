@@ -1,5 +1,5 @@
 
-from database.command.database_admin import get_all_admin
+from database.command.admin import get_all_admin
 from lexicon.lexicon_ru import LEXICON_ADMIN_INFO
 
 

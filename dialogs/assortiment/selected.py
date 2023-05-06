@@ -4,7 +4,7 @@ from aiogram.types import CallbackQuery, Message
 from aiogram_dialog import DialogManager
 from aiogram_dialog.widgets.input import TextInput
 
-from database.command.database_item import get_item
+from database.command.item import get_item
 from dialogs.assortiment.states import BotMenu, BuyProduct
 
 

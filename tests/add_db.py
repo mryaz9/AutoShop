@@ -1,51 +1,27 @@
 
 import asyncio
 
-
-
-from database.command.database_item import add_item
+from database.command.category import add_categories, add_subcategories
 from database.init_database import create_db
+
+categories = ['Услуги', 'Товары']
+subcategories1 = ["Раскрутка", "Рассылка"]
+subcategories2 = ["Телеграм", "Инстаграм", "Твиттер"]
+
+item11 = ["Раскрутка тг", "раскрутка инсты"]
+item21 = ["аккаунт"]
 
 
 # Используем эту функцию, чтобы заполнить базу данных товарами
 async def add_items():
     await create_db()
-    await add_item(name="ASUS",
-                   category_name="🔌 Электроника", category_code="Electronics",
-                   subcategory_name="🖥 Компьютеры", subcategory_code="PCs",
-                   price=100, photo="-", amount=3)
-    await add_item(name="DELL",
-                   category_name="🔌 Электроника", category_code="Electronics",
-                   subcategory_name="🖥 Компьютеры", subcategory_code="PCs",
-                   price=100, photo="-", amount=3)
-    await add_item(name="Apple",
-                   category_name="🔌 Электроника", category_code="Electronics",
-                   subcategory_name="🖥 Компьютеры", subcategory_code="PCs",
-                   price=100, photo="-", amount=3)
-    await add_item(name="Iphone",
-                   category_name="🔌 Электроника", category_code="Electronics",
-                   subcategory_name="☎️ Телефоны", subcategory_code="Phones",
-                   price=100, photo="-", amount=3)
-    await add_item(name="Xiaomi",
-                   category_name="🔌 Электроника", category_code="Electronics",
-                   subcategory_name="☎️ Телефоны", subcategory_code="Phones",
-                   price=100, photo="-", amount=3)
-    await add_item(name="PewDiePie",
-                   category_name="🛍 Услуги Рекламы", category_code="Ads",
-                   subcategory_name="📹 На Youtube", subcategory_code="Youtube",
-                   price=100, photo="-", amount=3)
-    await add_item(name="Топлес",
-                   category_name="🛍 Услуги Рекламы", category_code="Ads",
-                   subcategory_name="📹 На Youtube", subcategory_code="Youtube",
-                   price=100, photo="-", amount=3)
-    await add_item(name="Орлёнок",
-                   category_name="🛍 Услуги Рекламы", category_code="Ads",
-                   subcategory_name="🗣 На Вконтакте", subcategory_code="VK",
-                   price=100, photo="-", amount=3)
-    await add_item(name="МДК",
-                   category_name="🛍 Услуги Рекламы", category_code="Ads",
-                   subcategory_name="🗣 На Вконтакте", subcategory_code="VK",
-                   price=100, photo="-", amount=3)
+    for i in categories:
+        await add_categories(category_name=i)
 
+    for j in subcategories1:
+        await add_subcategories(category_name=categories[0], subcategory_name=j)
+
+    for j in subcategories2:
+        await add_subcategories(category_name=categories[1], subcategory_name=j)
 
 asyncio.run(add_items())

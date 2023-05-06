@@ -1,7 +1,7 @@
 from aiogram.filters import BaseFilter
 from aiogram.types import Message
 
-from database.command import database_admin
+from database.command import admin
 
 
 class IsAdmin(BaseFilter):

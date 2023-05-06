@@ -1,4 +1,5 @@
 import asyncio
+import logging
 
 from aiogram.fsm.storage.memory import MemoryStorage
 from aiogram_dialog import setup_dialogs
@@ -14,7 +15,7 @@ from utils.notify_admin import startup, shutdown
 from config_data.config import Config, load_config
 
 from database.init_database import create_db
-from database.command.database_admin import add_new_admin
+from database.command.admin import add_new_admin
 
 
 def register_all_dialog(dp):
@@ -47,10 +48,8 @@ async def creating_db(config):
 
 
 # Функция конфигурирования и запуска бота
-#@logger.catch
 async def main():
     # Выводим в консоль информацию о начале запуска бота
-    logger.info('Starting bot')
     config: Config = load_config()
     """storage = RedisStorage(
         Redis(host=config.tg_bot.ip),
@@ -75,4 +74,5 @@ async def main():
 
 
 if __name__ == '__main__':
+    logging.basicConfig(level=logging.INFO)
     asyncio.run(main())

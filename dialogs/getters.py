@@ -1,16 +1,16 @@
 from aiogram_dialog import DialogManager
 
-from database.command import database_item
-from database.command.database_item import count_items
+from database.command import item, category
+from database.command.item import count_items
 from dialogs.assortiment.states import BotMenu
 
 
 async def get_categories(dialog_manager: DialogManager, **kwargs):
-    db_categories = await database_item.get_categories()
+    db_categories = await category.get_categories()
     data = {
         "categories": [
-            (f'{category.category_name} ({await count_items(category.category_code)})', category.category_code)
-            for category in db_categories
+            (f'{categorys.category_name} ({await count_items(categorys.id)})', categorys.id)
+            for categorys in db_categories
         ]
     }
     return data
@@ -24,12 +24,12 @@ async def get_subcategories(dialog_manager: DialogManager, **kwargs):
         await dialog_manager.switch_to(BotMenu.select_categories)
         return
 
-    db_subcategories = await database_item.get_subcategories(category=category_id)
+    db_subcategories = await category.get_subcategories(category=int(category_id))
 
     data = {
         "subcategories": [
-            (f'{subcategories.subcategory_name} ({await count_items(category_id, subcategories.subcategory_code)})',
-             subcategories.subcategory_code)
+            (f'{subcategories.subcategory_name} ({await count_items(int(category_id), int(subcategories.id))})',
+             subcategories.id)
             for subcategories in db_subcategories
         ]
     }
@@ -46,10 +46,10 @@ async def get_product(dialog_manager: DialogManager, **kwargs):
         await dialog_manager.switch_to(BotMenu.select_categories)
         return
 
-    db_product = await database_item.get_items(category_code=category_id, subcategory_code=subcategory_id)
+    db_product = await item.get_items(category_id=int(category_id), subcategory_id=int(subcategory_id))
     data = {
         "product": [
-            (f'{product.name} {product.amount} {product.price}', product.id)  # TODO: Добавить количество товара
+            (f'{product.name} {product.amount}шт. {product.price}цена.', product.id)  # TODO: Добавить количество товара
             for product in db_product
         ]
     }
@@ -64,7 +64,7 @@ async def get_product_info(dialog_manager: DialogManager, **kwargs):
         await dialog_manager.switch_to(BotMenu.select_categories)
         return
 
-    db_product_info = await database_item.get_item(int(product_id))
+    db_product_info = await item.get_item(int(product_id))
 
     data = {
         "product": db_product_info
@@ -80,7 +80,7 @@ async def get_buy_product(dialog_manager: DialogManager, **kwargs):
         await dialog_manager.switch_to(BotMenu.select_categories)
         return
 
-    db_product_info = await database_item.get_item(int(product_id))
+    db_product_info = await item.get_item(int(product_id))
     amount = ctx.dialog_data.get("amount")
 
     data = {
@@ -90,3 +90,8 @@ async def get_buy_product(dialog_manager: DialogManager, **kwargs):
         "total_amount": db_product_info.price * amount if amount else None
     }
     return data
+
+
+async def get_confirm_add(dialog_manager: DialogManager, **kwargs):
+    ctx = dialog_manager.current_context()
+    return ctx.dialog_data

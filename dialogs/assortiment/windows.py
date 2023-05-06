@@ -1,9 +1,10 @@
 from aiogram_dialog import Window, Data, DialogManager
 from aiogram_dialog.widgets.input import TextInput
-from aiogram_dialog.widgets.kbd import Cancel, Back, Button, Column, Row
+from aiogram_dialog.widgets.kbd import Cancel, Back, Button, Row
 from aiogram_dialog.widgets.text import Const, Format
 
-from dialogs.assortiment import keyboard, selected, states, getters
+from dialogs.assortiment import selected, states
+from dialogs import getters, keyboard
 from lexicon.lexicon_ru import LEXICON_INLINE_MENU, LEXICON_MAIN
 
 

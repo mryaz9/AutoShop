@@ -45,7 +45,12 @@ LEXICON_BUTTON_ADMIN: dict[str, str] = {
     'show_assortment': 'Скрыть/показать товар',
     'del_assortment': 'Удалить ассортимент',
     'see_admin': 'Администраторы',
-    'exit': 'Выход'
+    'exit': 'Выход',
+
+    'select': 'Выбрать',
+    'hide': 'Скрыть',
+    'edit': 'Изменить',
+    'del': 'Удалить',
 }
 
 LEXICON_FSM_SHOP: dict[str, str] = {
@@ -67,6 +72,7 @@ LEXICON_FSM_SHOP: dict[str, str] = {
 
     'name': 'Наименование:',
     'amount': 'Количество',
+    'files': 'Файлы (обязательно столько же, сколько количества)',
     'price': 'Цена:',
     'photo': 'Фото:',
     'time_action': 'Время использования (в днях):',
