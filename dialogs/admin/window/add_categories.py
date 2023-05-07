@@ -1,7 +1,7 @@
 from aiogram.enums import ContentType
 from aiogram_dialog import Window
 from aiogram_dialog.widgets.input import MessageInput
-from aiogram_dialog.widgets.kbd import Cancel, SwitchTo, Back
+from aiogram_dialog.widgets.kbd import Cancel, SwitchTo, Back, Row
 from aiogram_dialog.widgets.text import Const
 
 from dialogs import keyboard, getters
@@ -22,6 +22,9 @@ def menu_window():
             id="add_subcategory",
             state=states.AddCategories.select_categories
         ),
+        Row(
+            Cancel(Const(LEXICON_MAIN["exit"])),
+        ),
         state=states.AddCategories.categories_menu
     )
 
@@ -30,7 +33,10 @@ def select_categories_window():
     return Window(
         Const(LEXICON_INLINE_MENU["category"]),
         keyboard.paginated_categories(selected.on_select_add_category),
-        Cancel(Const(LEXICON_MAIN["back"])),
+        Row(
+            Cancel(Const(LEXICON_MAIN["exit"])),
+            Back(Const(LEXICON_MAIN["back"])),
+        ),
         state=states.AddCategories.select_categories,
         getter=getters.get_categories
     )
@@ -40,8 +46,10 @@ def add_categories_window():
     return Window(
         Const(LEXICON_FSM_SHOP["new_category_name"]),
         MessageInput(selected.on_add_category, ContentType.TEXT),
-        Back(Const(LEXICON_MAIN["back"])),
-        Cancel(Const(LEXICON_MAIN["exit"])),
+        Row(
+            Cancel(Const(LEXICON_MAIN["exit"])),
+            Back(Const(LEXICON_MAIN["back"])),
+        ),
         state=states.AddCategories.add_categories,
     )
 
@@ -50,8 +58,10 @@ def add_subcategories_window():
     return Window(
         Const(LEXICON_FSM_SHOP["new_subcategory_name"]),
         MessageInput(selected.on_add_subcategory, ContentType.TEXT),
-        Back(Const(LEXICON_MAIN["back"])),
-        Cancel(Const(LEXICON_MAIN["exit"])),
+        Row(
+            Cancel(Const(LEXICON_MAIN["exit"])),
+            Back(Const(LEXICON_MAIN["back"])),
+        ),
         state=states.AddCategories.add_subcategories,
     )
 

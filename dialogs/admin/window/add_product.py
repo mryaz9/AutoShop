@@ -13,7 +13,7 @@ def categories_window():
     return Window(
         Const(LEXICON_INLINE_MENU["category"]),
         keyboard.paginated_categories(selected.on_chosen_category),
-        Cancel(Const(LEXICON_MAIN["back"])),
+        Cancel(Const(LEXICON_MAIN["exit"])),
         state=states.AddItem.select_categories,
         getter=getters.get_categories
     )

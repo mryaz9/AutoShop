@@ -27,8 +27,7 @@ async def get_subcategories(dialog_manager: DialogManager, **kwargs):
     db_subcategories = await category.get_subcategories(category=int(category_id))
 
     data = {
-        "subcategories": [(subcategories.subcategory_name,
-                           subcategories.id)
+        "subcategories": [(subcategories.subcategory_name, subcategories.id)
                           for subcategories in db_subcategories
                           ]
     }

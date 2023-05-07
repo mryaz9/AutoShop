@@ -19,4 +19,4 @@ async def add_subcategories(**kwargs):
 # Функция для вывода товаров с РАЗНЫМИ подкатегориями в выбранной категории
 async def get_subcategories(category) -> list[SubCategory]:
     return await SubCategory.query.distinct(SubCategory.subcategory_name).where(
-        SubCategory.id == category).gino.all()
+        SubCategory.category_id == category).gino.all()
