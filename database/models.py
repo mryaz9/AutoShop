@@ -1,6 +1,7 @@
 from sqlalchemy import (Column, Integer, BigInteger, String,
-                        Sequence, TIMESTAMP, Boolean, JSON, Float)
+                        Sequence, TIMESTAMP, Boolean, JSON, Float, ForeignKey)
 from sqlalchemy import sql
+from sqlalchemy.orm import relationship
 
 from database.init_database import db
 
@@ -36,15 +37,17 @@ class Category(db.Model):
     __tablename__ = 'category'
 
     id = Column(Integer, Sequence('category_id_seq'), primary_key=True)
-    category_name = Column(String(50))
+    category_name = Column(String(250))
+    subcategory_id = relationship("SubCategory", back_populates="category_id")
 
 
 class SubCategory(db.Model):
     __tablename__ = 'subcategory'
 
     id = Column(Integer, Sequence('subcategory_id_seq'), primary_key=True)
-    category_name = Column(String(250))
     subcategory_name = Column(String(250))
+    category_id = Column(ForeignKey("category.id"))
+    category = relationship("Category", back_populates="subcategory_id")
 
 
 class Items(db.Model):
@@ -54,12 +57,12 @@ class Items(db.Model):
     id = Column(Integer, Sequence('item_id_seq'), primary_key=True)
     show = Column(Boolean, default=False)
 
-    category_id = Column(Integer)
-    subcategory_id = Column(Integer)
+    category_id = ForeignKey("category.id")
+    subcategory_id = ForeignKey("subcategory.id")
 
     name = Column(String(50))
     amount = Column(Integer)
-    files = Column(JSON)
+    # files = Column(JSON)
     photo = Column(String(250))
     price = Column(Integer)
     time_action = Column(Integer)

@@ -16,3 +16,10 @@ class AddItem(StatesGroup):
     description = State()
 
     confirm = State()
+
+
+class AddCategories (StatesGroup):
+    categories_menu = State()
+    select_categories = State()
+    add_categories = State()
+    add_subcategories = State()

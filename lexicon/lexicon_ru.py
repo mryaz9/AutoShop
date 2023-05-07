@@ -42,6 +42,7 @@ LEXICON_BUTTON_MAIN: dict[str, str] = {
 
 LEXICON_BUTTON_ADMIN: dict[str, str] = {
     'add_assortment': 'Добавить товар',
+    'add_categories': 'Добавить категории',
     'show_assortment': 'Скрыть/показать товар',
     'del_assortment': 'Удалить ассортимент',
     'see_admin': 'Администраторы',

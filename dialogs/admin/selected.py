@@ -4,9 +4,9 @@ from aiogram.types import CallbackQuery, Message
 from aiogram_dialog import DialogManager, DialogProtocol
 from aiogram_dialog.widgets.input import MessageInput
 
-from database.command.category import get_categories, get_subcategories
+from database.command.category import get_categories, get_subcategories, add_categories, add_subcategories
 from database.command.item import add_item
-from dialogs.admin.states import AddItem
+from dialogs.admin.states import AddItem, AddCategories
 from lexicon.lexicon_ru import LEXICON_FSM_SHOP
 
 
@@ -75,3 +75,27 @@ async def on_chosen_confirm(callback: CallbackQuery, widget: Any, manager: Dialo
     await manager.event.answer(LEXICON_FSM_SHOP["done_yes"])
     await manager.done()
 
+
+async def on_select_add_category(callback: CallbackQuery, widget: Any, manager: DialogManager, item_id: str):
+    ctx = manager.current_context()
+    ctx.dialog_data.update(category_id=item_id)
+    await manager.switch_to(AddCategories.add_subcategories)
+
+
+async def on_add_category(message: Message, input_message: MessageInput, manager: DialogManager):
+    category = message.text
+    await add_categories(category_name=category)
+
+    await manager.event.answer(f"Категория {category} добавлена успешно!")
+    await manager.done()
+
+
+async def on_add_subcategory(message: Message, input_message: MessageInput, manager: DialogManager):
+    ctx = manager.current_context()
+    category_id = ctx.dialog_data.get("category_id")
+
+    subcategory = message.text
+    await add_subcategories(category_id=int(category_id), subcategory_name=subcategory)
+
+    await manager.event.answer(f"Подкатегория {subcategory} добавлена успешно!")
+    await manager.done()

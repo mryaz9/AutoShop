@@ -9,8 +9,8 @@ async def get_categories(dialog_manager: DialogManager, **kwargs):
     db_categories = await category.get_categories()
     data = {
         "categories": [
-            (f'{categorys.category_name} ({await count_items(categorys.id)})', categorys.id)
-            for categorys in db_categories
+            (categories.category_name, categories.id)
+            for categories in db_categories
         ]
     }
     return data
@@ -27,11 +27,10 @@ async def get_subcategories(dialog_manager: DialogManager, **kwargs):
     db_subcategories = await category.get_subcategories(category=int(category_id))
 
     data = {
-        "subcategories": [
-            (f'{subcategories.subcategory_name} ({await count_items(int(category_id), int(subcategories.id))})',
-             subcategories.id)
-            for subcategories in db_subcategories
-        ]
+        "subcategories": [(subcategories.subcategory_name,
+                           subcategories.id)
+                          for subcategories in db_subcategories
+                          ]
     }
     return data
 

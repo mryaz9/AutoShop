@@ -1,6 +1,6 @@
 from aiogram_dialog import Dialog
 
-from dialogs.admin.window import menu, add_product
+from dialogs.admin.window import menu, add_product, add_categories
 
 
 def admin_dialogs():
@@ -18,5 +18,11 @@ def admin_dialogs():
             add_product.time_action_window(),
             add_product.description_window(),
             add_product.confirm_window(),
+        ),
+        Dialog(
+            add_categories.menu_window(),
+            add_categories.select_categories_window(),
+            add_categories.add_categories_window(),
+            add_categories.add_subcategories_window(),
         )
     ]
