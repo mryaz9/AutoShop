@@ -12,24 +12,22 @@ from dialogs.assortiment import bot_menu_dialogs
 from dialogs.main_menu import main_menu_dialogs
 from handlers import user, admin, other
 from utils.notify_admin import startup, shutdown
-from config_data.config import Config, load_config
+from config.config import Config, load_config
 
 from database.init_database import create_db
 from database.command.admin import add_new_admin
 
 
-def register_all_dialog(dp):
-    dialog = bot_menu_dialogs()
-    for i in dialog:
-        dp.include_router(i)
-
-    dialog2 = admin_dialogs()
-    for i in dialog2:
-        dp.include_router(i)
-
-    dialog3 = main_menu_dialogs()
-    for i in dialog3:
-        dp.include_router(i)
+def register_all_dialog(dp) -> None:
+    logger.info("Register dialogs")
+    dialogs = [
+        bot_menu_dialogs,
+        admin_dialogs,
+        main_menu_dialogs
+    ]
+    for dialog in dialogs:
+        for i in dialog():
+            dp.include_router(i)
 
     setup_dialogs(dp)
 
@@ -38,8 +36,8 @@ def register_all_handlers(dp):
     # dp.startup.register(startup)
     # dp.shutdown.register(shutdown)
     dp.include_router(user.router)
-    dp.include_router(admin.router)
-    dp.include_router(other.router)
+    #dp.include_router(admin.router)
+    #dp.include_router(other.router)
 
 
 async def creating_db(config):
@@ -67,8 +65,15 @@ async def main():
     register_all_handlers(dp)
 
     await bot.delete_webhook(drop_pending_updates=True)
-    await dp.start_polling(bot)
 
+    try:
+        logger.info("Start bot")
+        await dp.start_polling(bot)
+    finally:
+        await dp.storage.close()
+        await bot.session.close()
+
+    logger.info("Stop bot!")
     # Проверяет старые апдейты с учетом имеющихся хендлеров
     # await dp.start_polling(bot, allowed_updates=dp.resolve_used_update_types())
 

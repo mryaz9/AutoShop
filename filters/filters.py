@@ -7,6 +7,6 @@ from database.command import admin
 class IsAdmin(BaseFilter):
     async def __call__(self, message: Message) -> bool:
         user_id = message.from_user.id
-        admin = await database_admin.get_admin(user_id)
-        if admin:
+        adminbool = await admin.get_admin(user_id)
+        if adminbool:
             return True

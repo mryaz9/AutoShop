@@ -6,7 +6,30 @@ from aiogram_dialog.widgets.text import Const, Format
 
 from dialogs import keyboard, getters
 from dialogs.admin import selected, states
-from lexicon.lexicon_ru import LEXICON_FSM_SHOP, LEXICON_MAIN
+from lexicon.lexicon_ru import LEXICON_FSM_SHOP, LEXICON_MAIN, LEXICON_INLINE_MENU
+
+
+def categories_window():
+    return Window(
+        Const(LEXICON_INLINE_MENU["category"]),
+        keyboard.paginated_categories(selected.on_chosen_category),
+        Cancel(Const(LEXICON_MAIN["back"])),
+        state=states.AddItem.categories,
+        getter=getters.get_categories
+    )
+
+
+def subcategories_window():
+    return Window(
+        Const(LEXICON_INLINE_MENU["subcategory"]),
+        keyboard.paginated_subcategories(selected.on_chosen_subcategories),
+        Row(
+            Cancel(Const(LEXICON_MAIN["exit"])),
+            Back(Const(LEXICON_MAIN["back"])),
+        ),
+        state=states.AddItem.subcategories,
+        getter=getters.get_subcategories
+    )
 
 
 def name_window():

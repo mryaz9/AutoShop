@@ -3,37 +3,24 @@ from typing import Any
 from aiogram.types import CallbackQuery, Message
 from aiogram_dialog import DialogManager, DialogProtocol
 from aiogram_dialog.widgets.input import MessageInput
+from loguru import logger
 
 from database.command.category import get_categories, get_subcategories
 from database.command.item import add_item
-from dialogs.admin.states import AddItem, Category, SubCategory, Product
+from dialogs.admin.states import AddItem
 from lexicon.lexicon_ru import LEXICON_FSM_SHOP
 
 
 async def on_chosen_category(callback: CallbackQuery, widget: Any, manager: DialogManager, item_id: str):
-
     ctx = manager.current_context()
     ctx.dialog_data.update(category_id=item_id)
-    await manager.start(SubCategory.select_subcategories, data=ctx)
+    await manager.switch_to(AddItem.subcategories)
 
 
 async def on_chosen_subcategories(callback: CallbackQuery, widget: Any, manager: DialogManager, item_id: str):
     ctx = manager.current_context()
-    category_id = ctx.start_data.get("category_id")
-    ctx.dialog_data.update(category_id=category_id)
     ctx.dialog_data.update(subcategory_id=item_id)
-    await manager.start(Product.select_product, data=ctx)
-
-
-async def on_chosen_products(callback: CallbackQuery, widget: Any, manager: DialogManager, item_id: str):
-    ctx = manager.current_context()
-    category_id = ctx.start_data.get("category_id")
-    subcategory_id = ctx.start_data.get("subcategory_id")
-    ctx.dialog_data.update(category_id=category_id)
-    ctx.dialog_data.update(subcategory_id=subcategory_id)
-    ctx.dialog_data.update(product=item_id)
-
-    await manager.start(Product.select_product, data=ctx)
+    await manager.switch_to(AddItem.amount)
 
 
 async def on_chosen_name(message: Message, input_message: MessageInput, manager: DialogManager):
@@ -50,7 +37,6 @@ async def on_chosen_amount(message: Message, input_message: MessageInput, manage
 
 
 async def on_chosen_files(message: Message, input_message: MessageInput, manager: DialogManager):
-    print(message)
     if message.text.isdigit() and message.text == "0":
         ctx = manager.current_context()
         ctx.dialog_data.update(files=None)
@@ -103,24 +89,4 @@ async def on_chosen_confirm(callback: CallbackQuery, widget: Any, manager: Dialo
 
     await manager.event.answer(LEXICON_FSM_SHOP["done_yes"])
     await manager.done()
-
-
-
-async def on_add_new_category_name(message: Message, input_message: MessageInput, manager: DialogManager):
-    ctx = manager.current_context()
-    ctx.dialog_data.update(category_name=message.text)
-    await manager.switch_to(Category.add_new_subcategories_code)
-
-
-async def on_add_new_subcategory_code(message: Message, input_message: MessageInput, manager: DialogManager):
-    ctx = manager.current_context()
-    ctx.dialog_data.update(subcategory_id=message.text)
-    await manager.switch_to(AddItem.add_new_subcategories_name)
-
-
-async def on_add_new_subcategory_name(message: Message, input_message: MessageInput, manager: DialogManager):
-    ctx = manager.current_context()
-    ctx.dialog_data.update(subcategory_name=message.text)
-    await manager.switch_to(AddItem.name)
-
 
