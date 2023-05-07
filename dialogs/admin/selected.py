@@ -6,40 +6,20 @@ from aiogram_dialog.widgets.input import MessageInput
 
 from database.command.category import get_categories, get_subcategories
 from database.command.item import add_item
-from dialogs.admin.states import AddItem, Category
+from dialogs.admin.states import AddItem
 from lexicon.lexicon_ru import LEXICON_FSM_SHOP
 
 
-async def on_chosen_category(callback: CallbackQuery, widget: Any, manager: DialogManager):
-    print(manager.current_context().dialog_data)
-    print(manager.current_context().widget_data)
-    categories = await get_categories()
-    category_name = ""
-    for i in categories:
-        if item_id == i.category_code:
-            category_name = i.category_name
-
+async def on_chosen_category(callback: CallbackQuery, widget: Any, manager: DialogManager, item_id: str):
     ctx = manager.current_context()
     ctx.dialog_data.update(category_id=item_id)
-    ctx.dialog_data.update(category_name=category_name)
     await manager.switch_to(AddItem.select_subcategories)
 
 
 async def on_chosen_subcategories(callback: CallbackQuery, widget: Any, manager: DialogManager, item_id: str):
     ctx = manager.current_context()
-
-    subcategories = await get_subcategories(ctx.dialog_data.get("category_id"))
-    subcategories_name = ""
-    for i in subcategories:
-        if item_id == i.subcategory_code:
-            subcategories_name = i.subcategory_name
-
     ctx.dialog_data.update(subcategory_id=item_id)
-    ctx.dialog_data.update(subcategory_name=subcategories_name)
     await manager.switch_to(AddItem.name)
-
-
-
 
 
 async def on_chosen_name(message: Message, input_message: MessageInput, manager: DialogManager):
@@ -52,20 +32,6 @@ async def on_chosen_amount(message: Message, input_message: MessageInput, manage
     if message.text.isdigit():
         ctx = manager.current_context()
         ctx.dialog_data.update(amount=message.text)
-        await manager.switch_to(AddItem.files)
-
-
-async def on_chosen_files(message: Message, input_message: MessageInput, manager: DialogManager):
-    print(message)
-    if message.text.isdigit() and message.text == "0":
-        ctx = manager.current_context()
-        ctx.dialog_data.update(files=None)
-        await manager.switch_to(AddItem.photo)
-
-    else:
-        ctx = manager.current_context()
-        ctx.dialog_data.update(files=message.document.file_id)
-        print(message.document.file_id)
         await manager.switch_to(AddItem.photo)
 
 
@@ -100,33 +66,12 @@ async def on_chosen_confirm(callback: CallbackQuery, widget: Any, manager: Dialo
     data = ctx.dialog_data
     admin_id_add = callback.from_user.id
 
-    await add_item(show=True, category_code=data["category_id"],
-                   category_name=data["category_name"], subcategory_name=data["subcategory_name"],
-                   subcategory_code=data["subcategory_id"], name=data["name"],
+    await add_item(show=True, category_id=data["category_id"],
+                   subcategory_id=data["subcategory_id"], name=data["name"],
                    amount=int(data["amount"]), photo=data["photo"],
                    price=int(data["price"]), time_action=int(data["time_action"]),
                    description=data["description"], admin_id_add=admin_id_add)
 
     await manager.event.answer(LEXICON_FSM_SHOP["done_yes"])
     await manager.done()
-
-
-
-async def on_add_new_category_name(message: Message, input_message: MessageInput, manager: DialogManager):
-    ctx = manager.current_context()
-    ctx.dialog_data.update(category_name=message.text)
-    await manager.switch_to(Category.add_new_subcategories_code)
-
-
-async def on_add_new_subcategory_code(message: Message, input_message: MessageInput, manager: DialogManager):
-    ctx = manager.current_context()
-    ctx.dialog_data.update(subcategory_id=message.text)
-    await manager.switch_to(AddItem.add_new_subcategories_name)
-
-
-async def on_add_new_subcategory_name(message: Message, input_message: MessageInput, manager: DialogManager):
-    ctx = manager.current_context()
-    ctx.dialog_data.update(subcategory_name=message.text)
-    await manager.switch_to(AddItem.name)
-
 

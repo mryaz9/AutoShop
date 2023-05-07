@@ -54,8 +54,8 @@ class Items(db.Model):
     id = Column(Integer, Sequence('item_id_seq'), primary_key=True)
     show = Column(Boolean, default=False)
 
-    category_name = Column(String(250))
-    subcategory_name = Column(String(250))
+    category_id = Column(Integer)
+    subcategory_id = Column(Integer)
 
     name = Column(String(50))
     amount = Column(Integer)
