@@ -6,40 +6,34 @@ from aiogram_dialog.widgets.input import MessageInput
 
 from database.command.category import get_categories, get_subcategories
 from database.command.item import add_item
-from dialogs.admin.states import AddItem, Category
+from dialogs.admin.states import AddItem, Category, SubCategory, Product
 from lexicon.lexicon_ru import LEXICON_FSM_SHOP
 
 
-async def on_chosen_category(callback: CallbackQuery, widget: Any, manager: DialogManager):
-    print(manager.current_context().dialog_data)
-    print(manager.current_context().widget_data)
-    categories = await get_categories()
-    category_name = ""
-    for i in categories:
-        if item_id == i.category_code:
-            category_name = i.category_name
+async def on_chosen_category(callback: CallbackQuery, widget: Any, manager: DialogManager, item_id: str):
 
     ctx = manager.current_context()
     ctx.dialog_data.update(category_id=item_id)
-    ctx.dialog_data.update(category_name=category_name)
-    await manager.switch_to(AddItem.select_subcategories)
+    await manager.start(SubCategory.select_subcategories, data=ctx)
 
 
 async def on_chosen_subcategories(callback: CallbackQuery, widget: Any, manager: DialogManager, item_id: str):
     ctx = manager.current_context()
-
-    subcategories = await get_subcategories(ctx.dialog_data.get("category_id"))
-    subcategories_name = ""
-    for i in subcategories:
-        if item_id == i.subcategory_code:
-            subcategories_name = i.subcategory_name
-
+    category_id = ctx.start_data.get("category_id")
+    ctx.dialog_data.update(category_id=category_id)
     ctx.dialog_data.update(subcategory_id=item_id)
-    ctx.dialog_data.update(subcategory_name=subcategories_name)
-    await manager.switch_to(AddItem.name)
+    await manager.start(Product.select_product, data=ctx)
 
 
+async def on_chosen_products(callback: CallbackQuery, widget: Any, manager: DialogManager, item_id: str):
+    ctx = manager.current_context()
+    category_id = ctx.start_data.get("category_id")
+    subcategory_id = ctx.start_data.get("subcategory_id")
+    ctx.dialog_data.update(category_id=category_id)
+    ctx.dialog_data.update(subcategory_id=subcategory_id)
+    ctx.dialog_data.update(product=item_id)
 
+    await manager.start(Product.select_product, data=ctx)
 
 
 async def on_chosen_name(message: Message, input_message: MessageInput, manager: DialogManager):

@@ -4,8 +4,8 @@ from aiogram_dialog.widgets.input import MessageInput
 from aiogram_dialog.widgets.kbd import Button, Cancel, Row, Back, SwitchTo
 from aiogram_dialog.widgets.text import Const
 
-from dialogs import getters
-from dialogs.admin import selected, states, keyboard
+from dialogs import getters, keyboard
+from dialogs.admin import selected, states
 from lexicon.lexicon_ru import LEXICON_INLINE_MENU, LEXICON_FSM_SHOP, LEXICON_MAIN
 
 
