@@ -1,4 +1,5 @@
 from aiogram_dialog import DialogManager
+from loguru import logger
 
 from database.command import item, category
 from database.command.item import count_items
@@ -24,7 +25,11 @@ async def get_subcategories(dialog_manager: DialogManager, **kwargs):
         await dialog_manager.switch_to(BotMenu.select_categories)
         return
 
-    db_subcategories = await category.get_subcategories(category=int(category_id))
+    db_subcategories = await category.get_subcategories(category_id=int(category_id))
+    if len(db_subcategories) == 0:
+        await dialog_manager.event.answer("Нет товаров")
+        await dialog_manager.switch_to(BotMenu.select_categories)
+        return
 
     data = {
         "subcategories": [(subcategories.subcategory_name, subcategories.id)
@@ -36,21 +41,21 @@ async def get_subcategories(dialog_manager: DialogManager, **kwargs):
 
 async def get_product(dialog_manager: DialogManager, **kwargs):
     ctx = dialog_manager.current_context()
-    category_id = ctx.dialog_data.get("category_id")
     subcategory_id = ctx.dialog_data.get("subcategory_id")
 
-    if not category_id or not subcategory_id:
+    if not subcategory_id:
         await dialog_manager.event.answer("Сначала выберете подкатегорию")
         await dialog_manager.switch_to(BotMenu.select_categories)
         return
-
-    db_product = await item.get_items(category_id=int(category_id), subcategory_id=int(subcategory_id))
+    logger.info(int(subcategory_id))
+    db_product = await item.get_items(subcategory_id=int(subcategory_id))
     data = {
         "product": [
             (product, product.id)
             for product in db_product  # TODO: Добавить количество товара и отправлять дату не строкой
         ]
     }
+    logger.info(data)
     return data
 
 

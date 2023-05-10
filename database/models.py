@@ -16,7 +16,6 @@ class Users(db.Model):
     username = Column(String(50))
     balance = Column(Float, default=0)
 
-
     def __repr__(self):
         return "<Users(id='{}', fullname='{}', username='{}', balance='{}')>".format(
             self.id, self.full_name, self.username, self.balance)
@@ -58,7 +57,7 @@ class Items(db.Model):
     id = Column(Integer, Sequence('item_id_seq'), primary_key=True)
     show = Column(Boolean, default=True)
 
-    subcategory_id = Column(ForeignKey("subcategory.id"))
+    subcategory_id = Column(Integer, ForeignKey("subcategory.id"))
 
     name = Column(String(50))
     amount = Column(Integer)
@@ -71,8 +70,8 @@ class Items(db.Model):
     admin_id_add = Column(Integer)
 
     def __repr__(self):
-        return "<Items(id='{}', show='{}', category_code='{}', subcategory_code='{}', name='{}', price='{}')>".format(
-            self.id, self.show, self.category_code, self.subcategory_code, self.name, self.price)
+        return "<Items(id='{}', show='{}', subcategory_id='{}', name='{}', price='{}')>".format(
+            self.id, self.show, self.subcategory_id, self.name, self.price)
 
 
 class Purchases(db.Model):

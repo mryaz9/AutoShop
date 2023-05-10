@@ -1,3 +1,4 @@
+from loguru import logger
 from sqlalchemy import and_
 
 from database.init_database import db
@@ -5,8 +6,8 @@ from database.models import Items, Category, SubCategory
 
 
 # Функция для создания нового товара в базе данных. Принимает все возможные аргументы, прописанные в Item
-async def add_item(**kwargs):
-    new_item = await Items(**kwargs).create()
+async def add_item(items: Items):
+    new_item = await items.create()
     return new_item
 
 
@@ -27,11 +28,8 @@ async def count_items(category_id, subcategory_id=None):
 
 
 # Функция вывода всех товаров, которые есть в переданных категории и подкатегории
-async def get_items(category_id, subcategory_id) -> list[Items]:
-    item = await Items.query.where(
-        and_(Category.id == category_id,
-             SubCategory.id == subcategory_id)
-    ).gino.all()
+async def get_items(subcategory_id) -> list[Items]:
+    item = await Items.query.distinct(Items.name).where(Items.subcategory_id == subcategory_id).gino.all()
     return item
 
 
