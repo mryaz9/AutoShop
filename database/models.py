@@ -24,6 +24,7 @@ class Users(db.Model):
 
 class Admins(db.Model):
     __tablename__ = 'admins'
+    query: sql.Select
 
     id = Column(Integer, Sequence('admin_id_seq'), primary_key=True)
     user_id = Column(BigInteger)
@@ -35,19 +36,19 @@ class Admins(db.Model):
 
 class Category(db.Model):
     __tablename__ = 'category'
+    query: sql.Select
 
     id = Column(Integer, Sequence('category_id_seq'), primary_key=True)
     category_name = Column(String(250))
-    subcategory_id = relationship("SubCategory", back_populates="category_id")
 
 
 class SubCategory(db.Model):
     __tablename__ = 'subcategory'
+    query: sql.Select
 
     id = Column(Integer, Sequence('subcategory_id_seq'), primary_key=True)
     subcategory_name = Column(String(250))
     category_id = Column(ForeignKey("category.id"))
-    category = relationship("Category", back_populates="subcategory_id")
 
 
 class Items(db.Model):
@@ -57,8 +58,7 @@ class Items(db.Model):
     id = Column(Integer, Sequence('item_id_seq'), primary_key=True)
     show = Column(Boolean, default=False)
 
-    category_id = ForeignKey("category.id")
-    subcategory_id = ForeignKey("subcategory.id")
+    subcategory_id = Column(ForeignKey("subcategory.id"))
 
     name = Column(String(50))
     amount = Column(Integer)
@@ -68,7 +68,7 @@ class Items(db.Model):
     time_action = Column(Integer)
     description = Column(String(255))
 
-    admin_id_add = Column(BigInteger)
+    admin_id_add = Column(Integer)
 
     def __repr__(self):
         return "<Items(id='{}', show='{}', category_code='{}', subcategory_code='{}', name='{}', price='{}')>".format(
@@ -80,8 +80,8 @@ class Purchases(db.Model):
     query: sql.Select
 
     id = Column(Integer, Sequence('purchases_id_seq'), primary_key=True)
-    buyer_id = Column(BigInteger)
-    item_id = Column(BigInteger)
+    buyer_id = Column(ForeignKey("users.id"))
+    item_id = Column(ForeignKey("items.id"))
     amount = Column(Integer)
     purchase_time = Column(TIMESTAMP)
     successful = Column(Boolean, default=False)

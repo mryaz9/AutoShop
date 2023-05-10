@@ -1,7 +1,7 @@
 import operator
 
 from aiogram_dialog.widgets.kbd import ScrollingGroup, Select, Row, Button, Back
-from aiogram_dialog.widgets.text import Format, Const
+from aiogram_dialog.widgets.text import Format, Const, Multi
 
 from lexicon.lexicon_ru import LEXICON_MAIN
 
@@ -18,6 +18,7 @@ def paginated_categories(on_click):
             items="categories",
             on_click=on_click
         ),
+        hide_pager=True,
         id="categories_id",
         width=SCROLLING_WIDTH,
         height=SCROLLING_HEIGHT,
@@ -33,6 +34,7 @@ def paginated_subcategories(on_click):
             items="subcategories",
             on_click=on_click
         ),
+        hide_pager=True,
         id="subcategories_id",
         width=SCROLLING_WIDTH,
         height=SCROLLING_HEIGHT,
@@ -42,12 +44,17 @@ def paginated_subcategories(on_click):
 def paginated_product(on_click):
     return ScrollingGroup(
         Select(
-            Format('{item[0]}'),
+            Multi(
+                Format("{item[0].name}"),
+                Format("{item[0].price}руб."),
+                sep="\n",
+            ),
             id="s_scroll_product",
             item_id_getter=operator.itemgetter(1),
             items="product",
             on_click=on_click
         ),
+        hide_pager=True,
         id="product_id",
         width=SCROLLING_WIDTH,
         height=SCROLLING_HEIGHT,

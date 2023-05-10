@@ -26,7 +26,7 @@ LEXICON_INLINE_MENU: dict[str, str] = {
     'subcategory': 'Подкаталог:',
     'name': 'Наименование:',
     'card': 'Товар',
-    'item': '{product.name}\n{product.price}руб.\nОписание: {product.description}'
+    'item': ''
 }
 LEXICON_COMMANDS: dict[str, str] = {
     '/start': 'Начало работы',

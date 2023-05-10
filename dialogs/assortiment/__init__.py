@@ -15,5 +15,5 @@ def bot_menu_dialogs():
         Dialog(
             windows.buy_product_window(),
             windows.confirm_buy_window()
-        )
+        ),
     ]

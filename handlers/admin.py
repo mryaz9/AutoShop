@@ -5,11 +5,10 @@ from aiogram_dialog import DialogManager
 
 from dialogs.admin.states import AdminMenu
 from dialogs.assortiment.states import BotMenu
-from filters.filters import IsAdmin
 from lexicon.lexicon_ru import LEXICON_ADMIN, LEXICON_BUTTON_ADMIN, LEXICON_BUTTON_MAIN
 
 router: Router = Router()
-router.message.filter(IsAdmin())
+router.message.filter()
 
 '''
 @router.message(Command(commands=['admin']))

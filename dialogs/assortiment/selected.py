@@ -29,9 +29,11 @@ async def on_chosen_product(callback: CallbackQuery, widget: Any, manager: Dialo
 async def on_chosen_product_info(callback: CallbackQuery, widget: Any, manager: DialogManager):
     ctx = manager.current_context()
     product_id = ctx.dialog_data.get("product_id")
+    # Todo: Добавить проверку на тип товара
+    # await manager.start(BuyProduct.enter_amount, data={
+    #    "product_id": product_id})
     await manager.start(BuyProduct.enter_amount, data={
-        "product_id": product_id
-    })
+        "product_id": product_id})
 
 
 async def on_entered_amount(message: Message, widget: TextInput, manager: DialogManager, amount: str):
@@ -42,9 +44,10 @@ async def on_entered_amount(message: Message, widget: TextInput, manager: Dialog
         return
     amount = int(amount)
     product_info = await get_item(int(product_id))
-    if product_info.amount < amount:
-        await message.answer("Недостаточно товаров")
-        return
+    if product_info.amount is not None:
+        if product_info.amount < amount:
+            await message.answer("Недостаточно товаров")
+            return
     ctx.dialog_data.update(amount=amount)
     await manager.switch_to(BuyProduct.confirm)
 

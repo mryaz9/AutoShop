@@ -1,7 +1,10 @@
+from typing import Dict
+
 from aiogram_dialog import Window, Data, DialogManager
+from aiogram_dialog.widgets.common import Whenable
 from aiogram_dialog.widgets.input import TextInput
-from aiogram_dialog.widgets.kbd import Cancel, Back, Button, Row
-from aiogram_dialog.widgets.text import Const, Format
+from aiogram_dialog.widgets.kbd import Cancel, Back, Button, Row, PrevPage, NextPage
+from aiogram_dialog.widgets.text import Const, Format, Multi
 
 from dialogs.assortiment import selected, states
 from dialogs import getters, keyboard
@@ -12,6 +15,14 @@ def categories_window():
     return Window(
         Const(LEXICON_INLINE_MENU["category"]),
         keyboard.paginated_categories(selected.on_chosen_category),
+        Row(
+            PrevPage(
+                scroll="categories_id", text=Format("◀️"),
+            ),
+            NextPage(
+                scroll="categories_id", text=Format("▶️"),
+            ),
+        ),
         Cancel(Const(LEXICON_MAIN["exit"])),
         state=states.BotMenu.select_categories,
         getter=getters.get_categories
@@ -22,6 +33,14 @@ def subcategories_window():
     return Window(
         Const(LEXICON_INLINE_MENU["subcategory"]),
         keyboard.paginated_subcategories(selected.on_chosen_subcategories),
+        Row(
+            PrevPage(
+                scroll="subcategories_id", text=Format("◀️"),
+            ),
+            NextPage(
+                scroll="subcategories_id", text=Format("▶️"),
+            ),
+        ),
         Row(
             Cancel(Const(LEXICON_MAIN["exit"])),
             Back(Const(LEXICON_MAIN["back"])),
@@ -36,6 +55,14 @@ def product_window():
         Const(LEXICON_INLINE_MENU["name"]),
         keyboard.paginated_product(selected.on_chosen_product),
         Row(
+            PrevPage(
+                scroll="product_id", text=Format("◀️"),
+            ),
+            NextPage(
+                scroll="product_id", text=Format("▶️"),
+            ),
+        ),
+        Row(
             Cancel(Const(LEXICON_MAIN["exit"])),
             Back(Const(LEXICON_MAIN["back"])),
         ),
@@ -46,7 +73,12 @@ def product_window():
 
 def product_info_window():
     return Window(
-        Format(LEXICON_INLINE_MENU["item"]),
+        Multi(
+            Format("{product.name}"),
+            Format("{product.price}руб."),
+            Format("Описание: {product.description}", when=is_when_description),
+            sep="\n",
+        ),
         Button(
             Const(LEXICON_MAIN["buy"]),
             id="buy_product",
@@ -61,32 +93,54 @@ def product_info_window():
     )
 
 
+def is_when_description(data: Dict, widget: Whenable, manager: DialogManager):
+    return data.get("description") is not None
+
+
+def is_when_amount(data: Dict, widget: Whenable, manager: DialogManager):
+    return data.get("amount") is not None
+
+
 def buy_product_window():
     return Window(
-        Format("Для {product}\nИмеется {amount}шт.\nСколько вы хотите купить?"),
+        Multi(
+            Format("{product}"),
+            Format("Имеется {amount}шт.", when=is_when_amount),
+            Format("Сколько вы хотите купить?"),
+            sep="\n",
+        ),
         TextInput(
             id="enter_amount",
             on_success=selected.on_entered_amount,
         ),
-        Cancel(Const(LEXICON_MAIN["back"])),
-        Cancel(Const("Выбрать другой продукт"), id="cancel_sw_to_select", result={"switch_to_window": "select_products"}),
+        Row(
+            Cancel(Const(LEXICON_MAIN["back"])),
+            Cancel(Const("Выбрать другой продукт"), id="cancel_sw_to_select",
+                   result={"switch_to_window": "select_products"}),
+        ),
         state=states.BuyProduct.enter_amount,
         getter=getters.get_buy_product
-
     )
 
 
 def confirm_buy_window():
     return Window(
-        Format("Вы хотите купить {product} {amount_user} шт\nЗа {total_amount}руб.\nВы уверены?"),
+        Multi(
+            Format("Вы хотите купить {product}"),
+            Format("{amount_user} шт", when=is_when_amount),
+            Format("За {total_amount}руб."),
+            Format("Вы уверены?"),
+            sep="\n",
+        ),
         Button(Const("Да"),
                id="confirm_buy",
                on_click=selected.on_confirm_buy),
-        Back(Const("Изменить кол-во")),
-        Cancel(Const("Выбрать другой продукт"),
-               id="cancel_sw_to_select",
-               result={"switch_to_window": "select_products"}),
-
+        Row(
+            Back(Const("Изменить кол-во")),
+            Cancel(Const("Выбрать другой продукт"),
+                   id="cancel_sw_to_select",
+                   result={"switch_to_window": "select_products"}),
+        ),
         state=states.BuyProduct.confirm,
         getter=getters.get_buy_product
     )

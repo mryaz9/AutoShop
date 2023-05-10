@@ -47,8 +47,8 @@ async def get_product(dialog_manager: DialogManager, **kwargs):
     db_product = await item.get_items(category_id=int(category_id), subcategory_id=int(subcategory_id))
     data = {
         "product": [
-            (f'{product.name} {product.amount}шт. {product.price}цена.', product.id)  # TODO: Добавить количество товара
-            for product in db_product
+            (product, product.id)
+            for product in db_product  # TODO: Добавить количество товара и отправлять дату не строкой
         ]
     }
     return data
@@ -92,4 +92,16 @@ async def get_buy_product(dialog_manager: DialogManager, **kwargs):
 
 async def get_confirm_add(dialog_manager: DialogManager, **kwargs):
     ctx = dialog_manager.current_context()
-    return ctx.dialog_data
+    data = ctx.dialog_data
+
+    data_ret = {
+        "subcategory_id": int(data.get("subcategory_id")),
+        "name":  data.get("name"),
+        "amount": data.get("amount"),
+        "photo": data.get("photo"),
+        "price": data.get("price"),
+        "time_action": data.get("time_action"),
+        "description": data.get("description"),
+    }
+
+    return data_ret

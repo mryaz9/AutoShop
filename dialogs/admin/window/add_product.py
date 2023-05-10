@@ -1,7 +1,7 @@
 from aiogram.enums import ContentType
 from aiogram_dialog import Window
 from aiogram_dialog.widgets.input import MessageInput
-from aiogram_dialog.widgets.kbd import Row, Cancel, Back, SwitchTo
+from aiogram_dialog.widgets.kbd import Row, Cancel, Back, SwitchTo, Radio, Next
 from aiogram_dialog.widgets.text import Const, Format
 
 from dialogs import keyboard, getters
@@ -51,6 +51,7 @@ def amount_window():
         Row(
             Cancel(Const(LEXICON_MAIN["exit"])),
             Back(Const(LEXICON_MAIN["back"])),
+            Next(Const("Пропустить"))
         ),
         state=states.AddItem.amount,
     )
@@ -63,6 +64,7 @@ def photo_window():
         Row(
             Cancel(Const(LEXICON_MAIN["exit"])),
             Back(Const(LEXICON_MAIN["back"])),
+            Next(Const("Пропустить"))
         ),
         state=states.AddItem.photo,
     )
@@ -87,6 +89,7 @@ def time_action_window():
         Row(
             Cancel(Const(LEXICON_MAIN["exit"])),
             Back(Const(LEXICON_MAIN["back"])),
+            Next(Const("Пропустить"))
         ),
         state=states.AddItem.time_action,
     )
@@ -99,6 +102,7 @@ def description_window():
         Row(
             Cancel(Const(LEXICON_MAIN["exit"])),
             Back(Const(LEXICON_MAIN["back"])),
+            Next(Const("Пропустить"))
         ),
         state=states.AddItem.description,
     )

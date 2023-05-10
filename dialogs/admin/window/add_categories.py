@@ -35,7 +35,6 @@ def select_categories_window():
         keyboard.paginated_categories(selected.on_select_add_category),
         Row(
             Cancel(Const(LEXICON_MAIN["exit"])),
-            Back(Const(LEXICON_MAIN["back"])),
         ),
         state=states.AddCategories.select_categories,
         getter=getters.get_categories
@@ -48,7 +47,6 @@ def add_categories_window():
         MessageInput(selected.on_add_category, ContentType.TEXT),
         Row(
             Cancel(Const(LEXICON_MAIN["exit"])),
-            Back(Const(LEXICON_MAIN["back"])),
         ),
         state=states.AddCategories.add_categories,
     )
@@ -60,7 +58,6 @@ def add_subcategories_window():
         MessageInput(selected.on_add_subcategory, ContentType.TEXT),
         Row(
             Cancel(Const(LEXICON_MAIN["exit"])),
-            Back(Const(LEXICON_MAIN["back"])),
         ),
         state=states.AddCategories.add_subcategories,
     )
