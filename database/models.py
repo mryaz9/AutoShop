@@ -15,6 +15,7 @@ class Users(db.Model):
     full_name = Column(String(100))
     username = Column(String(50))
     balance = Column(Float, default=0)
+    register_time = Column(DateTime)
 
     def __repr__(self):
         return "<Users(id='{}', fullname='{}', username='{}', balance='{}')>".format(
@@ -87,4 +88,4 @@ class Purchases(db.Model):
 
     def __repr__(self):
         return "<Purchases(id='{}', buyer='{}', item_id='{}', purchase_time='{}', successful='{}')>".format(
-            self.id, self.buyer, self.item_id, self.purchase_time, self.successful)
+            self.id, self.buyer_id, self.item_id, self.purchase_time, self.successful)

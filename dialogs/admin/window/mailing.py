@@ -10,27 +10,26 @@ from lexicon.lexicon_ru import LEXICON_MAIN
 
 def menu_window():
     return Window(
-        Const("Редактирование администраторов"),
+        Const("Рассылка"),
         SwitchTo(
-            Const("Добавить админа"),
-            id="add_category",
-            state=states.AddAdmin.add_admin
+            Const("Создать рассылку"),
+            id="create_mailing",
+            state=states.Mailing.create_mailing
         ),
         Row(
             Cancel(Const(LEXICON_MAIN["exit"])),
         ),
-        state=states.AddAdmin.admin_menu
+        state=states.Mailing.mailing_menu
     )
 
 
-def add_admin_window():
+def create_mailing_window():
     return Window(
-        Const("Введите id"),
-        MessageInput(selected.on_add_admin, ContentType.TEXT),
+        Const("Введите сообщение рассылки"),
+        MessageInput(selected.on_create_mailing, ContentType.TEXT),
         Row(
             Cancel(Const(LEXICON_MAIN["exit"])),
             Back(Const(LEXICON_MAIN["back"])),
         ),
-        state=states.AddAdmin.add_admin,
+        state=states.Mailing.create_mailing
     )
-

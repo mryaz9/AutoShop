@@ -11,6 +11,7 @@ from database.command.item import add_item
 from database.models import Category, SubCategory, Items
 from dialogs.admin.states import AddItem, AddCategories
 from lexicon.lexicon_ru import LEXICON_FSM_SHOP
+from utils.mailing_user import mailing
 
 
 @dataclass()
@@ -131,3 +132,10 @@ async def on_add_admin(message: Message, input_message: MessageInput, manager: D
 
         await manager.event.answer(f"Администратор {message.text} добавлен успешно!")
         await manager.done()
+
+
+async def on_create_mailing(message: Message, input_message: MessageInput, manager: DialogManager):
+    mailing_text = message.text
+    await manager.event.answer(f"Сообщение добавлено успешно!")
+    await mailing(mailing_text)
+    await manager.done()

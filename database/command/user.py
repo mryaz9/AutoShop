@@ -1,3 +1,5 @@
+import datetime
+
 from aiogram import types
 
 from database.init_database import db
@@ -9,6 +11,10 @@ async def get_user(user_id) -> Users:
     return user
 
 
+async def get_all_user():
+    return await Users.query.distinct(Users.user_id).gino.all()
+
+
 async def add_new_user() -> Users:
     user = types.User.get_current()
     old_user = await get_user(user.id)
@@ -18,6 +24,7 @@ async def add_new_user() -> Users:
     new_user.user_id = user.id
     new_user.username = user.username
     new_user.full_name = user.full_name
+    new_user.register_time = datetime.datetime.now()
 
     await new_user.create()
     return new_user

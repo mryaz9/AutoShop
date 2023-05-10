@@ -19,14 +19,19 @@ class AddItem(StatesGroup):
     confirm = State()
 
 
-class AddCategories (StatesGroup):
+class AddCategories(StatesGroup):
     categories_menu = State()
     select_categories = State()
     add_categories = State()
     add_subcategories = State()
 
 
-class AddAdmin (StatesGroup):
+class AddAdmin(StatesGroup):
     admin_menu = State()
     add_admin = State()
+
+
+class Mailing(StatesGroup):
+    mailing_menu = State()
+    create_mailing = State()
 
