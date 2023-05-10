@@ -8,6 +8,7 @@ from aiogram import Bot, Dispatcher
 from dialogs.admin import admin_dialogs
 from dialogs.assortiment import bot_menu_dialogs
 from dialogs.main_menu import main_menu_dialogs
+from dialogs.profile import profile_dialogs
 from handlers import user, other
 from config.config import Config, load_config
 
@@ -19,7 +20,8 @@ def register_all_dialog(dp):
     dialogs = [
         bot_menu_dialogs,
         admin_dialogs,
-        main_menu_dialogs
+        main_menu_dialogs,
+        profile_dialogs
     ]
     for dialog in dialogs:
         for i in dialog():

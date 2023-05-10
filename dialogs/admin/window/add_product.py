@@ -13,7 +13,6 @@ def categories_window():
     return Window(
         Const(LEXICON_INLINE_MENU["category"]),
         keyboard.paginated_categories(selected.on_chosen_category),
-        Cancel(Const(LEXICON_MAIN["exit"])),
         state=states.AddItem.select_categories,
         getter=getters.get_categories
     )
@@ -23,10 +22,6 @@ def subcategories_window():
     return Window(
         Const(LEXICON_INLINE_MENU["subcategory"]),
         keyboard.paginated_subcategories(selected.on_chosen_subcategories),
-        Row(
-            Cancel(Const(LEXICON_MAIN["exit"])),
-            Back(Const(LEXICON_MAIN["back"])),
-        ),
         state=states.AddItem.select_subcategories,
         getter=getters.get_subcategories
     )
@@ -48,10 +43,10 @@ def amount_window():
     return Window(
         Const(LEXICON_FSM_SHOP["amount"]),
         MessageInput(selected.on_chosen_amount, ContentType.TEXT),
+        Next(Const("Пропустить")),
         Row(
             Cancel(Const(LEXICON_MAIN["exit"])),
             Back(Const(LEXICON_MAIN["back"])),
-            Next(Const("Пропустить"))
         ),
         state=states.AddItem.amount,
     )
@@ -61,10 +56,10 @@ def photo_window():
     return Window(
         Const(LEXICON_FSM_SHOP["photo"]),
         MessageInput(selected.on_chosen_photo, ContentType.PHOTO),
+        Next(Const("Пропустить")),
         Row(
             Cancel(Const(LEXICON_MAIN["exit"])),
             Back(Const(LEXICON_MAIN["back"])),
-            Next(Const("Пропустить"))
         ),
         state=states.AddItem.photo,
     )
@@ -86,10 +81,10 @@ def time_action_window():
     return Window(
         Const(LEXICON_FSM_SHOP["time_action"]),
         MessageInput(selected.on_chosen_time_action, ContentType.TEXT),
+        Next(Const("Пропустить")),
         Row(
             Cancel(Const(LEXICON_MAIN["exit"])),
             Back(Const(LEXICON_MAIN["back"])),
-            Next(Const("Пропустить"))
         ),
         state=states.AddItem.time_action,
     )
@@ -99,10 +94,10 @@ def description_window():
     return Window(
         Const(LEXICON_FSM_SHOP["description"]),
         MessageInput(selected.on_chosen_description, ContentType.TEXT),
+        Next(Const("Пропустить")),
         Row(
             Cancel(Const(LEXICON_MAIN["exit"])),
             Back(Const(LEXICON_MAIN["back"])),
-            Next(Const("Пропустить"))
         ),
         state=states.AddItem.description,
     )
@@ -113,7 +108,6 @@ def confirm_window():
         Const("Все правильно?"),
         Format(LEXICON_FSM_SHOP["done_2"]),
         keyboard.confirm_kb(selected.on_chosen_confirm),
-        Cancel(Const(LEXICON_MAIN["exit"])),
         state=states.AddItem.confirm,
         getter=getters.get_confirm_add
     )

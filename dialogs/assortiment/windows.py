@@ -15,15 +15,6 @@ def categories_window():
     return Window(
         Const(LEXICON_INLINE_MENU["category"]),
         keyboard.paginated_categories(selected.on_chosen_category),
-        Row(
-            PrevPage(
-                scroll="categories_id", text=Format("◀️"),
-            ),
-            NextPage(
-                scroll="categories_id", text=Format("▶️"),
-            ),
-        ),
-        Cancel(Const(LEXICON_MAIN["exit"])),
         state=states.BotMenu.select_categories,
         getter=getters.get_categories
     )
@@ -33,18 +24,6 @@ def subcategories_window():
     return Window(
         Const(LEXICON_INLINE_MENU["subcategory"]),
         keyboard.paginated_subcategories(selected.on_chosen_subcategories),
-        Row(
-            PrevPage(
-                scroll="subcategories_id", text=Format("◀️"),
-            ),
-            NextPage(
-                scroll="subcategories_id", text=Format("▶️"),
-            ),
-        ),
-        Row(
-            Cancel(Const(LEXICON_MAIN["exit"])),
-            Back(Const(LEXICON_MAIN["back"])),
-        ),
         state=states.BotMenu.select_subcategories,
         getter=getters.get_subcategories
     )
@@ -54,18 +33,6 @@ def product_window():
     return Window(
         Const(LEXICON_INLINE_MENU["name"]),
         keyboard.paginated_product(selected.on_chosen_product),
-        Row(
-            PrevPage(
-                scroll="product_id", text=Format("◀️"),
-            ),
-            NextPage(
-                scroll="product_id", text=Format("▶️"),
-            ),
-        ),
-        Row(
-            Cancel(Const(LEXICON_MAIN["exit"])),
-            Back(Const(LEXICON_MAIN["back"])),
-        ),
         state=states.BotMenu.select_product,
         getter=getters.get_product
     )
