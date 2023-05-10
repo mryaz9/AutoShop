@@ -16,4 +16,8 @@ def bot_menu_dialogs():
             windows.buy_product_window(),
             windows.confirm_buy_window()
         ),
+        Dialog(
+            windows.payment_window(),
+            windows.successful_window()
+        ),
     ]

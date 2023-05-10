@@ -1,8 +1,9 @@
 from aiogram_dialog import Window
-from aiogram_dialog.widgets.kbd import Cancel, Row, Back, Select
+from aiogram_dialog.widgets.kbd import Cancel, Row, Back, Select, Start
 from aiogram_dialog.widgets.text import Const, Multi, Format
 
-from dialogs.getters import get_profile, get_order
+from dialogs.assortiment.states import Payment
+from dialogs.getters import get_profile, get_orders
 from dialogs.keyboard import paginated_orders
 from dialogs.profile.states import Profile, Purchases
 from lexicon.lexicon_ru import LEXICON_MAIN
@@ -20,6 +21,11 @@ def profile_window():
             Format("🕜 Регистрация: {register_time}"),
             sep="\n"
         ),
+        Start(
+            Const("Пополнить баланс"),
+            id="up_balance",
+            state=Payment.payment
+        ),
         Row(
             Cancel(Const(LEXICON_MAIN["exit"])),
         ),
@@ -33,5 +39,5 @@ def orders_window():
         Const("Заказы:"),
         paginated_orders(on_click=None),  # Todo: Добавить поддержку нажатия на кнопку
         state=Purchases.purchases,
-        getter=get_order
+        getter=get_orders
     )

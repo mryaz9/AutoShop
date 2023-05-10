@@ -11,3 +11,12 @@ class BotMenu(StatesGroup):
 class BuyProduct(StatesGroup):
     enter_amount = State()
     confirm = State()
+
+
+class Payment(StatesGroup):
+    payment = State()
+    payment_crypto_bot = State()
+    payment_qiwi = State()
+    payment_balance = State()
+    successful = State()
+
