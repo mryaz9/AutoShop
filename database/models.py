@@ -1,5 +1,5 @@
 from sqlalchemy import (Column, Integer, BigInteger, String,
-                        Sequence, TIMESTAMP, Boolean, JSON, Float, ForeignKey)
+                        Sequence, TIMESTAMP, Boolean, JSON, Float, ForeignKey, DateTime)
 from sqlalchemy import sql
 from sqlalchemy.orm import relationship
 
@@ -8,6 +8,7 @@ from database.init_database import db
 
 class Users(db.Model):
     __tablename__ = 'users'
+    query: sql.Select
 
     id = Column(Integer, Sequence('user_id_seq'), primary_key=True)
     user_id = Column(BigInteger)
@@ -15,7 +16,6 @@ class Users(db.Model):
     username = Column(String(50))
     balance = Column(Float, default=0)
 
-    query: sql.Select
 
     def __repr__(self):
         return "<Users(id='{}', fullname='{}', username='{}', balance='{}')>".format(
@@ -27,7 +27,7 @@ class Admins(db.Model):
     query: sql.Select
 
     id = Column(Integer, Sequence('admin_id_seq'), primary_key=True)
-    user_id = Column(BigInteger)
+    user_id = Column(BigInteger, primary_key=True)
 
     def __repr__(self):
         return "<Admins(id='{}', user_id='{}')>".format(
@@ -48,7 +48,7 @@ class SubCategory(db.Model):
 
     id = Column(Integer, Sequence('subcategory_id_seq'), primary_key=True)
     subcategory_name = Column(String(250))
-    category_id = Column(ForeignKey("category.id"))
+    category_id = Column(Integer, ForeignKey("category.id"))
 
 
 class Items(db.Model):
@@ -56,7 +56,7 @@ class Items(db.Model):
     query: sql.Select
 
     id = Column(Integer, Sequence('item_id_seq'), primary_key=True)
-    show = Column(Boolean, default=False)
+    show = Column(Boolean, default=True)
 
     subcategory_id = Column(ForeignKey("subcategory.id"))
 
@@ -80,10 +80,10 @@ class Purchases(db.Model):
     query: sql.Select
 
     id = Column(Integer, Sequence('purchases_id_seq'), primary_key=True)
-    buyer_id = Column(ForeignKey("users.id"))
-    item_id = Column(ForeignKey("items.id"))
+    buyer_id = Column(Integer, ForeignKey("users.id"))
+    item_id = Column(Integer, ForeignKey("items.id"))
     amount = Column(Integer)
-    purchase_time = Column(TIMESTAMP)
+    purchase_time = Column(DateTime)
     successful = Column(Boolean, default=False)
 
     def __repr__(self):

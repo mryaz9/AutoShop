@@ -1,6 +1,6 @@
 from gino import Gino
 from gino.schema import GinoSchemaVisitor
-from config_data.config import Config, load_config
+from config.config import Config, load_config
 
 config: Config = load_config()
 db = Gino()

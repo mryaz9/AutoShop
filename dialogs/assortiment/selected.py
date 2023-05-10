@@ -1,3 +1,4 @@
+import datetime
 from typing import Any
 
 from aiogram.types import CallbackQuery, Message
@@ -5,6 +6,9 @@ from aiogram_dialog import DialogManager
 from aiogram_dialog.widgets.input import TextInput
 
 from database.command.item import get_item
+from database.command.purchases import add_purchases
+from database.command.user import get_user
+from database.models import Purchases
 from dialogs.assortiment.states import BotMenu, BuyProduct
 
 
@@ -57,6 +61,16 @@ async def on_confirm_buy(callback: CallbackQuery, widget: Any, manager: DialogMa
     product_id = ctx.start_data.get("product_id")
     amount = ctx.dialog_data.get("amount")
     # TODO: Запрос в бд для покупки товара
+    user = await get_user(int(callback.from_user.id))
+    purchases = Purchases(buyer_id=user.id,
+                          item_id=int(product_id),
+                          amount=int(amount),
+                          purchase_time=datetime.datetime.now())
+
+    await add_purchases(purchases)
+
+    # TODO: Выбор способа оплаты
+
     product_info = await get_item(int(product_id))
     await callback.answer(f"Вы купили {amount} {product_info.name}")
     await manager.done(result={

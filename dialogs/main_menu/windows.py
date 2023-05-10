@@ -18,7 +18,7 @@ def main_menu_window():
         Const(LEXICON_MAIN["start"]),
         Start(Const(LEXICON_BUTTON_MAIN["assortment"]), id="assortment", state=BotMenu.select_categories),
         # Start(Const(LEXICON_BUTTON_MAIN["profile"]), id="profile", state=BannerSG.default),
-        # Start(Const(LEXICON_BUTTON_MAIN["️orders"]), id="️orders", state=Product.show),
+        Start(Const(LEXICON_BUTTON_MAIN["️orders"]), id="️orders", state=Product.show),
         # Start(Const(LEXICON_BUTTON_MAIN["information"]), id="information", state=Product.show),
         Start(Const("Администрирование"), id="admin", state=AdminMenu.admin_menu, when="admin"),
         state=MainMenu.main_menu,
