@@ -3,12 +3,11 @@ from typing import Dict
 from aiogram_dialog import Window, Data, DialogManager
 from aiogram_dialog.widgets.common import Whenable
 from aiogram_dialog.widgets.input import TextInput
-from aiogram_dialog.widgets.kbd import Cancel, Back, Button, Row, PrevPage, NextPage, Start
+from aiogram_dialog.widgets.kbd import Cancel, Back, Button, Row
 from aiogram_dialog.widgets.text import Const, Format, Multi
 
-from dialogs.assortiment import selected, states
 from dialogs import getters, keyboard
-from dialogs.assortiment.states import Payment
+from dialogs.assortiment import selected, states
 from lexicon.lexicon_ru import LEXICON_INLINE_MENU, LEXICON_MAIN
 
 
@@ -111,38 +110,6 @@ def confirm_buy_window():
         ),
         state=states.BuyProduct.confirm,
         getter=getters.get_buy_product
-    )
-
-
-def payment_window():
-    return Window(
-        Const("Выберите способ оплаты"),
-        keyboard.payment_keyboard(),
-        Button(
-            Const("Баланс"),
-            id="balance_pay",
-            on_click=on_pay_balance
-        ),
-        state=states.Payment.payment
-    )
-
-
-def payment_crypto_bot_window():
-    return Window(
-        Const("Оплатите"),
-        state=states.Payment.payment
-    )
-
-
-def successful_window():
-    return Window(
-        Format("Успешно оплачено"),
-        Button(
-            Format("{item[-1]}"),
-            id="successful_pay"
-        ),
-        state=Payment.successful,
-        getter=getters.get_orders
     )
 
 

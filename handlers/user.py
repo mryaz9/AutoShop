@@ -17,7 +17,7 @@ router = Router()
 @router.message(CommandStart())
 async def user_start(message: Message, dialog_manager: DialogManager):
     database_user = await add_new_user()  # TODO: Можно передать имя в диалог менеджер
-    await dialog_manager.start(MainMenu.main_menu)
+    await dialog_manager.start(MainMenu.main_menu, mode=StartMode.RESET_STACK)
 
 
 '''

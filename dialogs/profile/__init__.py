@@ -10,5 +10,6 @@ def profile_dialogs():
         ),
         Dialog(
             windows.orders_window(),
+
         ),
     ]

@@ -4,9 +4,11 @@ import logging
 from aiogram.fsm.storage.memory import MemoryStorage
 from aiogram_dialog import setup_dialogs
 from aiogram import Bot, Dispatcher
+from aiogram_dialog.tools import render_transitions, render_preview
+from loguru import logger
 
 from dialogs.admin import admin_dialogs
-from dialogs.assortiment import bot_menu_dialogs
+from dialogs.assortiment import items_dialogs
 from dialogs.main_menu import main_menu_dialogs
 from dialogs.profile import profile_dialogs
 from handlers import user, other
@@ -14,17 +16,22 @@ from config.config import Config, load_config
 
 from database.init_database import create_db
 from database.command.admin import add_new_admin
+from payment import payment_dialogs
 
 
 def register_all_dialog(dp):
     dialogs = [
-        bot_menu_dialogs,
+        items_dialogs,
         admin_dialogs,
         main_menu_dialogs,
-        profile_dialogs
+        profile_dialogs,
+        payment_dialogs
     ]
+
     for dialog in dialogs:
         for i in dialog():
+            # logger.info(i.windows)
+            # render_transitions(i, title=i.__name__)
             dp.include_router(i)
 
     setup_dialogs(dp)
@@ -39,7 +46,8 @@ def register_all_handlers(dp):
 
 async def creating_db(config):
     await create_db()
-    await add_new_admin(int(config.tg_bot.admin_ids[0]))
+    for admin in config.tg_bot.admin_ids:
+        await add_new_admin(int(admin))
 
 
 # Функция конфигурирования и запуска бота

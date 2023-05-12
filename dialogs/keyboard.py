@@ -3,7 +3,6 @@ import operator
 from aiogram_dialog.widgets.kbd import ScrollingGroup, Select, Row, Button, Back, Group, PrevPage, NextPage, Cancel
 from aiogram_dialog.widgets.text import Format, Const, Multi
 
-from dialogs.assortiment import selected
 from lexicon.lexicon_ru import LEXICON_MAIN
 
 SCROLLING_HEIGHT = 6
@@ -129,24 +128,6 @@ def paginated_orders(on_click):
         Row(
             Cancel(Const(LEXICON_MAIN["exit"])),
         ),
-    )
-
-
-def payment_keyboard():
-    return Group(
-        Button(
-            Const("CryptoBot"),
-            id="crypto_bot",
-            on_click=None
-        ),
-        Button(
-            Const("Qiwi"),
-            id="qiwi_pay",
-            on_click=None
-        ),
-        Row(
-            Cancel(Const(LEXICON_MAIN["exit"]))
-        )
     )
 
 

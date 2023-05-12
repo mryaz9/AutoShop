@@ -1,9 +1,10 @@
 from aiogram_dialog import Dialog
 
 from dialogs.assortiment import windows
+from payment import payment
 
 
-def bot_menu_dialogs():
+def items_dialogs():
     return [
         Dialog(
             windows.categories_window(),
@@ -17,7 +18,6 @@ def bot_menu_dialogs():
             windows.confirm_buy_window()
         ),
         Dialog(
-            windows.payment_window(),
-            windows.successful_window()
+            payment.payment_select_window(),
         ),
     ]

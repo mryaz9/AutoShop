@@ -1,12 +1,13 @@
 from aiogram_dialog import Window
-from aiogram_dialog.widgets.kbd import Cancel, Row, Back, Select, Start
+from aiogram_dialog.widgets.kbd import Cancel, Row, Start
 from aiogram_dialog.widgets.text import Const, Multi, Format
 
-from dialogs.assortiment.states import Payment
+from dialogs import keyboard
 from dialogs.getters import get_profile, get_orders
 from dialogs.keyboard import paginated_orders
 from dialogs.profile.states import Profile, Purchases
 from lexicon.lexicon_ru import LEXICON_MAIN
+from payment.payment import Payment
 
 
 def profile_window():
@@ -24,7 +25,7 @@ def profile_window():
         Start(
             Const("Пополнить баланс"),
             id="up_balance",
-            state=Payment.payment
+            state=Payment.payment_select
         ),
         Row(
             Cancel(Const(LEXICON_MAIN["exit"])),
@@ -41,3 +42,4 @@ def orders_window():
         state=Purchases.purchases,
         getter=get_orders
     )
+
