@@ -7,7 +7,7 @@ from dialogs.getters import get_profile, get_orders
 from dialogs.keyboard import paginated_orders
 from dialogs.profile.states import Profile, Purchases
 from lexicon.lexicon_ru import LEXICON_MAIN
-from payment.payment import Payment
+from payment.states import Payment
 
 
 def profile_window():

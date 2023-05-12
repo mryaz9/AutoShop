@@ -12,76 +12,11 @@ from loguru import logger
 from lexicon.lexicon_ru import LEXICON_MAIN
 
 
-class Payment(StatesGroup):
-    payment_select = State()
-    input_amount = State()
-    payment_qiwi = State()
-    successful = State()
 
 
-def payment_select_window():
-    return Window(
-        Const("Выберите способ оплаты"),
-        Group(
-            SwitchTo(
-                Const("Qiwi"),
-                id="qiwi_pay",
-                state=Payment.input_amount
-            ),
-            Row(
-                Cancel(Const(LEXICON_MAIN["exit"]))
-            )
-        ),
-        state=Payment.payment_select,
-    )
 
 
-def input_amount_window():
-    return Window(
-        Const("Введите сумму в руб."),
-        MessageInput(
-            func=on_input_amount, content_types=ContentType.TEXT
-        ),
-        state=Payment.input_amount
-    )
 
-
-async def on_input_amount(message: Message, message_input: MessageInput, manager: DialogManager):
-    ctx = manager.current_context()
-    if message.text.isdigit():
-        ctx.dialog_data.update(amount=message.text)
-    await manager.switch_to(Payment.payment_qiwi)
-
-
-def payment_qiwi_window():
-    return Window(
-        Const("Оплатите"),
-        Button(
-            Const("Я оплатил"),
-            id="check_payment",
-        ),
-        state=Payment.payment_qiwi
-    )
-
-
-def successful_window():
-    return Window(
-        Format("Успешно оплачено"),
-        Button(
-            Format("{item[-1]}"),
-            id="successful_pay"
-        ),
-        state=Payment.successful,
-    )
-
-async def on_check_payment(callback: CallbackQuery, widget: Any, manager: DialogManager):
-    pass
-
-
-async def get_payment_qiwi(dialog_manager: DialogManager, **kwargs):
-    pass
-
-'''
 
 p2p = QiwiP2PClient(secret_p2p=config.PRIVATE_TOKEN_QIWI)
 @dp.callback_query_handler(lambda x: x.data and x.data.startswith("buy:"))
@@ -115,4 +50,3 @@ async def buy_callback(callback: types.CallbackQuery):
 
     elif await p2p.check_if_bill_was_paid(bill) != True:
         await callback.answer(text=f"Платёж не получен!", show_alert=True)
-'''
