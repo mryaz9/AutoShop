@@ -20,7 +20,7 @@ async def add_new_user() -> Users:
     old_user = await get_user(user.id)
     if old_user:
         return old_user
-    new_user = Users()
+    new_user: Users = Users()
     new_user.user_id = user.id
     new_user.username = user.username
     new_user.full_name = user.full_name
@@ -33,3 +33,22 @@ async def add_new_user() -> Users:
 async def count_users() -> int:
     total = await db.func.count(Users.id).gino.scalar()
     return total
+
+
+async def add_balance(amount: float, user_id: int):
+    user = await get_user(user_id)
+    old_balance = user.balance
+    balance = amount+old_balance
+    user.balance = balance
+    await user.update(balance=balance).apply()
+    await db.gino.create_all()
+
+
+async def reduce_balance(amount: float, user_id: int):
+    user = await get_user(user_id)
+    old_balance = user.balance
+    balance = old_balance-amount
+    user.balance = balance
+    await user.update(balance=balance).apply()
+    await db.gino.create_all()
+

@@ -8,7 +8,7 @@ from loguru import logger
 
 from database.command.item import get_item
 from database.command.purchases import add_purchases, get_purchases
-from database.command.user import get_user
+from database.command.user import get_user, reduce_balance
 from database.models import Purchases
 from dialogs.assortiment.states import BotMenu, BuyProduct
 from utils.notify_admin import new_order
@@ -71,18 +71,24 @@ async def on_confirm_buy(callback: CallbackQuery, widget: Any, manager: DialogMa
 
     await add_purchases(purchases)
 
-    # TODO: Выбор способа оплаты
-
     product_info = await get_item(int(product_id))
-    await callback.answer(f"Вы купили {amount} {product_info.name}", show_alert=True)
 
-    purchases_get: list[Purchases] = await get_purchases(user.id)
-    purchases_get: Purchases = purchases_get[-1]
-    user_name = user.username
-    message_text = f"Номер заказа: {purchases_get.id}\nТовар: {product_info.name}\n" \
-                   f"Кол-во: {purchases_get.amount}\nПокупатель: @{user_name}"
-    await new_order(message_text)
+    # TODO: Выбор способа оплаты
+    if user.balance < product_info.price:
+        await callback.answer("Недостаточно средств", show_alert=True)
 
-    await manager.done(result={
-        "switch_to_window": "select_products"
-    })
+    else:
+        await reduce_balance(product_info.price, user.user_id)
+
+        await callback.answer(f"Вы купили {amount} {product_info.name}", show_alert=True)
+
+        purchases_get: list[Purchases] = await get_purchases(user.id)
+        purchases_get: Purchases = purchases_get[-1]
+        user_name = user.username
+        message_text = f"Номер заказа: {purchases_get.id}\nТовар: {product_info.name}\n" \
+                       f"Кол-во: {purchases_get.amount}\nПокупатель: @{user_name}"
+        await new_order(message_text)
+
+        await manager.done(result={
+            "switch_to_window": "select_products"
+        })
