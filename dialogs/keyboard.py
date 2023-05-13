@@ -1,7 +1,10 @@
 import operator
 
+from aiogram_dialog import DialogManager
+from aiogram_dialog.widgets.common import Whenable
 from aiogram_dialog.widgets.kbd import ScrollingGroup, Select, Row, Button, Back, Group, PrevPage, NextPage, Cancel
 from aiogram_dialog.widgets.text import Format, Const, Multi
+from magic_filter import F
 
 from lexicon.lexicon_ru import LEXICON_MAIN
 
@@ -13,11 +16,14 @@ def paginated_categories(on_click):
     return Group(
         ScrollingGroup(
             Select(
-                Format('{item[0]}'),
+                Format(
+                    '{item[0]}',
+                    #when=is_show
+                    ),
                 id="s_scroll_categories",
                 item_id_getter=operator.itemgetter(1),
                 items="categories",
-                on_click=on_click
+                on_click=on_click,
             ),
             hide_pager=True,
             id="categories_id",
@@ -42,11 +48,14 @@ def paginated_subcategories(on_click):
     return Group(
         ScrollingGroup(
             Select(
-                Format('{item[0]}'),
+                Format(
+                    '{item[0]}',
+                    #when=is_show
+                       ),
                 id="s_scroll_subcategories",
                 item_id_getter=operator.itemgetter(1),
                 items="subcategories",
-                on_click=on_click
+                on_click=on_click,
             ),
             hide_pager=True,
             id="subcategories_id",
@@ -68,19 +77,23 @@ def paginated_subcategories(on_click):
     )
 
 
-def paginated_product(on_click):
+def paginated_product(on_click, show=None, hide=lambda d, w, m: False):
     return Group(
         ScrollingGroup(
             Select(
                 Multi(
                     Format("{item[0].name}"),
                     Format("{item[0].price}руб."),
+                    Format("{item[0].show}", when=hide),
+
                     sep="\n",
+                    when=show
                 ),
+
                 id="s_scroll_product",
                 item_id_getter=operator.itemgetter(1),
                 items="product",
-                on_click=on_click
+                on_click=on_click,
             ),
             hide_pager=True,
             id="product_id",
@@ -100,6 +113,11 @@ def paginated_product(on_click):
             Back(Const(LEXICON_MAIN["back"])),
         ),
     )
+
+
+def is_show(dict_when: dict, when: Whenable, dialog_manager: DialogManager) -> bool:
+    items = dict_when.get("item")
+    return items[0].show
 
 
 def paginated_orders(on_click):

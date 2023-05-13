@@ -8,6 +8,7 @@ from aiogram_dialog.widgets.text import Const, Format, Multi
 
 from dialogs import getters, keyboard
 from dialogs.assortiment import selected, states
+from dialogs.keyboard import is_show
 from lexicon.lexicon_ru import LEXICON_INLINE_MENU, LEXICON_MAIN
 
 
@@ -32,7 +33,7 @@ def subcategories_window():
 def product_window():
     return Window(
         Const(LEXICON_INLINE_MENU["name"]),
-        keyboard.paginated_product(selected.on_chosen_product),
+        keyboard.paginated_product(selected.on_chosen_product, show=is_show),
         state=states.BotMenu.select_product,
         getter=getters.get_product
     )

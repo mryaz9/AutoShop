@@ -4,16 +4,17 @@ from typing import Any
 from aiogram.types import CallbackQuery, Message
 from aiogram_dialog import DialogManager, DialogProtocol
 from aiogram_dialog.widgets.input import MessageInput
+from aiogram_dialog.widgets.kbd import Select, SwitchTo
 
 from database.command.admin import add_new_admin
 from database.command.category import get_categories, get_subcategories, add_categories, add_subcategories
-from database.command.item import add_item
+from database.command.item import add_item, edit_show
 from database.models import Category, SubCategory, Items
 from dialogs.admin.states import AddItem, AddCategories
 from lexicon.lexicon_ru import LEXICON_FSM_SHOP
 from utils.mailing_user import mailing
 
-
+# TODO: Добавить дата класс в контексный менеджер
 @dataclass()
 class DialogData:
     category_id = None
@@ -33,10 +34,16 @@ async def on_chosen_category(callback: CallbackQuery, widget: Any, manager: Dial
     await manager.switch_to(AddItem.select_subcategories)
 
 
-async def on_chosen_subcategories(callback: CallbackQuery, widget: Any, manager: DialogManager, item_id: str):
+async def on_chosen_subcategories(callback: CallbackQuery, widget: Select, manager: DialogManager, item_id: str):
     ctx = manager.current_context()
     ctx.dialog_data.update(subcategory_id=item_id)
-    await manager.switch_to(AddItem.name)
+    menu = ctx.dialog_data.get("menu")
+
+    if menu == "add_item":
+        await manager.switch_to(AddItem.name)
+
+    elif menu == "hide_item":
+        await manager.switch_to(AddItem.hide_item)
 
 
 async def on_chosen_name(message: Message, input_message: MessageInput, manager: DialogManager):
@@ -139,3 +146,18 @@ async def on_create_mailing(message: Message, input_message: MessageInput, manag
     await manager.event.answer(f"Сообщение добавлено успешно!")
     await mailing(mailing_text)
     await manager.done()
+
+
+async def on_hide_item(callback: CallbackQuery, widget: Any, manager: DialogManager, item_id: str):
+    show = await edit_show(int(item_id))
+    if show:
+        await manager.event.answer("Товар показывается", show_alert=True)
+
+    elif not show:
+        await manager.event.answer("Товар скрыт", show_alert=True)
+
+
+async def on_select_menu(callback: CallbackQuery, widget: Any, manager: DialogManager):
+    ctx = manager.current_context()
+    ctx.dialog_data.update(menu=widget.widget_id)
+

@@ -9,6 +9,9 @@ def admin_dialogs():
             menu.admin_menu_window(),
         ),
         Dialog(
+            add_product.menu_window(),
+            add_product.hide_item_window(),
+
             add_product.categories_window(),
             add_product.subcategories_window(),
             add_product.name_window(),

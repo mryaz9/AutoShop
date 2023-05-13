@@ -39,6 +39,7 @@ class Category(db.Model):
     query: sql.Select
 
     id = Column(Integer, Sequence('category_id_seq'), primary_key=True)
+    #show = Column(Boolean, default=True)
     category_name = Column(String(250))
 
 
@@ -47,6 +48,7 @@ class SubCategory(db.Model):
     query: sql.Select
 
     id = Column(Integer, Sequence('subcategory_id_seq'), primary_key=True)
+    #show = Column(Boolean, default=True)
     subcategory_name = Column(String(250))
     category_id = Column(Integer, ForeignKey("category.id"))
 

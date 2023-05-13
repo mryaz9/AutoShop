@@ -10,11 +10,11 @@ from lexicon.lexicon_ru import LEXICON_ADMIN, LEXICON_BUTTON_ADMIN
 def admin_menu_window():
     return Window(
         Const(LEXICON_ADMIN["in_admin"]),
-        Start(Const(LEXICON_BUTTON_ADMIN["add_assortment"]), id="add_assortment",
-              state=AddItem.select_categories),
-        Start(Const(LEXICON_BUTTON_ADMIN["add_categories"]), id="add_categories", state=AddCategories.categories_menu),
-        Start(Const("Добавить администраторов"), id="add_admin", state=AddAdmin.admin_menu),
+        Start(Const("Товары"), id="item", state=AddItem.menu),
+        Start(Const("Категории"), id="categories", state=AddCategories.categories_menu),
+        Start(Const("Администраторы"), id="add_admin", state=AddAdmin.admin_menu),
         Start(Const("Сделать рассылку"), id="mailing", state=Mailing.mailing_menu),
         Cancel(Const(LEXICON_BUTTON_ADMIN["exit"])),
         state=AdminMenu.admin_menu
     )
+

@@ -6,6 +6,9 @@ class AdminMenu(StatesGroup):
 
 
 class AddItem(StatesGroup):
+    menu = State()
+    hide_item = State()
+
     select_categories = State()
     select_subcategories = State()
     type_item = State()

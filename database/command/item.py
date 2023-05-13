@@ -37,3 +37,12 @@ async def get_items(subcategory_id) -> list[Items]:
 async def get_item(item_id) -> Items:
     item = await Items.query.where(Items.id == item_id).gino.first()
     return item
+
+
+async def edit_show(item_id: int):
+    item = await get_item(item_id)
+    show = not item.show
+    await item.update(show=show).apply()
+    await db.gino.create_all()
+    return show
+

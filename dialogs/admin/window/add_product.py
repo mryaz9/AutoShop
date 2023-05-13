@@ -1,5 +1,8 @@
+from typing import Dict
+
 from aiogram.enums import ContentType
-from aiogram_dialog import Window
+from aiogram_dialog import Window, DialogManager
+from aiogram_dialog.widgets.common import Whenable
 from aiogram_dialog.widgets.input import MessageInput
 from aiogram_dialog.widgets.kbd import Row, Cancel, Back, SwitchTo, Radio, Next
 from aiogram_dialog.widgets.text import Const, Format
@@ -7,6 +10,28 @@ from aiogram_dialog.widgets.text import Const, Format
 from dialogs import keyboard, getters
 from dialogs.admin import selected, states
 from lexicon.lexicon_ru import LEXICON_FSM_SHOP, LEXICON_MAIN, LEXICON_INLINE_MENU
+
+
+def menu_window():
+    return Window(
+        Const("Товары"),
+        SwitchTo(
+            Const("Добавить товар"),
+            state=states.AddItem.select_categories,
+            id="add_item",
+            on_click=selected.on_select_menu
+        ),
+        SwitchTo(
+            Const("Скрыть товар"),
+            state=states.AddItem.select_categories,
+            id="hide_item",
+            on_click=selected.on_select_menu
+        ),
+        Row(
+            Cancel(Const(LEXICON_MAIN["exit"]))
+        ),
+        state=states.AddItem.menu
+    )
 
 
 def categories_window():
@@ -111,3 +136,13 @@ def confirm_window():
         state=states.AddItem.confirm,
         getter=getters.get_confirm_add
     )
+
+
+def hide_item_window():
+    return Window(
+        Const("Скрыть товар"),
+        keyboard.paginated_product(selected.on_hide_item, hide=lambda d, w, m: True),
+        state=states.AddItem.hide_item,
+        getter=getters.get_product
+    )
+
