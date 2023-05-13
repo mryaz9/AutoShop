@@ -1,6 +1,7 @@
 from aiogram.fsm.state import StatesGroup, State
 from aiogram_dialog import Window
 from aiogram_dialog.widgets.kbd import Start
+from aiogram_dialog.widgets.media import StaticMedia
 from aiogram_dialog.widgets.text import Const
 
 from dialogs.admin.states import AdminMenu
@@ -16,6 +17,9 @@ class MainMenu(StatesGroup):
 
 def main_menu_window():
     return Window(
+        StaticMedia(
+            path="/home/mryaz/Рабочий стол/Tg_Bot_tgc/sourse/welcome.jpg",
+        ),
         Const(LEXICON_MAIN["start"]),
         Start(Const(LEXICON_BUTTON_MAIN["assortment"]), id="assortment", state=BotMenu.select_categories),
         Start(Const(LEXICON_BUTTON_MAIN["profile"]), id="profile", state=Profile.profile),

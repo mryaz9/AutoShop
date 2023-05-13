@@ -2,7 +2,8 @@ import operator
 
 from aiogram_dialog import DialogManager
 from aiogram_dialog.widgets.common import Whenable
-from aiogram_dialog.widgets.kbd import ScrollingGroup, Select, Row, Button, Back, Group, PrevPage, NextPage, Cancel
+from aiogram_dialog.widgets.kbd import ScrollingGroup, Select, Row, Button, Back, Group, PrevPage, NextPage, Cancel, \
+    CurrentPage
 from aiogram_dialog.widgets.text import Format, Const, Multi
 from magic_filter import F
 
@@ -33,6 +34,9 @@ def paginated_categories(on_click):
         Row(
             PrevPage(
                 scroll="categories_id", text=Format("◀️"),
+            ),
+            CurrentPage(
+                scroll="categories_id", text=Format("{current_page1}"),
             ),
             NextPage(
                 scroll="categories_id", text=Format("▶️"),
@@ -65,6 +69,9 @@ def paginated_subcategories(on_click):
         Row(
             PrevPage(
                 scroll="subcategories_id", text=Format("◀️"),
+            ),
+            CurrentPage(
+                scroll="subcategories_id", text=Format("{current_page1}"),
             ),
             NextPage(
                 scroll="subcategories_id", text=Format("▶️"),
@@ -104,6 +111,9 @@ def paginated_product(on_click, show=None, hide=lambda d, w, m: False):
             PrevPage(
                 scroll="product_id", text=Format("◀️"),
             ),
+            CurrentPage(
+                scroll="product_id", text=Format("{current_page1}"),
+            ),
             NextPage(
                 scroll="product_id", text=Format("▶️"),
             ),
@@ -138,6 +148,9 @@ def paginated_orders(on_click):
         Row(
             PrevPage(
                 scroll="orders_id", text=Format("◀️"),
+            ),
+            CurrentPage(
+                scroll="orders_id", text=Format("{current_page1}"),
             ),
             NextPage(
                 scroll="orders_id", text=Format("▶️"),

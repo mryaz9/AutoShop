@@ -1,5 +1,6 @@
 from aiogram_dialog import Window
 from aiogram_dialog.widgets.kbd import Cancel, Row, Start
+from aiogram_dialog.widgets.media import StaticMedia
 from aiogram_dialog.widgets.text import Const, Multi, Format
 
 from dialogs import keyboard
@@ -12,6 +13,9 @@ from payment.states import Payment
 
 def profile_window():
     return Window(
+        StaticMedia(
+            path="/home/mryaz/Рабочий стол/Tg_Bot_tgc/sourse/profile.jpg",
+        ),
         Multi(
             Const("📱 Ваш профиль:"),
             Const("➖➖➖➖➖➖➖➖➖➖➖➖➖"),
@@ -37,6 +41,9 @@ def profile_window():
 
 def orders_window():
     return Window(
+        StaticMedia(
+            path="/home/mryaz/Рабочий стол/Tg_Bot_tgc/sourse/order.jpg",
+        ),
         Const("Заказы:"),
         paginated_orders(on_click=None),  # Todo: Добавить поддержку нажатия на кнопку
         state=Purchases.purchases,

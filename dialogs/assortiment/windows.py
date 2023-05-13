@@ -1,9 +1,11 @@
 from typing import Dict
 
+from aiogram.enums import ContentType
 from aiogram_dialog import Window, Data, DialogManager
 from aiogram_dialog.widgets.common import Whenable
 from aiogram_dialog.widgets.input import TextInput
 from aiogram_dialog.widgets.kbd import Cancel, Back, Button, Row
+from aiogram_dialog.widgets.media import StaticMedia
 from aiogram_dialog.widgets.text import Const, Format, Multi
 
 from dialogs import getters, keyboard
@@ -14,6 +16,9 @@ from lexicon.lexicon_ru import LEXICON_INLINE_MENU, LEXICON_MAIN
 
 def categories_window():
     return Window(
+        StaticMedia(
+            path="/home/mryaz/Рабочий стол/Tg_Bot_tgc/sourse/catalog.jpg",
+        ),
         Const(LEXICON_INLINE_MENU["category"]),
         keyboard.paginated_categories(selected.on_chosen_category),
         state=states.BotMenu.select_categories,
@@ -23,6 +28,9 @@ def categories_window():
 
 def subcategories_window():
     return Window(
+        StaticMedia(
+            path="/home/mryaz/Рабочий стол/Tg_Bot_tgc/sourse/catalog.jpg",
+        ),
         Const(LEXICON_INLINE_MENU["subcategory"]),
         keyboard.paginated_subcategories(selected.on_chosen_subcategories),
         state=states.BotMenu.select_subcategories,
@@ -32,6 +40,9 @@ def subcategories_window():
 
 def product_window():
     return Window(
+        StaticMedia(
+            path="/home/mryaz/Рабочий стол/Tg_Bot_tgc/sourse/catalog.jpg",
+        ),
         Const(LEXICON_INLINE_MENU["name"]),
         keyboard.paginated_product(selected.on_chosen_product, show=is_show),
         state=states.BotMenu.select_product,
@@ -41,6 +52,9 @@ def product_window():
 
 def product_info_window():
     return Window(
+        StaticMedia(
+            path="/home/mryaz/Рабочий стол/Tg_Bot_tgc/sourse/catalog.jpg",
+        ),
         Multi(
             Format("{product.name}"),
             Format("{product.price}руб."),
@@ -71,6 +85,9 @@ def is_when_amount(data: Dict, widget: Whenable, manager: DialogManager):
 
 def buy_product_window():
     return Window(
+        StaticMedia(
+            path="/home/mryaz/Рабочий стол/Tg_Bot_tgc/sourse/catalog.jpg",
+        ),
         Multi(
             Format("{product}"),
             Format("Имеется {amount}шт.", when=is_when_amount),
@@ -93,6 +110,9 @@ def buy_product_window():
 
 def confirm_buy_window():
     return Window(
+        StaticMedia(
+            path="/home/mryaz/Рабочий стол/Tg_Bot_tgc/sourse/catalog.jpg",
+        ),
         Multi(
             Format("Вы хотите купить {product}"),
             Format("{amount_user} шт", when=is_when_amount),
