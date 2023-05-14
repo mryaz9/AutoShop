@@ -9,6 +9,7 @@ class TgBot:
     admin_ids: dict[int, str]  # Список id администраторов бота
 
     qiwi_token: str
+    crypto_token: str
 
     PGUSER: str
     PGPASSWORD: str
@@ -28,6 +29,7 @@ def load_config(path: str | None = None) -> Config:
         token=env('BOT_TOKEN'),
         admin_ids=env.list('ADMIN_IDS'),
         qiwi_token=env('QIWI_TOKEN'),
+        crypto_token=env('CRYPTO_BOT'),
         PGUSER=env('PGUSER'),
         PGPASSWORD=env('PGPASSWORD'),
         DATABASE=env('DATABASE'),

@@ -70,6 +70,7 @@ async def main():
     register_all_handlers(dp)
 
     await bot.delete_webhook(drop_pending_updates=True)
+
     await dp.start_polling(bot)
 
     # Проверяет старые апдейты с учетом имеющихся хендлеров
@@ -79,3 +80,4 @@ async def main():
 if __name__ == '__main__':
     logging.basicConfig(level=logging.INFO)
     asyncio.run(main())
+
