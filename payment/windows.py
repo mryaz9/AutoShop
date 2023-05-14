@@ -33,7 +33,7 @@ def payment_select_window():
             id="admin_select",
             state=states.Payment.payment_input_amount,
             on_click=on_select_menu,
-            when="is_admin"
+            when="admin"
         ),
         Row(
             Cancel(Const(LEXICON_MAIN["exit"])),
@@ -121,11 +121,9 @@ def payment_crypto_window():
         Row(
             Cancel(
                 Const(LEXICON_MAIN["exit"]),
-                #on_click=selected.on_reject_crypto_payment
             ),
             Back(
                 Const(LEXICON_MAIN["back"]),
-                #on_click=selected.on_reject_crypto_payment
             ),
         ),
         state=states.Payment.payment_crypto,

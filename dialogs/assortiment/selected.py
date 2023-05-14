@@ -1,6 +1,7 @@
 import datetime
 from typing import Any
 
+from aiogram.methods import export_chat_invite_link
 from aiogram.types import CallbackQuery, Message
 from aiogram_dialog import DialogManager
 from aiogram_dialog.widgets.input import TextInput
@@ -64,6 +65,18 @@ async def on_confirm_buy(callback: CallbackQuery, widget: Any, manager: DialogMa
     amount = ctx.dialog_data.get("amount")
     # TODO: Запрос в бд для покупки товара
     user = await get_user(int(callback.from_user.id))
+
+    product_info = await get_item(int(product_id))
+
+    if user.username is None:
+        await callback.answer("Создайте user_name", show_alert=True)
+        return
+
+    # TODO: Выбор способа оплаты
+    if user.balance < product_info.price:
+        await callback.answer("Недостаточно средств", show_alert=True)
+        return
+
     purchases = Purchases(buyer_id=user.id,
                           item_id=int(product_id),
                           amount=int(amount),
@@ -71,24 +84,22 @@ async def on_confirm_buy(callback: CallbackQuery, widget: Any, manager: DialogMa
 
     await add_purchases(purchases)
 
-    product_info = await get_item(int(product_id))
+    await reduce_balance(product_info.price, user.user_id)
 
-    # TODO: Выбор способа оплаты
-    if user.balance < product_info.price:
-        await callback.answer("Недостаточно средств", show_alert=True)
+    await callback.answer(f"Вы купили {amount} {product_info.name}", show_alert=True)
 
-    else:
-        await reduce_balance(product_info.price, user.user_id)
+    purchases_get: list[Purchases] = await get_purchases(user.id)
+    purchases_get: Purchases = purchases_get[-1]
+    user_name = user.username
 
-        await callback.answer(f"Вы купили {amount} {product_info.name}", show_alert=True)
+    message_text = f"Номер заказа: #{purchases_get.id}\n" \
+                   f"Товар: {product_info.name}\n" \
+                   f"Кол-во: {purchases_get.amount}\n" \
+                   f"Имя: {user.full_name}\n" \
+                   f"Покупатель: @{user_name}\n" \
 
-        purchases_get: list[Purchases] = await get_purchases(user.id)
-        purchases_get: Purchases = purchases_get[-1]
-        user_name = user.username
-        message_text = f"Номер заказа: {purchases_get.id}\nТовар: {product_info.name}\n" \
-                       f"Кол-во: {purchases_get.amount}\nПокупатель: @{user_name}"
-        await new_order(message_text)
+    await new_order(message_text)
 
-        await manager.done(result={
-            "switch_to_window": "select_products"
-        })
+    await manager.done(result={
+        "switch_to_window": "select_products"
+    })

@@ -24,7 +24,8 @@ async def on_input_amount(message: Message, message_input: MessageInput, manager
         await manager.switch_to(states.Payment.payment_select_assets)
 
     elif menu == "admin_select":
-        await manager.switch_to(states.Payment.payment_admin)
+        await add_balance(float(int(message.text)), message.from_user.id)
+        await manager.done()
 
 
 async def on_select_asset(callback: CallbackQuery, widget: Any, manager: DialogManager, item_id: str):

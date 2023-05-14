@@ -49,7 +49,6 @@ async def get_payment_crypto(dialog_manager: DialogManager, **kwargs):
     ctx.dialog_data.update(bill_id=invoice.invoice_id)
 
     crypto.close()
-
     data = {
         "amount": amount,
         "asset": asset,

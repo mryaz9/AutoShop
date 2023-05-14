@@ -7,4 +7,3 @@ class Payment(StatesGroup):
     payment_qiwi = State()
     payment_crypto = State()
     payment_select_assets = State()
-    payment_admin = State()
