@@ -7,7 +7,7 @@ from dialogs import keyboard
 from dialogs.getters import get_profile, get_orders
 from dialogs.keyboard import paginated_orders
 from dialogs.profile.states import Profile, Purchases
-from lexicon.lexicon_ru import LEXICON_MAIN
+from lexicon.lexicon_ru import LEXICON_MAIN, LEXICON_PROFILE
 from payment.states import Payment
 
 
@@ -32,7 +32,7 @@ def profile_window():
             state=Payment.payment_select
         ),
         Row(
-            Cancel(Const(LEXICON_MAIN["exit"])),
+            Cancel(Const(LEXICON_PROFILE.get("to_menu"))),
         ),
         state=Profile.profile,
         getter=get_profile

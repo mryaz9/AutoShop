@@ -8,7 +8,7 @@ from dialogs.admin.states import AdminMenu
 from dialogs.assortiment.states import BotMenu
 from dialogs.profile.states import Profile, Purchases
 from filters.filters import is_admin
-from lexicon.lexicon_ru import LEXICON_MAIN, LEXICON_BUTTON_MAIN
+from lexicon.lexicon_ru import LEXICON_MAIN
 
 
 class MainMenu(StatesGroup):
@@ -20,12 +20,12 @@ def main_menu_window():
         StaticMedia(
             path="/home/mryaz/Рабочий стол/Tg_Bot_tgc/sourse/welcome.jpg",
         ),
-        Const(LEXICON_MAIN["start"]),
-        Start(Const(LEXICON_BUTTON_MAIN["assortment"]), id="assortment", state=BotMenu.select_categories),
-        Start(Const(LEXICON_BUTTON_MAIN["profile"]), id="profile", state=Profile.profile),
-        Start(Const(LEXICON_BUTTON_MAIN["️orders"]), id="orders", state=Purchases.purchases),
+        Const(LEXICON_MAIN.get("start")),
+        Start(Const(LEXICON_MAIN.get("assortment")), id="assortment", state=BotMenu.select_categories),
+        Start(Const(LEXICON_MAIN.get("profile")), id="profile", state=Profile.profile),
+        Start(Const(LEXICON_MAIN.get("️orders")), id="orders", state=Purchases.purchases),
         # Start(Const(LEXICON_BUTTON_MAIN["information"]), id="information", state=Product.show),
-        Start(Const("Администрирование"), id="admin", state=AdminMenu.admin_menu, when="admin"),
+        Start(Const(LEXICON_MAIN.get("admin")), id="admin", state=AdminMenu.admin_menu, when="admin"),
         state=MainMenu.main_menu,
         getter=is_admin
     )

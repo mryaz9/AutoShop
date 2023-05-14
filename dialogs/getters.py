@@ -5,6 +5,7 @@ from database.command import item, category
 from database.command.item import count_items, get_item
 from database.command.purchases import get_purchases
 from database.command.user import get_user
+from lexicon.lexicon_ru import LEXICON_ASSORTIMENT
 
 
 async def get_categories(dialog_manager: DialogManager, **kwargs):
@@ -22,13 +23,13 @@ async def get_subcategories(dialog_manager: DialogManager, **kwargs):
     ctx = dialog_manager.current_context()
     category_id = ctx.dialog_data.get("category_id")
     if not category_id:
-        await dialog_manager.event.answer("Сначала выберете категорию")
+        await dialog_manager.event.answer(LEXICON_ASSORTIMENT.get("error_categories"))
         await dialog_manager.back()
         return
 
     db_subcategories = await category.get_subcategories(category_id=int(category_id))
     if len(db_subcategories) == 0:
-        await dialog_manager.event.answer("Нет подкатегорий")
+        await dialog_manager.event.answer(LEXICON_ASSORTIMENT.get("not_subcategories"))
         await dialog_manager.back()
         return
 
@@ -45,14 +46,14 @@ async def get_product(dialog_manager: DialogManager, **kwargs):
     subcategory_id = ctx.dialog_data.get("subcategory_id")
 
     if not subcategory_id:
-        await dialog_manager.event.answer("Сначала выберете подкатегорию")
+        await dialog_manager.event.answer(LEXICON_ASSORTIMENT.get("error_subcategories"))
         await dialog_manager.back()
         return
 
     db_product = await item.get_items(subcategory_id=int(subcategory_id))
 
     if len(db_product) == 0:
-        await dialog_manager.event.answer("Нет товаров")
+        await dialog_manager.event.answer(LEXICON_ASSORTIMENT.get("not_items"))
         await dialog_manager.back()
         return
 
@@ -69,12 +70,11 @@ async def get_product_info(dialog_manager: DialogManager, **kwargs):
     ctx = dialog_manager.current_context()
     product_id = ctx.dialog_data.get("product_id")
     if not product_id:
-        await dialog_manager.event.answer("Сначала выберете продукт")
+        await dialog_manager.event.answer(LEXICON_ASSORTIMENT.get("error_items"))
         await dialog_manager.back()
         return
 
     db_product_info = await item.get_item(int(product_id))
-
     data = {
         "product": db_product_info
     }
@@ -85,7 +85,7 @@ async def get_buy_product(dialog_manager: DialogManager, **kwargs):
     ctx = dialog_manager.current_context()
     product_id = ctx.start_data.get("product_id")
     if not product_id:
-        await dialog_manager.event.answer("Сначала выберете продукт")
+        await dialog_manager.event.answer(LEXICON_ASSORTIMENT.get("error_items"))
         await dialog_manager.back()
         return
 
@@ -93,8 +93,7 @@ async def get_buy_product(dialog_manager: DialogManager, **kwargs):
     amount = ctx.dialog_data.get("amount")
 
     data = {
-        "product": db_product_info.name,
-        "amount": db_product_info.amount,
+        "product": db_product_info,
         "amount_user": amount,
         "total_amount": db_product_info.price * amount if amount else None
     }

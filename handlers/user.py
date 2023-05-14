@@ -9,7 +9,6 @@ from aiogram_dialog.api.exceptions import UnknownState, UnknownIntent
 from database.command.user import add_new_user
 from dialogs.assortiment.states import BotMenu
 from dialogs.main_menu.windows import MainMenu
-from lexicon.lexicon_ru import LEXICON_BUTTON_MAIN, LEXICON_MAIN
 
 router = Router()
 

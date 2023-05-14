@@ -5,19 +5,19 @@ from aiogram_dialog.widgets.kbd import SwitchTo, Row, Cancel, Back
 from aiogram_dialog.widgets.text import Const
 
 from dialogs.admin import states, selected
-from lexicon.lexicon_ru import LEXICON_MAIN
+from lexicon.lexicon_ru import LEXICON_MAILING as lex
 
 
 def menu_window():
     return Window(
-        Const("Рассылка"),
+        Const(lex.get("item_menu")),
         SwitchTo(
-            Const("Создать рассылку"),
+            Const(lex.get("create_mailing")),
             id="create_mailing",
             state=states.Mailing.create_mailing
         ),
         Row(
-            Cancel(Const(LEXICON_MAIN["exit"])),
+            Cancel(Const(lex.get("to_menu"))),
         ),
         state=states.Mailing.mailing_menu
     )
@@ -28,8 +28,8 @@ def create_mailing_window():
         Const("Введите сообщение рассылки"),
         MessageInput(selected.on_create_mailing, ContentType.TEXT),
         Row(
-            Cancel(Const(LEXICON_MAIN["exit"])),
-            Back(Const(LEXICON_MAIN["back"])),
+            Cancel(Const(lex.get("to_menu"))),
+            Back(Const(lex.get("to_mailing_menu"))),
         ),
         state=states.Mailing.create_mailing
     )

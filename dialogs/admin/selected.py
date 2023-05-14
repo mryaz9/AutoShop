@@ -11,7 +11,7 @@ from database.command.category import get_categories, get_subcategories, add_cat
 from database.command.item import add_item, edit_show
 from database.models import Category, SubCategory, Items
 from dialogs.admin.states import AddItem, AddCategories
-from lexicon.lexicon_ru import LEXICON_FSM_SHOP
+from lexicon.lexicon_ru import LEXICON_ITEM, LEXICON_CATEGORIES, LEXICON_ADMIN, LEXICON_MAILING
 from utils.mailing_user import mailing
 
 # TODO: Добавить дата класс в контексный менеджер
@@ -104,7 +104,7 @@ async def on_chosen_confirm(callback: CallbackQuery, widget: Any, manager: Dialo
         )
     )
 
-    await manager.event.answer(LEXICON_FSM_SHOP["done_yes"])
+    await manager.event.answer(LEXICON_ITEM.get("done"))
     await manager.done()
 
 
@@ -118,7 +118,7 @@ async def on_add_category(message: Message, input_message: MessageInput, manager
     category = message.text
     await add_categories(Category(category_name=category))
 
-    await manager.event.answer(f"Категория {category} добавлена успешно!")
+    await manager.event.answer(LEXICON_CATEGORIES.get("successful_add_category").format(category))
     await manager.done()
 
 
@@ -129,21 +129,22 @@ async def on_add_subcategory(message: Message, input_message: MessageInput, mana
 
     await add_subcategories(SubCategory(subcategory_name=subcategory, category_id=int(category_id)))
 
-    await manager.event.answer(f"Подкатегория {subcategory} добавлена успешно!")
+    await manager.event.answer(LEXICON_CATEGORIES.get("successful_add_subcategory").format(subcategory))
     await manager.done()
 
 
 async def on_add_admin(message: Message, input_message: MessageInput, manager: DialogManager):
     if message.text.isdigit():
-        await add_new_admin(id_user=int(message.text))
+        admin_id = int(message.text)
+        await add_new_admin(id_user=admin_id)
 
-        await manager.event.answer(f"Администратор {message.text} добавлен успешно!")
+        await manager.event.answer(LEXICON_ADMIN.get("successful_add_admin").format(admin_id))
         await manager.done()
 
 
 async def on_create_mailing(message: Message, input_message: MessageInput, manager: DialogManager):
     mailing_text = message.text
-    await manager.event.answer(f"Сообщение добавлено успешно!")
+    await manager.event.answer(LEXICON_MAILING.get("successful_add_mailing"))
     await mailing(mailing_text)
     await manager.done()
 
@@ -151,10 +152,10 @@ async def on_create_mailing(message: Message, input_message: MessageInput, manag
 async def on_hide_item(callback: CallbackQuery, widget: Any, manager: DialogManager, item_id: str):
     show = await edit_show(int(item_id))
     if show:
-        await manager.event.answer("Товар показывается", show_alert=True)
+        await manager.event.answer(LEXICON_ITEM.get("hide_on"), show_alert=True)
 
     elif not show:
-        await manager.event.answer("Товар скрыт", show_alert=True)
+        await manager.event.answer(LEXICON_ITEM.get("hide_off"), show_alert=True)
 
 
 async def on_select_menu(callback: CallbackQuery, widget: Any, manager: DialogManager):

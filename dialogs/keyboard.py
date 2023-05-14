@@ -7,7 +7,7 @@ from aiogram_dialog.widgets.kbd import ScrollingGroup, Select, Row, Button, Back
 from aiogram_dialog.widgets.text import Format, Const, Multi
 from magic_filter import F
 
-from lexicon.lexicon_ru import LEXICON_MAIN
+from lexicon.lexicon_ru import LEXICON_MAIN, LEXICON_ASSORTIMENT
 
 SCROLLING_HEIGHT = 6
 SCROLLING_WIDTH = 1
@@ -43,7 +43,7 @@ def paginated_categories(on_click):
             ),
         ),
         Row(
-            Cancel(Const(LEXICON_MAIN["exit"]))
+            Cancel(Const(LEXICON_ASSORTIMENT.get("to_menu")))
         ),
     )
 
@@ -78,8 +78,8 @@ def paginated_subcategories(on_click):
             ),
         ),
         Row(
-            Cancel(Const(LEXICON_MAIN["exit"])),
-            Back(Const(LEXICON_MAIN["back"])),
+            Cancel(Const(LEXICON_ASSORTIMENT.get("to_menu"))),
+            Back(Const(LEXICON_ASSORTIMENT.get("back_select_categories"))),
         ),
     )
 
@@ -119,8 +119,8 @@ def paginated_product(on_click, show=None, hide=lambda d, w, m: False):
             ),
         ),
         Row(
-            Cancel(Const(LEXICON_MAIN["exit"])),
-            Back(Const(LEXICON_MAIN["back"])),
+            Cancel(Const(LEXICON_ASSORTIMENT.get("to_menu"))),
+            Back(Const(LEXICON_ASSORTIMENT.get("back_select_subcategories"))),
         ),
     )
 
@@ -157,20 +157,6 @@ def paginated_orders(on_click):
             ),
         ),
         Row(
-            Cancel(Const(LEXICON_MAIN["exit"])),
-        ),
-    )
-
-
-def confirm_kb(on_click):
-    return Row(
-        Button(
-            Const("Да"),
-            id="confirm_yes",
-            on_click=on_click
-        ),
-        Row(
-            Cancel(Const(LEXICON_MAIN["exit"])),
-            Back(Const(LEXICON_MAIN["back"])),
+            Cancel(Const(LEXICON_ASSORTIMENT.get("to_menu"))),
         ),
     )

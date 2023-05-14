@@ -9,34 +9,34 @@ from aiogram_dialog.widgets.text import Const, Format
 
 from dialogs.admin.selected import on_select_menu
 from filters.filters import is_admin
-from lexicon.lexicon_ru import LEXICON_MAIN
+from lexicon.lexicon_ru import LEXICON_PAYMENT as lex
 from payment import states, getters, selected
 
 
 def payment_select_window():
     return Window(
-        Const("Выберите способ оплаты"),
+        Const(lex.get("payment_menu")),
         SwitchTo(
-            Const("Qiwi"),
+            Const(lex.get("qiwi")),
             id="qiwi_select",
             state=states.Payment.payment_input_amount,
             on_click=on_select_menu
         ),
         SwitchTo(
-            Const("Crypto_bot"),
+            Const(lex.get("crypto")),
             id="crypto_select",
             state=states.Payment.payment_input_amount,
             on_click=on_select_menu
         ),
         SwitchTo(
-            Const("Пополнить баланс"),
+            Const(lex.get("admin")),
             id="admin_select",
             state=states.Payment.payment_input_amount,
             on_click=on_select_menu,
             when="admin"
         ),
         Row(
-            Cancel(Const(LEXICON_MAIN["exit"])),
+            Cancel(Const(lex.get("to_menu"))),
         ),
         state=states.Payment.payment_select,
         getter=is_admin
@@ -45,14 +45,14 @@ def payment_select_window():
 
 def input_amount_window():
     return Window(
-        Const("Введите сумму"),
+        Const(lex.get("input_amount")),
         MessageInput(
             selected.on_input_amount,
             content_types=ContentType.TEXT
         ),
         Row(
-            Cancel(Const(LEXICON_MAIN["exit"])),
-            Back(Const(LEXICON_MAIN["back"])),
+            Cancel(Const(lex.get("to_menu"))),
+            Back(Const(lex.get("to_payment_menu"))),
         ),
         state=states.Payment.payment_input_amount,
     )
@@ -72,11 +72,11 @@ def payment_qiwi_window():
         ),
         Row(
             Cancel(
-                Const(LEXICON_MAIN["exit"]),
+                Const(lex.get("to_menu")),
                 on_click=selected.on_reject_qiwi_payment
             ),
             Back(
-                Const(LEXICON_MAIN["back"]),
+                Const(lex.get("back_input_amount")),
                 on_click=selected.on_reject_qiwi_payment
             ),
         ),
@@ -87,7 +87,7 @@ def payment_qiwi_window():
 
 def select_assets_window():
     return Window(
-        Const("Выберите валюту"),
+        Const(lex.get("select_assets")),
         Select(
             Format(
                 '{item[0]}'
@@ -98,8 +98,8 @@ def select_assets_window():
             on_click=selected.on_select_asset,
         ),
         Row(
-            Cancel(Const(LEXICON_MAIN["exit"])),
-            Back(Const(LEXICON_MAIN["back"])),
+            Cancel(Const(lex.get("to_menu")),),
+            Back(Const(lex.get("back_input_amount"))),
         ),
         state=states.Payment.payment_select_assets,
         getter=getters.get_assets_crypto
@@ -119,12 +119,8 @@ def payment_crypto_window():
             on_click=selected.on_check_crypto_payment
         ),
         Row(
-            Cancel(
-                Const(LEXICON_MAIN["exit"]),
-            ),
-            Back(
-                Const(LEXICON_MAIN["back"]),
-            ),
+            Cancel(Const(lex.get("to_menu")), ),
+            Back(Const(lex.get("select_assets"))),
         ),
         state=states.Payment.payment_crypto,
         getter=getters.get_payment_crypto

@@ -10,12 +10,12 @@ from lexicon.lexicon_ru import LEXICON_ADMIN_INFO
 
 async def startup(bot):
     for admin in await get_all_admin():
-        await bot.send_message(chat_id=int(admin.user_id), text=LEXICON_ADMIN_INFO["startup"])
+        await bot.send_message(chat_id=int(admin.user_id), text=LEXICON_ADMIN_INFO.get('startup'))
 
 
 async def shutdown(bot):
     for admin in await get_all_admin():
-        await bot.send_message(chat_id=int(admin.user_id), text=LEXICON_ADMIN_INFO["shutdown"])
+        await bot.send_message(chat_id=int(admin.user_id), text=LEXICON_ADMIN_INFO.get('shutdown'))
 
 
 async def new_order(message_text):
