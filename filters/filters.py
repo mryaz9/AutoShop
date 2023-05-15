@@ -1,12 +1,21 @@
-from aiogram.filters import BaseFilter
-from aiogram.types import Message
+from aiogram import types
+from aiogram_dialog import DialogManager
+from aiogram_dialog.widgets.common import Whenable
 
-from database.command import database_admin
+from database.command import admin
 
 
-class IsAdmin(BaseFilter):
-    async def __call__(self, message: Message) -> bool:
-        user_id = message.from_user.id
-        admin = await database_admin.get_admin(user_id)
-        if admin:
-            return True
+async def is_admin(dialog_manager: DialogManager, **kwargs):
+    user = types.User.get_current()
+    admin1 = await admin.get_admin(user.id)
+    if admin1 is not None:
+        data = {
+            "admin": True
+        }
+        return data
+
+    elif admin1 is None:
+        data = {
+            "admin": False
+        }
+        return data

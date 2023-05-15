@@ -1,49 +1,78 @@
-from database.command.database_item import add_item
-
 import asyncio
 
+from database.command.category import add_categories, add_subcategories
+from database.command.item import add_item
 from database.init_database import create_db
+from database.models import Category, SubCategory, Items
+
+categories = [
+    {
+        'name': 'Электроника',
+        'subcategories': [
+            dict(name='Смартфоны', products=[
+                {'name': 'Samsung Galaxy S21', 'price': 80000},
+                {'name': 'iPhone 12', 'price': 90000},
+                {'name': 'Xiaomi Mi 11', 'price': 50000},
+                {'name': 'OnePlus 9', 'price': 60000},
+                {'name': 'iPhone 11', 'price': 90000},
+                {'name': 'iPhone 10', 'price': 80000},
+                {'name': 'iPhone 9', 'price': 70000},
+                {'name': 'iPhone 8', 'price': 60000},
+                {'name': 'iPhone 7', 'price': 50000},
+                {'name': 'iPhone 6', 'price': 40000},
+                {'name': 'iPhone 5', 'price': 30000},
+                {'name': 'iPhone 4', 'price': 20000},
+
+            ]),
+            {
+                'name': 'Ноутбуки',
+                'products': [
+                    {'name': 'MacBook Pro', 'price': 150000},
+                    {'name': 'Dell XPS', 'price': 120000},
+                    {'name': 'Lenovo ThinkPad', 'price': 90000}
+                ]
+            }
+        ]
+    },
+    {
+        'name': 'Одежда',
+        'subcategories': [
+            {
+                'name': 'Мужская одежда',
+                'products': [
+                    {'name': 'Футболка', 'price': 2000},
+                    {'name': 'Рубашка', 'price': 5000},
+                    {'name': 'Джинсы', 'price': 4000}
+                ]
+            },
+            {
+                'name': 'Женская одежда',
+                'products': [
+                    {'name': 'Платье', 'price': 10000},
+                    {'name': 'Блузка', 'price': 5000},
+                    {'name': 'Джинсы', 'price': 4000}
+                ]
+            }
+        ]
+    }
+]
 
 
 # Используем эту функцию, чтобы заполнить базу данных товарами
 async def add_items():
-    await add_item(name="ASUS",
-                   category_name="🔌 Электроника", category_code="Electronics",
-                   subcategory_name="🖥 Компьютеры", subcategory_code="PCs",
-                   price=100, photo="-")
-    await add_item(name="DELL",
-                   category_name="🔌 Электроника", category_code="Electronics",
-                   subcategory_name="🖥 Компьютеры", subcategory_code="PCs",
-                   price=100, photo="-")
-    await add_item(name="Apple",
-                   category_name="🔌 Электроника", category_code="Electronics",
-                   subcategory_name="🖥 Компьютеры", subcategory_code="PCs",
-                   price=100, photo="-")
-    await add_item(name="Iphone",
-                   category_name="🔌 Электроника", category_code="Electronics",
-                   subcategory_name="☎️ Телефоны", subcategory_code="Phones",
-                   price=100, photo="-")
-    await add_item(name="Xiaomi",
-                   category_name="🔌 Электроника", category_code="Electronics",
-                   subcategory_name="☎️ Телефоны", subcategory_code="Phones",
-                   price=100, photo="-")
-    await add_item(name="PewDiePie",
-                   category_name="🛍 Услуги Рекламы", category_code="Ads",
-                   subcategory_name="📹 На Youtube", subcategory_code="Youtube",
-                   price=100, photo="-")
-    await add_item(name="Топлес",
-                   category_name="🛍 Услуги Рекламы", category_code="Ads",
-                   subcategory_name="📹 На Youtube", subcategory_code="Youtube",
-                   price=100, photo="-")
-    await add_item(name="Орлёнок",
-                   category_name="🛍 Услуги Рекламы", category_code="Ads",
-                   subcategory_name="🗣 На Вконтакте", subcategory_code="VK",
-                   price=100, photo="-")
-    await add_item(name="МДК",
-                   category_name="🛍 Услуги Рекламы", category_code="Ads",
-                   subcategory_name="🗣 На Вконтакте", subcategory_code="VK",
-                   price=100, photo="-")
+    await create_db()
+    i = 0
+    j = 0
+    for cat in categories:
+        await add_categories(Category(category_name=cat.get("name")))
+        subcategory_name = cat.get("subcategories")
+        i += 1
+        for sub in subcategory_name:
+            await add_subcategories(SubCategory(subcategory_name=sub.get("name"), category_id=i))
+            item_name = sub.get("products")
+            j += 1
+            for item in item_name:
+                await add_item(Items(subcategory_id=j, name=item.get("name"), price=item.get("price")))
 
-loop = asyncio.get_event_loop()
-loop.run_until_complete(create_db())
-loop.run_until_complete(add_items())
+
+asyncio.run(add_items())

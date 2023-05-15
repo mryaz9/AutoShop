@@ -1,35 +1,24 @@
-from typing import List
-
+from loguru import logger
 from sqlalchemy import and_
 
 from database.init_database import db
-from database.models import Items
+from database.models import Items, Category, SubCategory
 
 
 # Функция для создания нового товара в базе данных. Принимает все возможные аргументы, прописанные в Item
-async def add_item(**kwargs):
-    new_item = await Items(**kwargs).create()
+async def add_item(items: Items):
+    new_item = await items.create()
     return new_item
 
 
-# Функция для вывода товаров с РАЗНЫМИ категориями
-async def get_categories() -> List[Items]:
-    return await Items.query.distinct(Items.category_name).gino.all()
-
-
-# Функция для вывода товаров с РАЗНЫМИ подкатегориями в выбранной категории
-async def get_subcategories(category) -> List[Items]:
-    return await Items.query.distinct(Items.subcategory_name).where(Items.category_code == category).gino.all()
-
-
 # Функция для подсчета товаров с выбранными категориями и подкатегориями
-async def count_items(category_code, subcategory_code=None):
+async def count_items(category_id, subcategory_id=None):
     # Прописываем условия для вывода (категория товара равняется выбранной категории)
-    conditions = [Items.category_code == category_code]
+    conditions = [Category.id == category_id]
 
     # Если передали подкатегорию, то добавляем ее в условие
-    if subcategory_code:
-        conditions.append(Items.subcategory_code == subcategory_code)
+    if subcategory_id:
+        conditions.append(SubCategory.id == subcategory_id)
 
     # Функция подсчета товаров с указанными условиями
     total = await db.select([db.func.count()]).where(
@@ -39,11 +28,8 @@ async def count_items(category_code, subcategory_code=None):
 
 
 # Функция вывода всех товаров, которые есть в переданных категории и подкатегории
-async def get_items(category_code, subcategory_code) -> List[Items]:
-    item = await Items.query.where(
-        and_(Items.category_code == category_code,
-             Items.subcategory_code == subcategory_code)
-    ).gino.all()
+async def get_items(subcategory_id) -> list[Items]:
+    item = await Items.query.distinct(Items.name).where(Items.subcategory_id == subcategory_id).gino.all()
     return item
 
 
@@ -51,3 +37,12 @@ async def get_items(category_code, subcategory_code) -> List[Items]:
 async def get_item(item_id) -> Items:
     item = await Items.query.where(Items.id == item_id).gino.first()
     return item
+
+
+async def edit_show(item_id: int):
+    item = await get_item(item_id)
+    show = not item.show
+    await item.update(show=show).apply()
+    await db.gino.create_all()
+    return show
+

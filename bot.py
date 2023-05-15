@@ -1,51 +1,74 @@
 import asyncio
-from loguru import logger
+import logging
+
+from aiogram.fsm.storage.memory import MemoryStorage
+from aiogram_dialog import setup_dialogs
 from aiogram import Bot, Dispatcher
-from aiogram.fsm.storage.redis import RedisStorage, Redis
+from aiogram_dialog.tools import render_transitions, render_preview
+from loguru import logger
 
-from keyboards.main_menu import set_main_menu
-from utils.notify_admin import startup, shutdown
+from dialogs.admin import admin_dialogs
+from dialogs.assortiment import items_dialogs
+from dialogs.main_menu import main_menu_dialogs
+from dialogs.profile import profile_dialogs
+from handlers import user, other
+from config.config import Config, load_config
 
-from config_data.config import Config, load_config
-from handlers import other_handlers, user_handlers, admin_handlers
-from FSM import FSM_shop_card
 from database.init_database import create_db
-from database.command.database_admin import add_new_admin
+from database.command.admin import add_new_admin
+from payment import payment_dialogs
+
+
+def register_all_dialog(dp):
+    dialogs = [
+        items_dialogs,
+        admin_dialogs,
+        main_menu_dialogs,
+        profile_dialogs,
+        payment_dialogs
+    ]
+
+    for dialog in dialogs:
+        for i in dialog():
+            # logger.info(i.windows)
+            # render_transitions(i, title=i.__name__)
+            dp.include_router(i)
+
+    setup_dialogs(dp)
+
+
+def register_all_handlers(dp):
+    # dp.startup.register(startup)
+    # dp.shutdown.register(shutdown)
+    dp.include_router(user.router)
+    dp.include_router(other.router)
+
+
+async def creating_db(config):
+    await create_db()
+    for admin in config.tg_bot.admin_ids:
+        await add_new_admin(int(admin))
 
 
 # Функция конфигурирования и запуска бота
-@logger.catch
 async def main():
-    # Конфигурируем логирование
-
-
     # Выводим в консоль информацию о начале запуска бота
-    logger.info('Starting bot')
-
-    # Загружаем конфиг в переменную config
     config: Config = load_config()
+    """storage = RedisStorage(
+        Redis(host=config.tg_bot.ip),
+        # in case of redis you need to configure key builder
+        key_builder=DefaultKeyBuilder(with_destiny=True),
+    )"""
+    storage = MemoryStorage()
 
-    redis: Redis = Redis(host=config.tg_bot.ip)
-    storage: RedisStorage = RedisStorage(redis=redis)
-    await create_db()
-    await add_new_admin(int(config.tg_bot.admin_ids[0]))
-
-
-    # Инициализируем бот и диспетчер
     bot: Bot = Bot(token=config.tg_bot.token,
                    parse_mode='HTML')
     dp: Dispatcher = Dispatcher(storage=storage)
 
-    # await set_main_menu(bot)
+    await creating_db(config)
+    register_all_dialog(dp)
+    register_all_handlers(dp)
 
-    # Регистрируем роутер в диспетчере
-    dp.include_router(user_handlers.router)
-    dp.include_router(admin_handlers.router)
-    dp.include_router(FSM_shop_card.router)
-
-    dp.include_router(other_handlers.router)
-
-    # Пропускаем накопившиеся адепты и запускаем polling
     await bot.delete_webhook(drop_pending_updates=True)
 
     # dp.startup.register(startup)
@@ -53,10 +76,10 @@ async def main():
 
     await dp.start_polling(bot)
 
-
-    #Проверяет станые апдейты с учетом имеющихся хендлеров
-    #await dp.start_polling(bot, allowed_updates=dp.resolve_used_update_types())
+    # Проверяет станые апдейты с учетом имеющихся хендлеров
+    # await dp.start_polling(bot, allowed_updates=dp.resolve_used_update_types())
 
 
 if __name__ == '__main__':
+    logging.basicConfig(level=logging.INFO)
     asyncio.run(main())
