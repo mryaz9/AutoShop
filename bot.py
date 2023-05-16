@@ -86,6 +86,6 @@ async def main():
 
 
 if __name__ == '__main__':
-    logging.basicConfig(filename='logs/debug.log', level=logging.CRITICAL)
+    logging.basicConfig(filename='logs/debug.log', level=logging.DEBUG)
     logging.getLogger().addHandler(logging.StreamHandler())
     asyncio.run(main())

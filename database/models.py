@@ -10,7 +10,7 @@ Base = declarative_base()
 class Users(Base):
     __tablename__ = 'users'
 
-    id = Column(Integer, primary_key=True, autoincrement=False)
+    id = Column(BigInteger, primary_key=True, autoincrement=False)
     admin = Column(Boolean, default=False)
     balance = Column(Float, default=0)
     register_time = Column(DateTime)
