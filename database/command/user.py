@@ -66,11 +66,16 @@ async def create_admin(session: AsyncSession, user_id: int) -> bool:
     """Изменение флага админа"""
 
     user: Users = await get_user(session, user_id)
-    admin = not user.admin
-    user.admin = admin
-    session.add(user)
-    await session.commit()
-    return user.admin
+    if user:
+        admin = not user.admin
+        user.admin = admin
+        session.add(user)
+        await session.commit()
+        return user.admin
+
+    elif not user:
+        await create_user(session, user_id)
+        await create_admin(session, user_id)
 
 
 async def get_all_admin(session: AsyncSession) -> Sequence[Users]:

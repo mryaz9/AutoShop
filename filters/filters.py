@@ -10,13 +10,13 @@ async def is_admin(dialog_manager: DialogManager, session: AsyncSession, **kwarg
     admin = await get_user(session, user.id)
     admin = admin.admin
 
-    if admin is not None:
+    if admin:
         data = {
             "admin": True
         }
         return data
 
-    elif admin is None:
+    elif not admin:
         data = {
             "admin": False
         }

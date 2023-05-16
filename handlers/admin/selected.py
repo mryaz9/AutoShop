@@ -136,9 +136,9 @@ async def on_add_admin(message: Message, input_message: MessageInput, manager: D
         admin_id = int(message.text)
         admin = await create_admin(session, admin_id)
         if admin:
-            await manager.event.answer(LEXICON_ADMIN.get("successful_add_admin").format(admin_id))
+            await manager.event.answer(LEXICON_ADMIN.get("successful_add_admin").format(admin_id=admin_id))
         elif not admin:
-            await manager.event.answer(LEXICON_ADMIN.get("successful_del_admin").format(admin_id))
+            await manager.event.answer(LEXICON_ADMIN.get("successful_del_admin").format(admin_id=admin_id))
         await manager.done()
 
 
