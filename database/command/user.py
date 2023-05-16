@@ -1,54 +1,61 @@
 import datetime
-
 from aiogram import types
+from sqlalchemy import select, exists
+from sqlalchemy.ext.asyncio import AsyncSession
 
-from database.init_database import db
 from database.models import Users
 
 
-async def get_user(user_id) -> Users:
-    user = await Users.query.where(Users.user_id == user_id).gino.first()
-    return user
-
-
-async def get_all_user():
-    return await Users.query.distinct(Users.user_id).gino.all()
-
-
-async def add_new_user() -> Users:
-    user = types.User.get_current()
-    old_user = await get_user(user.id)
-    if old_user:
-        return old_user
-    new_user: Users = Users()
-    new_user.user_id = user.id
-    new_user.username = user.username
-    new_user.full_name = user.full_name
-    new_user.register_time = datetime.datetime.now()
-
-    await new_user.create()
-    return new_user
-
-
-async def count_users() -> int:
-    total = await db.func.count(Users.id).gino.scalar()
-    return total
-
-
-async def add_balance(amount: float, user_id: int):
-    user = await get_user(user_id)
+async def add_balance(session: AsyncSession, amount: float, user_id: int):
+    user = await get_user(session, user_id)
     old_balance = user.balance
-    balance = amount+old_balance
+    balance = old_balance+amount
     user.balance = balance
-    await user.update(balance=balance).apply()
-    await db.gino.create_all()
+
+    session.add(user)
+    await session.commit()
 
 
-async def reduce_balance(amount: float, user_id: int):
-    user = await get_user(user_id)
+async def reduce_balance(session: AsyncSession, amount: float, user_id: int):
+    user = await get_user(session, user_id)
     old_balance = user.balance
     balance = old_balance-amount
     user.balance = balance
-    await user.update(balance=balance).apply()
-    await db.gino.create_all()
 
+    session.add(user)
+    await session.commit()
+
+
+async def is_user_exists(session: AsyncSession, user_id: int) -> bool:
+    """Checks for the presence of a user with the passed id"""
+
+    q = select(exists().where(Users.id == user_id))
+    res = await session.execute(q)
+    return res.scalar()
+
+
+async def create_user(session: AsyncSession, user_id: int, register_time: datetime.datetime.date) -> None:
+    """Create the User instance"""
+
+    user = Users(id=user_id, register_time=register_time)
+    session.add(user)
+    await session.commit()
+
+
+async def get_user(session: AsyncSession, user_id: int) -> Users:
+    """Get User instance"""
+
+    q = select(Users).where(Users.id == user_id)
+    res = await session.execute(q)
+
+    return res.scalar()
+
+
+async def create_admin(session: AsyncSession, user_id: int) -> None:
+    """Изменение флага админа"""
+
+    user: Users = await get_user(session, user_id)
+    admin = not user.admin
+    user.admin = admin
+    session.add(user)
+    await session.commit()

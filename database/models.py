@@ -1,93 +1,71 @@
 from sqlalchemy import (Column, Integer, BigInteger, String,
                         Sequence, TIMESTAMP, Boolean, JSON, Float, ForeignKey, DateTime)
 from sqlalchemy import sql
+from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship
 
-from database.init_database import db
+Base = declarative_base()
 
 
-class Users(db.Model):
+class Users(Base):
     __tablename__ = 'users'
-    query: sql.Select
 
-    id = Column(Integer, Sequence('user_id_seq'), primary_key=True)
-    user_id = Column(BigInteger)
-    full_name = Column(String(100))
-    username = Column(String(50))
+    id = Column(Integer, primary_key=True, autoincrement=False)
+    admin = Column(Boolean, default=False)
     balance = Column(Float, default=0)
     register_time = Column(DateTime)
 
-    def __repr__(self):
-        return "<Users(id='{}', fullname='{}', username='{}', balance='{}')>".format(
-            self.id, self.full_name, self.username, self.balance)
 
-
-class Admins(db.Model):
-    __tablename__ = 'admins'
-    query: sql.Select
-
-    id = Column(Integer, Sequence('admin_id_seq'), primary_key=True)
-    user_id = Column(BigInteger, primary_key=True)
-
-    def __repr__(self):
-        return "<Admins(id='{}', user_id='{}')>".format(
-            self.id, self.user_id)
-
-
-class Category(db.Model):
+class Category(Base):
     __tablename__ = 'category'
-    query: sql.Select
 
-    id = Column(Integer, Sequence('category_id_seq'), primary_key=True)
-    #show = Column(Boolean, default=True)
-    category_name = Column(String(250))
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    photo = Column(String(250))
+    show = Column(Boolean, default=True)
+    title = Column(String(250))
 
 
-class SubCategory(db.Model):
+class SubCategory(Base):
     __tablename__ = 'subcategory'
-    query: sql.Select
 
-    id = Column(Integer, Sequence('subcategory_id_seq'), primary_key=True)
-    #show = Column(Boolean, default=True)
-    subcategory_name = Column(String(250))
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    photo = Column(String(250))
+    show = Column(Boolean, default=True)
+    title = Column(String(250))
     category_id = Column(Integer, ForeignKey("category.id"))
 
 
-class Items(db.Model):
+class Items(Base):
     __tablename__ = 'items'
-    query: sql.Select
 
-    id = Column(Integer, Sequence('item_id_seq'), primary_key=True)
+    id = Column(Integer, primary_key=True, autoincrement=True)
     show = Column(Boolean, default=True)
-
     subcategory_id = Column(Integer, ForeignKey("subcategory.id"))
-
-    name = Column(String(50))
-    amount = Column(Integer)
-    # files = Column(JSON)
+    name = Column(String(250))
     photo = Column(String(250))
     price = Column(Integer)
-    time_action = Column(Integer)
     description = Column(String(255))
 
-    admin_id_add = Column(Integer)
-
-    def __repr__(self):
-        return "<Items(id='{}', show='{}', subcategory_id='{}', name='{}', price='{}')>".format(
-            self.id, self.show, self.subcategory_id, self.name, self.price)
+    files = relationship("ItemFiles", back_populates="item")
 
 
-class Purchases(db.Model):
+class ItemFiles(Base):
+    __tablename__ = "item_files"
+
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    file_id = Column(String(150), nullable=False)
+
+    item_id = Column(Integer, ForeignKey("items.id"), nullable=False)
+    item = relationship("Items", back_populates="files")
+
+
+class Purchases(Base):
     __tablename__ = 'purchases'
-    query: sql.Select
 
-    id = Column(Integer, Sequence('purchases_id_seq'), primary_key=True)
+    id = Column(Integer, primary_key=True, autoincrement=True)
     buyer_id = Column(Integer, ForeignKey("users.id"))
     item_id = Column(Integer, ForeignKey("items.id"))
     amount = Column(Integer)
     purchase_time = Column(DateTime)
     successful = Column(Boolean, default=False)
 
-    def __repr__(self):
-        return "<Purchases(id='{}', buyer='{}', item_id='{}', purchase_time='{}', successful='{}')>".format(
-            self.id, self.buyer_id, self.item_id, self.purchase_time, self.successful)

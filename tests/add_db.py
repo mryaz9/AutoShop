@@ -2,7 +2,7 @@ import asyncio
 
 from database.command.category import add_categories, add_subcategories
 from database.command.item import add_item
-from database.init_database import create_db
+from database.__init__ import create_db
 from database.models import Category, SubCategory, Items
 
 categories = [

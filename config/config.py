@@ -1,37 +1,81 @@
-from dataclasses import dataclass
-
-from environs import Env
-
-
-@dataclass
-class TgBot:
-    token: str  # Токен для доступа к телеграм-боту
-    admin_ids: dict[int, str]  # Список id администраторов бота
-
-    qiwi_token: str
-    crypto_token: str
-
-    PGUSER: str
-    PGPASSWORD: str
-    DATABASE: str
-    ip: str
+from pydantic import (
+    BaseModel,
+    BaseSettings,
+)
 
 
-@dataclass
-class Config:
-    tg_bot: TgBot
+class Bot(BaseSettings):
+    """Bot config"""
+
+    token: str
+    admins: list[int]
+
+    class Config:
+        env_file = ".env"
+        env_file_encoding = "utf-8"
+
+        fields = {
+            "token": {
+                "env": "API_TOKEN",
+            },
+            "admins": {
+                "env": "BOT_ADMINS",
+            },
+        }
 
 
-def load_config(path: str | None = None) -> Config:
-    env = Env()
-    env.read_env(path)
-    return Config(tg_bot=TgBot(
-        token=env('BOT_TOKEN'),
-        admin_ids=env.list('ADMIN_IDS'),
-        qiwi_token=env('QIWI_TOKEN'),
-        crypto_token=env('CRYPTO_BOT'),
-        PGUSER=env('PGUSER'),
-        PGPASSWORD=env('PGPASSWORD'),
-        DATABASE=env('DATABASE'),
-        ip=env('ip'),
-    ))
+class DB(BaseSettings):
+    """Database config"""
+
+    host: str
+    db_name: str
+    user: str
+    password: str
+
+    class Config:
+        env_file = ".env"
+        env_file_encoding = "utf-8"
+
+        fields = {
+            "host": {
+                "env": "DB_HOST",
+            },
+            "db_name": {
+                "env": "DB_NAME",
+            },
+            "user": {
+                "env": "DB_USER",
+            },
+            "password": {
+                "env": "DB_PASS",
+            },
+        }
+
+
+class Payment(BaseSettings):
+    class Config:
+        env_file = ".env"
+        env_file_encoding = "utf-8"
+
+        fields = {
+            "qiwi_token": {
+                "env": "QIWI_TOKEN",
+            },
+            "crypto_token": {
+                "env": "CRYPTO_BOT",
+            },
+        }
+
+
+class Config(BaseModel):
+    """App config"""
+
+    bot: Bot = Bot()
+    db: DB = DB()
+    payment: Payment = Payment()
+
+
+def load_config() -> Config:
+    """Get app config"""
+
+    return Config()

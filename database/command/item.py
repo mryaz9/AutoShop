@@ -1,48 +1,108 @@
 from loguru import logger
-from sqlalchemy import and_
+from sqlalchemy import select, func, delete
+from sqlalchemy.ext.asyncio import AsyncSession
 
-from database.init_database import db
-from database.models import Items, Category, SubCategory
-
-
-# Функция для создания нового товара в базе данных. Принимает все возможные аргументы, прописанные в Item
-async def add_item(items: Items):
-    new_item = await items.create()
-    return new_item
+from database.command.subcategory import get_subcategory
+from database.models import Items, ItemFiles
+from schemas.admin import ItemModel
 
 
-# Функция для подсчета товаров с выбранными категориями и подкатегориями
-async def count_items(category_id, subcategory_id=None):
-    # Прописываем условия для вывода (категория товара равняется выбранной категории)
-    conditions = [Category.id == category_id]
+async def create_item(
+    session: AsyncSession,
+    item_obj: ItemModel,
+) -> None:
+    """
+    Create the Item instance, shops are list of (shop_id, quantity), photos are list of (file_id)
+    """
 
-    # Если передали подкатегорию, то добавляем ее в условие
-    if subcategory_id:
-        conditions.append(SubCategory.id == subcategory_id)
+    subcategory = await get_subcategory(session, item_obj.subcategory_id)
 
-    # Функция подсчета товаров с указанными условиями
-    total = await db.select([db.func.count()]).where(
-        and_(*conditions)
-    ).gino.scalar()
-    return total
+    item = Items(
+        name=item_obj.name,
+        description=item_obj.description,
+        price=item_obj.price,
+        photo=item_obj.photo
+    )
+
+    item.subcategory_id = subcategory
+
+    item_files_objects = []
+
+    for files_id in item_obj.files:
+        obj = ItemFiles(file_id=files_id)
+        item_files_objects.append(obj)
+
+    item.files.extend(item_files_objects)
+
+    session.add(item)
+
+    await session.commit()
 
 
-# Функция вывода всех товаров, которые есть в переданных категории и подкатегории
-async def get_items(subcategory_id) -> list[Items]:
-    item = await Items.query.distinct(Items.name).where(Items.subcategory_id == subcategory_id).gino.all()
-    return item
+async def get_items_by_subcategory(session: AsyncSession, subcategory_id: int) -> list[Items]:
+    """Select items by category_id"""
+
+    q = select(Items).where(Items.subcategory_id == subcategory_id)
+
+    res = await session.execute(q)
+
+    return res.scalars().all()
 
 
-# Функция для получения объекта товара по его айди
-async def get_item(item_id) -> Items:
-    item = await Items.query.where(Items.id == item_id).gino.first()
-    return item
+async def get_items_by_category_count(session: AsyncSession, subcategory_id: int) -> int:
+    """Select COUNT items by category_id"""
+
+    q = select(func.count(Items.id)).where(Items.subcategory_id == subcategory_id)
+
+    res = await session.execute(q)
+
+    return res.scalar()
 
 
-async def edit_show(item_id: int):
-    item = await get_item(item_id)
+async def get_items(session: AsyncSession) -> list[Items]:
+    """Select all items"""
+
+    q = select(Items)
+
+    res = await session.execute(q)
+
+    return res.scalars().all()
+
+
+async def get_item(session: AsyncSession, item_id: int) -> Items:
+    """Get Item instance"""
+
+    q = select(Items).where(Items.id == item_id)
+
+    res = await session.execute(q)
+
+    return res.scalar()
+
+
+async def get_items_count(session: AsyncSession) -> int:
+    """Select COUNT items"""
+
+    q = select(func.count(Items.id))
+
+    res = await session.execute(q)
+
+    return res.scalar()
+
+
+async def hide_item(session: AsyncSession, item_id: int) -> None:
+    """Hide item by id"""
+
+    item = await get_item(session, item_id)
     show = not item.show
-    await item.update(show=show).apply()
-    await db.gino.create_all()
-    return show
+    item.show = show
 
+    await session.commit()
+
+
+async def delete_item(session: AsyncSession, item_id: int) -> None:
+    """Delete item by id"""
+
+    q = delete(Items).where(Items.id == item_id)
+    await session.execute(q)
+
+    await session.commit()
