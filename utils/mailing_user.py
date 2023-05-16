@@ -15,10 +15,10 @@ async def mailing(session: AsyncSession, mailing_text: str):
     for users in await get_all_user(session):
         try:
             await bot.send_message(
-                chat_id=users.user_id,
+                chat_id=users.id,
                 text=mailing_text)
             await asyncio.sleep(1)
         except:
-            logger.info(f"Не получилось отправить сообщение {users}")
+            logger.info(f"Не получилось отправить сообщение {users.id}")
 
     await bot.close()

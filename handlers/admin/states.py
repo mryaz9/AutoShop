@@ -16,7 +16,6 @@ class AddItem(StatesGroup):
     amount = State()
     photo = State()
     price = State()
-    time_action = State()
     description = State()
 
     confirm = State()

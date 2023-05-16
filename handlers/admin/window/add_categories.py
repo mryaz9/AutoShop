@@ -4,7 +4,7 @@ from aiogram_dialog.widgets.input import MessageInput
 from aiogram_dialog.widgets.kbd import Cancel, SwitchTo, Back, Row
 from aiogram_dialog.widgets.text import Const
 
-from handlers.users import getters, keyboard
+from handlers import getters, keyboard
 from handlers.admin import states
 from handlers.admin import selected
 from dictionary.dictionary_ru import LEXICON_CATEGORIES as lex
@@ -35,7 +35,7 @@ def select_categories_window():
         Const(lex.get("select_category")),
         keyboard.paginated_categories(selected.on_select_add_category),
         state=states.AddCategories.select_categories,
-        getter=getters.get_categories
+        getter=getters.get_category
     )
 
 
@@ -53,11 +53,11 @@ def add_categories_window():
 
 def add_subcategories_window():
     return Window(
-        Const(lex.get("new_subcategory_name")),
+        Const(lex.get("input_new_subcategory")),
         MessageInput(selected.on_add_subcategory, ContentType.TEXT),
         Row(
-            Cancel(Const(lex.get("exit"))),
-            Back(Const(lex.get("back"))),
+            Cancel(Const(lex.get("to_menu"))),
+            Back(Const(lex.get("to_category_menu"))),
         ),
         state=states.AddCategories.add_subcategories,
     )

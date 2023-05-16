@@ -110,12 +110,12 @@ async def get_confirm_add(dialog_manager: DialogManager, **kwargs):
     data = ctx.dialog_data
 
     data_ret = {
-        "subcategory_id": int(data.get("subcategory_id")),
+        "category": int(data.get("subcategory_id")),
+        "subcategory": int(data.get("subcategory_id")),
         "name": data.get("name"),
-        "amount": data.get("amount"),
+        "amount": len(data.get("files", [])),
         "photo": data.get("photo"),
         "price": data.get("price"),
-        "time_action": data.get("time_action"),
         "description": data.get("description"),
     }
 
@@ -145,3 +145,11 @@ async def get_orders(dialog_manager: DialogManager, session: AsyncSession, **kwa
     ]
     }
     return data
+
+
+async def item_files_getter(dialog_manager: DialogManager, **kwargs) -> dict:
+    """Data getter for set_item_photos window"""
+
+    selected_files = dialog_manager.dialog_data.get("files", [])
+
+    return {"files_count": len(selected_files)}

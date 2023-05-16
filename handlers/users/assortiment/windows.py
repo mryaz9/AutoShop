@@ -4,12 +4,11 @@ from aiogram_dialog import Window, Data, DialogManager
 from aiogram_dialog.widgets.common import Whenable
 from aiogram_dialog.widgets.input import TextInput
 from aiogram_dialog.widgets.kbd import Cancel, Back, Button, Row
-from aiogram_dialog.widgets.media import StaticMedia
 from aiogram_dialog.widgets.text import Const, Format
 
-from handlers.users import getters, keyboard
+from handlers import getters, keyboard
 from handlers.users.assortiment import selected, states
-from handlers.users.keyboard import is_show
+from handlers.keyboard import is_show
 from dictionary.dictionary_ru import LEXICON_ASSORTIMENT
 
 
@@ -77,7 +76,7 @@ def buy_product_window():
             on_success=selected.on_entered_amount,
         ),
         Row(
-            Back(Const(LEXICON_ASSORTIMENT.get("back_items_info"))),
+            Cancel(Const(LEXICON_ASSORTIMENT.get("back_items_info"))),
             Cancel(Const(LEXICON_ASSORTIMENT.get("back_items_names")), id="cancel_sw_to_select",
                    result={"switch_to_window": "select_products"}),
         ),

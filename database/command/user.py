@@ -47,7 +47,6 @@ async def create_user(session: AsyncSession, user_id: int) -> None:
 
 async def get_user(session: AsyncSession, user_id: int) -> Users:
     """Get User instance"""
-
     q = select(Users).where(Users.id == user_id)
     res = await session.execute(q)
 
@@ -60,7 +59,7 @@ async def get_all_user(session: AsyncSession) -> Sequence[Users]:
     q = select(Users)
     res = await session.execute(q)
 
-    return res.scalar().all()
+    return res.scalars().all()
 
 
 async def create_admin(session: AsyncSession, user_id: int) -> bool:
@@ -80,4 +79,4 @@ async def get_all_admin(session: AsyncSession) -> Sequence[Users]:
     q = select(Users).where(Users.admin)
     res = await session.execute(q)
 
-    return res.scalar().all()
+    return res.scalars().all()

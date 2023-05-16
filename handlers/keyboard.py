@@ -18,7 +18,7 @@ def paginated_categories(on_click):
         ScrollingGroup(
             Select(
                 Format(
-                    '{item[0]}',
+                    '{item[0].title}',
                     when=is_show
                     ),
                 id="s_scroll_categories",
@@ -53,7 +53,7 @@ def paginated_subcategories(on_click):
         ScrollingGroup(
             Select(
                 Format(
-                    '{item[0]}',
+                    '{item[0].title}',
                     when=is_show
                        ),
                 id="s_scroll_subcategories",

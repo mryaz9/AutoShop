@@ -5,6 +5,7 @@ from aiogram.types import Message, CallbackQuery
 from aiogram_dialog import DialogManager
 from aiogram_dialog.widgets.input import MessageInput
 from aiogram_dialog.widgets.kbd import Button
+from sqlalchemy.ext.asyncio import AsyncSession
 
 from database.command.user import get_user, add_balance
 from database.models import Users
@@ -13,6 +14,7 @@ from utils.init_payment import init_qiwi_client, init_crypto_client
 
 
 async def on_input_amount(message: Message, message_input: MessageInput, manager: DialogManager):
+    session = manager.middleware_data.get("session")
     ctx = manager.current_context()
     ctx.dialog_data.update(amount=int(message.text))
     menu = ctx.dialog_data.get("menu")
@@ -24,7 +26,7 @@ async def on_input_amount(message: Message, message_input: MessageInput, manager
         await manager.switch_to(states.Payment.payment_select_assets)
 
     elif menu == "admin_select":
-        await add_balance(float(int(message.text)), message.from_user.id)
+        await add_balance(session, float(int(message.text)), message.from_user.id)
         await manager.done()
 
 
@@ -35,6 +37,7 @@ async def on_select_asset(callback: CallbackQuery, widget: Any, manager: DialogM
 
 
 async def on_check_qiwi_payment(callback: CallbackQuery, button: Button, manager: DialogManager):
+    session = manager.middleware_data.get("session")
     ctx = manager.current_context()
     bill_id = ctx.dialog_data.get("bill_id")
     amount = ctx.dialog_data.get("amount")
@@ -48,7 +51,7 @@ async def on_check_qiwi_payment(callback: CallbackQuery, button: Button, manager
     if status == "PAID":
         await callback.answer("Платеж прошел успешно")
 
-        await add_balance(float(amount), callback.from_user.id)
+        await add_balance(session, float(amount), callback.from_user.id)
 
         await manager.done()
 
@@ -70,6 +73,7 @@ async def on_reject_qiwi_payment(callback: CallbackQuery, button: Button, manage
 
 
 async def on_check_crypto_payment(callback: CallbackQuery, button: Button, manager: DialogManager):
+    session = manager.middleware_data.get("session")
     ctx = manager.current_context()
     bill_id = ctx.dialog_data.get("bill_id")
     amount = ctx.dialog_data.get("amount")
@@ -77,11 +81,11 @@ async def on_check_crypto_payment(callback: CallbackQuery, button: Button, manag
     crypto = init_crypto_client()
 
     status = await crypto.get_invoices(invoice_ids=bill_id)
-    crypto.close()
+    await crypto.close()
 
     if status.status == InvoiceStatus.PAID:
         await callback.answer("Платеж прошел успешно")
-        await add_balance(float(amount), callback.from_user.id)
+        await add_balance(session, float(amount), callback.from_user.id)
         await manager.done()
 
     else:

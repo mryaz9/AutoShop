@@ -1,10 +1,9 @@
 from aiogram_dialog import Window
 from aiogram_dialog.widgets.kbd import Cancel, Row, Start
-from aiogram_dialog.widgets.media import StaticMedia
 from aiogram_dialog.widgets.text import Const, Multi, Format
 
-from handlers.users.getters import get_profile, get_orders
-from handlers.users.keyboard import paginated_orders
+from handlers.getters import get_profile, get_orders
+from handlers.keyboard import paginated_orders
 from handlers.users.profile.states import Profile, Purchases
 from dictionary.dictionary_ru import LEXICON_PROFILE
 from payment.states import Payment

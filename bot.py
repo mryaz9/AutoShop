@@ -7,6 +7,7 @@ from aiogram import Bot, Dispatcher
 from sqlalchemy.ext.asyncio import async_sessionmaker
 
 from database import get_async_sessionmaker
+from handlers import error
 from handlers.admin import admin_dialogs
 from handlers.users.assortiment import items_dialogs
 from handlers.menu import main_menu_dialogs
@@ -39,6 +40,7 @@ def register_handlers(dp):
     dp.startup.register(startup)
     dp.shutdown.register(shutdown)
     dp.include_router(user.router)
+    #dp.include_router(error.router)
     dp.include_router(other.router)
 
 
@@ -84,5 +86,6 @@ async def main():
 
 
 if __name__ == '__main__':
-    logging.basicConfig(level=logging.INFO)
+    logging.basicConfig(filename='logs/debug.log', level=logging.CRITICAL)
+    logging.getLogger().addHandler(logging.StreamHandler())
     asyncio.run(main())

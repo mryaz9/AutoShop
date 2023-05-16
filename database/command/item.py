@@ -17,16 +17,13 @@ async def create_item(
     Create the Item instance, shops are list of (shop_id, quantity), photos are list of (file_id)
     """
 
-    subcategory = await get_subcategory(session, item_obj.subcategory_id)
-
     item = Items(
         name=item_obj.name,
         description=item_obj.description,
         price=item_obj.price,
-        photo=item_obj.photo
+        photo=item_obj.photo,
+        subcategory_id=item_obj.subcategory_id
     )
-
-    item.subcategory_id = subcategory
 
     item_files_objects = []
 
@@ -89,6 +86,16 @@ async def get_items_count(session: AsyncSession) -> int:
     res = await session.execute(q)
 
     return res.scalar()
+
+
+async def get_files(session: AsyncSession, item_id: int) -> Sequence[ItemFiles]:
+    """Select COUNT items"""
+
+    q = select(ItemFiles).where(ItemFiles.item_id == item_id)
+
+    res = await session.execute(q)
+
+    return res.scalars().all()
 
 
 async def hide_item(session: AsyncSession, item_id: int) -> None:

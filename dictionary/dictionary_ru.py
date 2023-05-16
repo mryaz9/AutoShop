@@ -48,7 +48,7 @@ LEXICON_ASSORTIMENT: dict[str, str] = {
     'error_unknown_username': 'Создайте username',
     'error_not_money': 'Недостаточно средств',
 
-    'successful_buy_item': 'Вы купили {amount}шт. {product_info.name}',
+    'successful_buy_item': 'Вы купили {amount}шт. {name}',
 
     'send_admin_buy': 'Номер заказа: #{purchases_get.id}\n'
                        'Товар: {product_info.name}\n'
@@ -135,7 +135,7 @@ LEXICON_ITEM: dict[str, str] = {
     'input_name': 'Введите имя',
     'back_input_name': 'Изменить подкатегорию',
 
-    'input_amount': 'Введите количество',
+    'input_amount': 'Загрузите документы',
     'back_input_amount': 'Изменить имя',
 
     'input_photo': 'Загрузите фото',

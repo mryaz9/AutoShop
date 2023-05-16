@@ -1,10 +1,11 @@
+from aiogram import types
 from aiogram.enums import ContentType
 from aiogram_dialog import Window
 from aiogram_dialog.widgets.input import MessageInput
 from aiogram_dialog.widgets.kbd import Row, Cancel, Back, SwitchTo, Next, Button
 from aiogram_dialog.widgets.text import Const, Format
 
-from handlers.users import getters, keyboard
+from handlers import getters, keyboard
 from handlers.admin import states
 from handlers.admin import selected
 from dictionary.dictionary_ru import LEXICON_ITEM as lex
@@ -37,7 +38,7 @@ def categories_window():
         Const(lex.get("select_category")),
         keyboard.paginated_categories(selected.on_chosen_category),
         state=states.AddItem.select_categories,
-        getter=getters.get_categories
+        getter=getters.get_category
     )
 
 
@@ -46,7 +47,7 @@ def subcategories_window():
         Const(lex.get("select_subcategory")),
         keyboard.paginated_subcategories(selected.on_chosen_subcategories),
         state=states.AddItem.select_subcategories,
-        getter=getters.get_subcategories
+        getter=getters.get_subcategory
     )
 
 
@@ -65,13 +66,15 @@ def name_window():
 def amount_window():
     return Window(
         Const(lex.get("input_amount")),
-        MessageInput(selected.on_chosen_amount, ContentType.TEXT),
-        Next(Const("Пропустить")),
+        Format("Получено {files_count} файлов", when="files_count"),
+        MessageInput(selected.on_chosen_amount, content_types=types.ContentType.DOCUMENT),
+        Next(Const("Далее")),
         Row(
             Cancel(Const(lex.get("to_menu"))),
             Back(Const(lex.get("back_input_amount"))),
         ),
         state=states.AddItem.amount,
+        getter=getters.item_files_getter,
     )
 
 

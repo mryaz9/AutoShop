@@ -1,12 +1,12 @@
 import datetime
-from typing import Any
+from typing import Any, Sequence
 
 from aiogram.types import CallbackQuery, Message
 from aiogram_dialog import DialogManager
 from aiogram_dialog.widgets.input import TextInput
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from database.command.item import get_item
+from database.command.item import get_item, get_files
 from database.command.purchases import add_purchases, get_purchases
 from database.command.user import get_user, reduce_balance
 from database.models import Purchases
@@ -37,14 +37,13 @@ async def on_chosen_product_info(callback: CallbackQuery, widget: Any, manager: 
     ctx = manager.current_context()
     product_id = ctx.dialog_data.get("product_id")
     # Todo: Добавить проверку на тип товара
-    # await manager.start(BuyProduct.enter_amount, data={
-    #    "product_id": product_id})
+    # Todo: Проверка на наличие файлов, если нет, то сразу перекидывает в покупку
     await manager.start(BuyProduct.enter_amount, data={
         "product_id": product_id})
 
 
-async def on_entered_amount(message: Message, widget: TextInput, manager: DialogManager,
-                            amount: str, session: AsyncSession):
+async def on_entered_amount(message: Message, widget: TextInput, manager: DialogManager, amount: str):
+    session = manager.middleware_data.get("session")
     ctx = manager.current_context()
     product_id = ctx.start_data.get("product_id")
 
@@ -53,10 +52,10 @@ async def on_entered_amount(message: Message, widget: TextInput, manager: Dialog
         return
 
     amount = int(amount)
-    product_info = await get_item(session, int(product_id))
+    product_info = await get_files(session, int(product_id))
 
-    if product_info.amount is not None:
-        if product_info.amount < amount:
+    if product_info is not None:
+        if len(product_info) < amount:
             await message.answer(LEXICON_ASSORTIMENT.get("error_not_items"))
             return
 
@@ -64,8 +63,9 @@ async def on_entered_amount(message: Message, widget: TextInput, manager: Dialog
     await manager.switch_to(BuyProduct.confirm)
 
 
-async def on_confirm_buy(callback: CallbackQuery, widget: Any,
-                         manager: DialogManager, session: AsyncSession):
+async def on_confirm_buy(callback: CallbackQuery, widget: Any, manager: DialogManager):
+    session = manager.middleware_data.get("session")
+
     ctx = manager.current_context()
     product_id = ctx.start_data.get("product_id")
     amount = ctx.dialog_data.get("amount")
@@ -74,7 +74,7 @@ async def on_confirm_buy(callback: CallbackQuery, widget: Any,
 
     product_info = await get_item(session, int(product_id))
 
-    if user.username is None:
+    if callback.from_user.username is None:
         await callback.answer(LEXICON_ASSORTIMENT.get("error_unknown_username"), show_alert=True)
         return
 
@@ -90,16 +90,19 @@ async def on_confirm_buy(callback: CallbackQuery, widget: Any,
 
     await add_purchases(session, purchases)
 
-    await reduce_balance(session, product_info.price, user.user_id)
+    await reduce_balance(session, product_info.price, user.id)
 
-    await callback.answer(LEXICON_ASSORTIMENT.get("error_not_money").format(amount, product_info.name), show_alert=True)
+    await callback.answer(LEXICON_ASSORTIMENT.get("successful_buy_item").format(amount=amount, name=product_info.name),
+                          show_alert=True)
 
-    purchases_get: list[Purchases] = await get_purchases(session, user.id)
+    purchases_get: Sequence[Purchases] = await get_purchases(session, user.id)
     purchases_get: Purchases = purchases_get[-1]
-    username = user.username
+
+    username = callback.from_user.username
+    full_name = callback.from_user.full_name
 
     message_text = LEXICON_ASSORTIMENT.get("send_admin_buy").format(
-        purchases_get.id, product_info.name, purchases_get.amount, user.full_name, username)
+        purchases_get.id, product_info.name, purchases_get.amount, full_name, username)
 
     await new_order(session, message_text)
 

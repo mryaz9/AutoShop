@@ -37,10 +37,11 @@ async def get_subcategory(session: AsyncSession, subcategory_id: int) -> SubCate
     return res.scalar()
 
 
-async def create_subcategory(session: AsyncSession, category_obj: SubCategoryModel) -> None:
+async def create_subcategory(session: AsyncSession, subcategory_obj: SubCategoryModel) -> None:
     """Create the SubCategory instance"""
 
-    category = SubCategory(title=category_obj.title, photo=category_obj.photo)
+    category = SubCategory(title=subcategory_obj.title, photo=subcategory_obj.photo,
+                           category_id=subcategory_obj.category_id)
 
     session.add(category)
     await session.commit()

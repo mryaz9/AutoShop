@@ -53,6 +53,9 @@ class DB(BaseSettings):
 
 
 class Payment(BaseSettings):
+    qiwi_token: str
+    crypto_token: str
+
     class Config:
         env_file = ".env"
         env_file_encoding = "utf-8"
