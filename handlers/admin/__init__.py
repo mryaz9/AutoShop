@@ -1,6 +1,7 @@
 from aiogram_dialog import Dialog
 
-from dialogs.admin.window import menu, add_item, add_categories, add_admin, mailing
+from handlers.admin.window import menu, add_item, add_categories, mailing
+from handlers.admin.window import add_admin
 
 
 def admin_dialogs():

@@ -1,4 +1,6 @@
 # Функция для вывода товаров с РАЗНЫМИ категориями
+from typing import Sequence
+
 from sqlalchemy import select, func, delete
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -6,7 +8,7 @@ from database.models import Category, SubCategory
 from schemas.admin import CategoryModel
 
 
-async def get_categories(session: AsyncSession) -> list[Category]:
+async def get_categories(session: AsyncSession) -> Sequence[Category]:
     """Select all categories"""
 
     q = select(Category)

@@ -3,19 +3,15 @@ from aiogram_dialog.widgets.kbd import Cancel, Row, Start
 from aiogram_dialog.widgets.media import StaticMedia
 from aiogram_dialog.widgets.text import Const, Multi, Format
 
-from dialogs import keyboard
-from dialogs.getters import get_profile, get_orders
-from dialogs.keyboard import paginated_orders
-from dialogs.profile.states import Profile, Purchases
-from lexicon.lexicon_ru import LEXICON_MAIN, LEXICON_PROFILE
+from handlers.users.getters import get_profile, get_orders
+from handlers.users.keyboard import paginated_orders
+from handlers.users.profile.states import Profile, Purchases
+from dictionary.dictionary_ru import LEXICON_PROFILE
 from payment.states import Payment
 
 
 def profile_window():
     return Window(
-        StaticMedia(
-            path="/home/mryaz/Рабочий стол/Tg_Bot_tgc/sourse/profile.jpg",
-        ),
         Multi(
             Const("📱 Ваш профиль:"),
             Const("➖➖➖➖➖➖➖➖➖➖➖➖➖"),
@@ -41,9 +37,6 @@ def profile_window():
 
 def orders_window():
     return Window(
-        StaticMedia(
-            path="/home/mryaz/Рабочий стол/Tg_Bot_tgc/sourse/order.jpg",
-        ),
         Const("Заказы:"),
         paginated_orders(on_click=None),  # Todo: Добавить поддержку нажатия на кнопку
         state=Purchases.purchases,

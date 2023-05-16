@@ -1,25 +1,27 @@
 from aiogram_dialog import DialogManager
 from loguru import logger
+from sqlalchemy.ext.asyncio import AsyncSession
 
-from database.command import item, category
-from database.command.item import count_items, get_item
+from database.command.category import get_categories
+from database.command.item import get_items, get_items_by_subcategory, get_item
 from database.command.purchases import get_purchases
+from database.command.subcategory import get_subcategories
 from database.command.user import get_user
-from lexicon.lexicon_ru import LEXICON_ASSORTIMENT
+from dictionary.dictionary_ru import LEXICON_ASSORTIMENT
 
 
-async def get_categories(dialog_manager: DialogManager, **kwargs):
-    db_categories = await category.get_categories()
+async def get_category(dialog_manager: DialogManager, session: AsyncSession, **kwargs):
+    db_categories = await get_categories(session)
     data = {
         "categories": [
-            (categories.category_name, categories.id)
+            (categories, categories.id)
             for categories in db_categories
         ]
     }
     return data
 
 
-async def get_subcategories(dialog_manager: DialogManager, **kwargs):
+async def get_subcategory(dialog_manager: DialogManager, session: AsyncSession, **kwargs):
     ctx = dialog_manager.current_context()
     category_id = ctx.dialog_data.get("category_id")
     if not category_id:
@@ -27,21 +29,23 @@ async def get_subcategories(dialog_manager: DialogManager, **kwargs):
         await dialog_manager.back()
         return
 
-    db_subcategories = await category.get_subcategories(category_id=int(category_id))
+    db_subcategories = await get_subcategories(session, int(category_id))
+
     if len(db_subcategories) == 0:
         await dialog_manager.event.answer(LEXICON_ASSORTIMENT.get("not_subcategories"))
         await dialog_manager.back()
         return
 
     data = {
-        "subcategories": [(subcategories.subcategory_name, subcategories.id)
-                          for subcategories in db_subcategories
-                          ]
+        "subcategories": [
+            (subcategories, subcategories.id)
+            for subcategories in db_subcategories
+        ]
     }
     return data
 
 
-async def get_product(dialog_manager: DialogManager, **kwargs):
+async def get_product(dialog_manager: DialogManager, session: AsyncSession, **kwargs):
     ctx = dialog_manager.current_context()
     subcategory_id = ctx.dialog_data.get("subcategory_id")
 
@@ -50,7 +54,7 @@ async def get_product(dialog_manager: DialogManager, **kwargs):
         await dialog_manager.back()
         return
 
-    db_product = await item.get_items(subcategory_id=int(subcategory_id))
+    db_product = await get_items_by_subcategory(session, int(subcategory_id))
 
     if len(db_product) == 0:
         await dialog_manager.event.answer(LEXICON_ASSORTIMENT.get("not_items"))
@@ -66,7 +70,7 @@ async def get_product(dialog_manager: DialogManager, **kwargs):
     return data
 
 
-async def get_product_info(dialog_manager: DialogManager, **kwargs):
+async def get_product_info(dialog_manager: DialogManager, session: AsyncSession, **kwargs):
     ctx = dialog_manager.current_context()
     product_id = ctx.dialog_data.get("product_id")
     if not product_id:
@@ -74,14 +78,14 @@ async def get_product_info(dialog_manager: DialogManager, **kwargs):
         await dialog_manager.back()
         return
 
-    db_product_info = await item.get_item(int(product_id))
+    db_product_info = await get_item(session, int(product_id))
     data = {
         "product": db_product_info
     }
     return data
 
 
-async def get_buy_product(dialog_manager: DialogManager, **kwargs):
+async def get_buy_product(dialog_manager: DialogManager, session: AsyncSession, **kwargs):
     ctx = dialog_manager.current_context()
     product_id = ctx.start_data.get("product_id")
     if not product_id:
@@ -89,7 +93,8 @@ async def get_buy_product(dialog_manager: DialogManager, **kwargs):
         await dialog_manager.back()
         return
 
-    db_product_info = await item.get_item(int(product_id))
+    db_product_info = await get_item(session, int(product_id))
+
     amount = ctx.dialog_data.get("amount")
 
     data = {
@@ -117,29 +122,26 @@ async def get_confirm_add(dialog_manager: DialogManager, **kwargs):
     return data_ret
 
 
-async def get_profile(dialog_manager: DialogManager, **kwargs):
+async def get_profile(dialog_manager: DialogManager, session: AsyncSession, **kwargs):
     id_user = dialog_manager.event.from_user.id
-    user = await get_user(id_user)
+    user = await get_user(session, id_user)
     data = {
-        "user_id": user.user_id,
-        "full_name": user.full_name,
-        "username": user.username,
+        "user_id": user.id,
+        "full_name": dialog_manager.event.from_user.full_name,
+        "username": dialog_manager.event.from_user.username,
         "balance": user.balance,
         "register_time": user.register_time
     }
     return data
 
 
-async def get_orders(dialog_manager: DialogManager, **kwargs):
+async def get_orders(dialog_manager: DialogManager, session: AsyncSession, **kwargs):
     id_user = dialog_manager.event.from_user.id
-    user = await get_user(id_user)
-    purchases = await get_purchases(user.id)
+    user = await get_user(session, id_user)
+    purchases = await get_purchases(session, user.id)
     data = {"orders": [
-        (await get_item(pur.item_id), pur.amount, pur.id)
+        (await get_item(session, pur.item_id), pur.amount, pur.id)
         for pur in purchases
     ]
     }
-
     return data
-
-

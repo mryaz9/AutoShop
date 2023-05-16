@@ -1,6 +1,6 @@
 from aiogram_dialog import Dialog
 
-from dialogs.assortiment import windows
+from handlers.users.assortiment import windows
 
 
 def items_dialogs():

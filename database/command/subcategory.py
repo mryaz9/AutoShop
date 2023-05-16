@@ -1,4 +1,6 @@
 # Функция для вывода товаров с РАЗНЫМИ подкатегориями
+from typing import Sequence
+
 from sqlalchemy import select, func, delete
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -6,10 +8,10 @@ from database.models import SubCategory
 from schemas.admin import SubCategoryModel
 
 
-async def get_subcategories(session: AsyncSession) -> list[SubCategory]:
+async def get_subcategories(session: AsyncSession, category_id: int) -> Sequence[SubCategory]:
     """Select all subcategories"""
 
-    q = select(SubCategory)
+    q = select(SubCategory).where(SubCategory.category_id == category_id)
 
     res = await session.execute(q)
 
@@ -35,7 +37,7 @@ async def get_subcategory(session: AsyncSession, subcategory_id: int) -> SubCate
     return res.scalar()
 
 
-async def create_category(session: AsyncSession, category_obj: SubCategoryModel) -> None:
+async def create_subcategory(session: AsyncSession, category_obj: SubCategoryModel) -> None:
     """Create the SubCategory instance"""
 
     category = SubCategory(title=category_obj.title, photo=category_obj.photo)
@@ -44,7 +46,7 @@ async def create_category(session: AsyncSession, category_obj: SubCategoryModel)
     await session.commit()
 
 
-async def delete_category(session: AsyncSession, subcategory_id: int) -> None:
+async def delete_subcategory(session: AsyncSession, subcategory_id: int) -> None:
     """Delete subcategory by id"""
 
     q = delete(SubCategory).where(SubCategory.id == subcategory_id)

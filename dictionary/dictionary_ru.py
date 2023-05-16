@@ -98,6 +98,7 @@ LEXICON_ADMIN: dict[str, str] = {
     'add_admin': 'Добавить админа',
     'input_id_admin': 'Введите id',
     'successful_add_admin': 'Администратор {admin_id} добавлен успешно!',
+    'successful_del_admin': 'Администратор {admin_id} удален успешно!',
 
     'to_menu': 'В основное меню',
     'to_admin_menu': 'В меню администратора'

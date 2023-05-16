@@ -1,6 +1,6 @@
 from aiogram_dialog import Dialog
 
-from dialogs.profile import windows
+from handlers.users.profile import windows
 
 
 def profile_dialogs():

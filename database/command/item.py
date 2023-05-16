@@ -1,3 +1,5 @@
+from typing import Sequence
+
 from loguru import logger
 from sqlalchemy import select, func, delete
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -39,7 +41,7 @@ async def create_item(
     await session.commit()
 
 
-async def get_items_by_subcategory(session: AsyncSession, subcategory_id: int) -> list[Items]:
+async def get_items_by_subcategory(session: AsyncSession, subcategory_id: int) -> Sequence[Items]:
     """Select items by category_id"""
 
     q = select(Items).where(Items.subcategory_id == subcategory_id)
@@ -59,7 +61,7 @@ async def get_items_by_category_count(session: AsyncSession, subcategory_id: int
     return res.scalar()
 
 
-async def get_items(session: AsyncSession) -> list[Items]:
+async def get_items(session: AsyncSession) -> Sequence[Items]:
     """Select all items"""
 
     q = select(Items)

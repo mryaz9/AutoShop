@@ -4,9 +4,10 @@ from aiogram_dialog.widgets.input import MessageInput
 from aiogram_dialog.widgets.kbd import Cancel, SwitchTo, Back, Row
 from aiogram_dialog.widgets.text import Const
 
-from dialogs import keyboard, getters
-from dialogs.admin import states, selected
-from lexicon.lexicon_ru import LEXICON_CATEGORIES as lex
+from handlers.users import getters, keyboard
+from handlers.admin import states
+from handlers.admin import selected
+from dictionary.dictionary_ru import LEXICON_CATEGORIES as lex
 
 
 def menu_window():

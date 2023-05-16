@@ -22,7 +22,7 @@ class CategoryModel(BaseModel):
     photo: str
     show: bool
 
-    _must_not_digit_title = validator("title", allow_reuse=True)(must_not_digit)
+    _must_not_digit_title = validator("title", allow_reuse=True, check_fields=False)(must_not_digit)
 
 
 class SubCategoryModel(BaseModel):
@@ -33,7 +33,7 @@ class SubCategoryModel(BaseModel):
     show: bool
     category_id: int
 
-    _must_not_digit_title = validator("title", allow_reuse=True)(must_not_digit)
+    _must_not_digit_title = validator("title", allow_reuse=True, check_fields=False)(must_not_digit)
 
 
 class ItemModel(BaseModel):
@@ -47,4 +47,4 @@ class ItemModel(BaseModel):
     show: bool
     files: list[str]
 
-    _must_not_digit_title = validator("title", allow_reuse=True)(must_not_digit)
+    _must_not_digit_title = validator("title", allow_reuse=True, check_fields=False)(must_not_digit)

@@ -1,4 +1,5 @@
 import datetime
+from typing import Sequence
 
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -17,8 +18,8 @@ async def add_purchases(session: AsyncSession, purchases: Purchases):
     await session.commit()
 
 
-async def get_purchases(session: AsyncSession, buyer_id: int) -> list[Purchases]:
+async def get_purchases(session: AsyncSession, buyer_id: int) -> Sequence[Purchases]:
     q = select(Purchases).where(Purchases.buyer_id == buyer_id)
     res = await session.execute(q)
 
-    return res.scalar()
+    return res.scalars().all()

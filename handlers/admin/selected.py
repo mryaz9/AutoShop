@@ -2,16 +2,19 @@ from dataclasses import dataclass
 from typing import Any
 
 from aiogram.types import CallbackQuery, Message
-from aiogram_dialog import DialogManager, DialogProtocol
+from aiogram_dialog import DialogManager
 from aiogram_dialog.widgets.input import MessageInput
-from aiogram_dialog.widgets.kbd import Select, SwitchTo
+from aiogram_dialog.widgets.kbd import Select
+from sqlalchemy.ext.asyncio import AsyncSession
 
-from database.command.admin import add_new_admin
-from database.command.category import get_categories, get_subcategories, add_categories, add_subcategories
-from database.command.item import add_item, edit_show
+from database.command.category import create_category
+from database.command.item import create_item, hide_item
+from database.command.subcategory import create_subcategory
+from database.command.user import create_admin
 from database.models import Category, SubCategory, Items
-from dialogs.admin.states import AddItem, AddCategories
-from lexicon.lexicon_ru import LEXICON_ITEM, LEXICON_CATEGORIES, LEXICON_ADMIN, LEXICON_MAILING
+from handlers.admin.states import AddItem, AddCategories
+from dictionary.dictionary_ru import LEXICON_ITEM, LEXICON_CATEGORIES, LEXICON_ADMIN, LEXICON_MAILING
+from schemas.admin import ItemModel, CategoryModel, SubCategoryModel
 from utils.mailing_user import mailing
 
 # TODO: Добавить дата класс в контексный менеджер
@@ -85,24 +88,14 @@ async def on_chosen_description(message: Message, input_message: MessageInput, m
     await manager.switch_to(AddItem.confirm)
 
 
-async def on_chosen_confirm(callback: CallbackQuery, widget: Any, manager: DialogManager):
+async def on_chosen_confirm(callback: CallbackQuery, widget: Any, manager: DialogManager, session: AsyncSession):
     ctx = manager.current_context()
     data = ctx.dialog_data
-    admin_id_add = callback.from_user.id
+    print(data)
 
-    await add_item(
-        Items(
-            show=True,
-            subcategory_id=int(data.get("subcategory_id")),
-            name=data.get("name"),
-            amount=data.get("amount"),
-            photo=data.get("photo"),
-            price=data.get("price"),
-            time_action=data.get("time_action"),
-            description=data.get("description"),
-            admin_id_add=admin_id_add
-        )
-    )
+    item = ItemModel()
+
+    await create_item(session, item)
 
     await manager.event.answer(LEXICON_ITEM.get("done"))
     await manager.done()
@@ -114,43 +107,52 @@ async def on_select_add_category(callback: CallbackQuery, widget: Any, manager: 
     await manager.switch_to(AddCategories.add_subcategories)
 
 
-async def on_add_category(message: Message, input_message: MessageInput, manager: DialogManager):
-    category = message.text
-    await add_categories(Category(category_name=category))
+async def on_add_category(message: Message, input_message: MessageInput, manager: DialogManager, session: AsyncSession):
+    category = CategoryModel()
+    category.title = message.text
+    category.photo = "none"
+    await create_category(session, category)
 
     await manager.event.answer(LEXICON_CATEGORIES.get("successful_add_category").format(category))
     await manager.done()
 
 
-async def on_add_subcategory(message: Message, input_message: MessageInput, manager: DialogManager):
-    ctx = manager.current_context()
-    category_id = ctx.dialog_data.get("category_id")
-    subcategory = message.text
+async def on_add_subcategory(message: Message, input_message: MessageInput,
+                             manager: DialogManager, session: AsyncSession):
 
-    await add_subcategories(SubCategory(subcategory_name=subcategory, category_id=int(category_id)))
+    ctx = manager.current_context()
+
+    subcategory = SubCategoryModel()
+    subcategory.title = message.text
+    subcategory.category_id = ctx.dialog_data.get("category_id")
+    subcategory.photo = "none"
+
+    await create_subcategory(session, subcategory)
 
     await manager.event.answer(LEXICON_CATEGORIES.get("successful_add_subcategory").format(subcategory))
     await manager.done()
 
 
-async def on_add_admin(message: Message, input_message: MessageInput, manager: DialogManager):
+async def on_add_admin(message: Message, input_message: MessageInput, manager: DialogManager, session: AsyncSession):
     if message.text.isdigit():
         admin_id = int(message.text)
-        await add_new_admin(id_user=admin_id)
-
-        await manager.event.answer(LEXICON_ADMIN.get("successful_add_admin").format(admin_id))
+        admin = await create_admin(session, admin_id)
+        if admin:
+            await manager.event.answer(LEXICON_ADMIN.get("successful_add_admin").format(admin_id))
+        elif not admin:
+            await manager.event.answer(LEXICON_ADMIN.get("successful_del_admin").format(admin_id))
         await manager.done()
 
 
-async def on_create_mailing(message: Message, input_message: MessageInput, manager: DialogManager):
+async def on_create_mailing(message: Message, input_message: MessageInput, manager: DialogManager, session: AsyncSession):
     mailing_text = message.text
     await manager.event.answer(LEXICON_MAILING.get("successful_add_mailing"))
-    await mailing(mailing_text)
+    await mailing(session, mailing_text)
     await manager.done()
 
 
-async def on_hide_item(callback: CallbackQuery, widget: Any, manager: DialogManager, item_id: str):
-    show = await edit_show(int(item_id))
+async def on_hide_item(callback: CallbackQuery, widget: Any, manager: DialogManager, item_id: str, session: AsyncSession):
+    show = await hide_item(session, int(item_id))
     if show:
         await manager.event.answer(LEXICON_ITEM.get("hide_on"), show_alert=True)
 
@@ -161,4 +163,3 @@ async def on_hide_item(callback: CallbackQuery, widget: Any, manager: DialogMana
 async def on_select_menu(callback: CallbackQuery, widget: Any, manager: DialogManager):
     ctx = manager.current_context()
     ctx.dialog_data.update(menu=widget.widget_id)
-

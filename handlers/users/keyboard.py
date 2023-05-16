@@ -7,7 +7,7 @@ from aiogram_dialog.widgets.kbd import ScrollingGroup, Select, Row, Button, Back
 from aiogram_dialog.widgets.text import Format, Const, Multi
 from magic_filter import F
 
-from lexicon.lexicon_ru import LEXICON_MAIN, LEXICON_ASSORTIMENT
+from dictionary.dictionary_ru import LEXICON_MAIN, LEXICON_ASSORTIMENT
 
 SCROLLING_HEIGHT = 6
 SCROLLING_WIDTH = 1
@@ -19,7 +19,7 @@ def paginated_categories(on_click):
             Select(
                 Format(
                     '{item[0]}',
-                    #when=is_show
+                    when=is_show
                     ),
                 id="s_scroll_categories",
                 item_id_getter=operator.itemgetter(1),
@@ -54,7 +54,7 @@ def paginated_subcategories(on_click):
             Select(
                 Format(
                     '{item[0]}',
-                    #when=is_show
+                    when=is_show
                        ),
                 id="s_scroll_subcategories",
                 item_id_getter=operator.itemgetter(1),

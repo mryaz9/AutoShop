@@ -1,4 +1,6 @@
 import datetime
+from typing import Sequence
+
 from aiogram import types
 from sqlalchemy import select, exists
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -34,12 +36,13 @@ async def is_user_exists(session: AsyncSession, user_id: int) -> bool:
     return res.scalar()
 
 
-async def create_user(session: AsyncSession, user_id: int, register_time: datetime.datetime.date) -> None:
+async def create_user(session: AsyncSession, user_id: int) -> None:
     """Create the User instance"""
 
-    user = Users(id=user_id, register_time=register_time)
-    session.add(user)
-    await session.commit()
+    if not await is_user_exists(session, user_id):
+        user = Users(id=user_id, register_time=datetime.datetime.now().date())
+        session.add(user)
+        await session.commit()
 
 
 async def get_user(session: AsyncSession, user_id: int) -> Users:
@@ -51,7 +54,16 @@ async def get_user(session: AsyncSession, user_id: int) -> Users:
     return res.scalar()
 
 
-async def create_admin(session: AsyncSession, user_id: int) -> None:
+async def get_all_user(session: AsyncSession) -> Sequence[Users]:
+    """Get User instance"""
+
+    q = select(Users)
+    res = await session.execute(q)
+
+    return res.scalar().all()
+
+
+async def create_admin(session: AsyncSession, user_id: int) -> bool:
     """Изменение флага админа"""
 
     user: Users = await get_user(session, user_id)
@@ -59,3 +71,13 @@ async def create_admin(session: AsyncSession, user_id: int) -> None:
     user.admin = admin
     session.add(user)
     await session.commit()
+    return user.admin
+
+
+async def get_all_admin(session: AsyncSession) -> Sequence[Users]:
+    """Get User instance"""
+
+    q = select(Users).where(Users.admin)
+    res = await session.execute(q)
+
+    return res.scalar().all()

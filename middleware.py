@@ -1,9 +1,9 @@
 from typing import Callable, Dict, Any, Awaitable
+from sqlalchemy.ext.asyncio import async_sessionmaker
 
 from aiogram import BaseMiddleware
 from aiogram.types import TelegramObject
 
-from sqlalchemy.orm import async_sessionmaker
 
 from config.config import Config
 
@@ -11,8 +11,8 @@ from config.config import Config
 class DBSessionMiddleware(BaseMiddleware):
     """Middleware that pass the database session to the handler"""
 
-    def __init__(self, async_sessionmaker: async_sessionmaker) -> None:
-        self.sessionmaker = async_sessionmaker
+    def __init__(self, sessionmaker: async_sessionmaker) -> None:
+        self.sessionmaker = sessionmaker
 
     async def __call__(
         self,
@@ -22,7 +22,7 @@ class DBSessionMiddleware(BaseMiddleware):
     ) -> Any:
 
         async with self.sessionmaker() as session:
-            data["db_session"] = session
+            data["session"] = session
 
             result = await handler(event, data)
             return result

@@ -1,15 +1,13 @@
-from typing import Dict
-
 from aiogram.enums import ContentType
-from aiogram_dialog import Window, DialogManager
-from aiogram_dialog.widgets.common import Whenable
+from aiogram_dialog import Window
 from aiogram_dialog.widgets.input import MessageInput
-from aiogram_dialog.widgets.kbd import Row, Cancel, Back, SwitchTo, Radio, Next, Button
-from aiogram_dialog.widgets.text import Const, Format, Multi
+from aiogram_dialog.widgets.kbd import Row, Cancel, Back, SwitchTo, Next, Button
+from aiogram_dialog.widgets.text import Const, Format
 
-from dialogs import keyboard, getters
-from dialogs.admin import selected, states
-from lexicon.lexicon_ru import LEXICON_ITEM as lex
+from handlers.users import getters, keyboard
+from handlers.admin import states
+from handlers.admin import selected
+from dictionary.dictionary_ru import LEXICON_ITEM as lex
 
 
 def menu_window():

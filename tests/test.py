@@ -14,7 +14,7 @@ from aiogram_dialog.widgets.kbd import Button, Url, Group, Cancel, Row, SwitchTo
 from aiogram_dialog.widgets.text import Const, Format
 from loguru import logger
 
-from lexicon.lexicon_ru import LEXICON_MAIN
+from dictionary.dictionary_ru import LEXICON_MAIN
 
 
 class Payment(StatesGroup):

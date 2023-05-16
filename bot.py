@@ -7,14 +7,13 @@ from aiogram import Bot, Dispatcher
 from sqlalchemy.ext.asyncio import async_sessionmaker
 
 from database import get_async_sessionmaker
-from dialogs.admin import admin_dialogs
-from dialogs.assortiment import items_dialogs
-from dialogs.main_menu import main_menu_dialogs
-from dialogs.profile import profile_dialogs
-from handlers import user, other
+from handlers.admin import admin_dialogs
+from handlers.users.assortiment import items_dialogs
+from handlers.menu import main_menu_dialogs
+from handlers.users.profile import profile_dialogs
+from handlers.users import other, user
 from config.config import Config, load_config
 
-from database.command.admin import add_new_admin
 from middleware import DBSessionMiddleware, ConfigMiddleware
 from payment import payment_dialogs
 from utils.notify_admin import startup, shutdown
