@@ -36,7 +36,7 @@ LEXICON_ASSORTIMENT: dict[str, str] = {
     'error_input_amount': 'Введите число',
     'error_not_items': 'Недостаточно товаров',
 
-    'buy_product_amount': 'Имеется {product.amount}шт.',  # Этот текст отображается только если имеется количество
+    'buy_product_amount': 'Имеется {amount}шт.',  # Этот текст отображается только если имеется количество
 
     'accept_buy_item': 'Вы хотите купить {product.name}\n'
                        'За {total_amount}руб.\n'
@@ -50,10 +50,10 @@ LEXICON_ASSORTIMENT: dict[str, str] = {
 
     'successful_buy_item': 'Вы купили {amount}шт. {name}',
 
-    'send_admin_buy': 'Номер заказа: #{purchases_get.id}\n'
-                       'Товар: {product_info.name}\n'
-                       'Кол-во: {purchases_get.amount}\n'
-                       'Имя: {user.full_name}\n'
+    'send_admin_buy': 'Номер заказа: #{id}\n'
+                       'Товар: {name}\n'
+                       'Кол-во: {amount}\n'
+                       'Имя: {full_name}\n'
                        'Покупатель: @{username}\n',
 
     'back_select_categories': 'Изменить категорию',

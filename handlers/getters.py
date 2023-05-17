@@ -5,7 +5,7 @@ from loguru import logger
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from database.command.category import get_categories, get_category
-from database.command.item import get_items, get_items_by_subcategory, get_item
+from database.command.item import get_items, get_items_by_subcategory, get_item, get_files
 from database.command.purchases import get_purchases
 from database.command.subcategory import get_subcategories, get_subcategory
 from database.command.user import get_user
@@ -105,8 +105,13 @@ async def getter_buy_product(dialog_manager: DialogManager, session: AsyncSessio
 
     amount = ctx.dialog_data.get("amount")
 
+    if not ctx.dialog_data.get("amount"):
+        ctx.dialog_data.update(amount=1)
+        amount = 1
+
     data = {
         "product": db_product_info,
+        "amount": len(await get_files(session, int(product_id))),
         "amount_user": amount,
         "total_amount": db_product_info.price * amount if amount else None,
         "photo": MediaAttachment(ContentType.PHOTO, file_id=MediaId(db_product_info.photo))

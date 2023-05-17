@@ -63,17 +63,14 @@ def product_info_window():
 
 
 def is_when_description(data: Dict, widget: Whenable, manager: DialogManager):
-    return data.get("description") is not None
-
-
-def is_when_amount(data: Dict, widget: Whenable, manager: DialogManager):
-    return data.get("amount") is not None
+    return data.get("product").description is not None
 
 
 def buy_product_window():
     return Window(
+        DynamicMedia("photo"),
         Format(LEXICON_ASSORTIMENT.get("buy_product_window")),
-        Format(LEXICON_ASSORTIMENT.get("buy_product_amount"), when=is_when_amount),
+        Format(LEXICON_ASSORTIMENT.get("buy_product_amount")),
 
         TextInput(
             id="enter_amount",
@@ -91,14 +88,15 @@ def buy_product_window():
 
 def confirm_buy_window():
     return Window(
-        Format(LEXICON_ASSORTIMENT.get("accept_buy_item_amount"), when=is_when_amount),
+        DynamicMedia("photo"),
+        Format(LEXICON_ASSORTIMENT.get("accept_buy_item_amount")),
         Format(LEXICON_ASSORTIMENT.get("accept_buy_item")),
 
         Button(Const(LEXICON_ASSORTIMENT.get("confirm_buy")),
                id="confirm_buy",
                on_click=selected.on_confirm_buy),
         Row(
-            Back(Const(LEXICON_ASSORTIMENT.get("back_items_amount"))),
+            Cancel(Const(LEXICON_ASSORTIMENT.get("back_items_amount"))),
             Cancel(Const(LEXICON_ASSORTIMENT.get("back_items_names")),
                    id="cancel_sw_to_select",
                    result={"switch_to_window": "select_products"}),
