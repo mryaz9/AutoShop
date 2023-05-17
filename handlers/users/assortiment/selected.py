@@ -6,7 +6,7 @@ from aiogram_dialog import DialogManager
 from aiogram_dialog.widgets.input import TextInput
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from database.command.item import get_item, get_files
+from database.command.item import get_item, get_files, return_and_del_files
 from database.command.purchases import add_order, get_purchases
 from database.command.user import get_user, reduce_balance
 from database.models import Order
@@ -78,17 +78,16 @@ async def on_confirm_buy(callback: CallbackQuery, widget: Any, manager: DialogMa
     session = manager.middleware_data.get("session")
 
     ctx = manager.current_context()
-    product_id = ctx.start_data.get("product_id")
+    product_id = int(ctx.start_data.get("product_id"))
 
     if ctx.start_data.get("amount_user") is not None:
         amount_user = ctx.start_data.get("amount_user")
     else:
         amount_user = ctx.dialog_data.get("amount_user")
 
-    # TODO: Запрос в бд для покупки товара
     user = await get_user(session, int(callback.from_user.id))
 
-    product_info = await get_item(session, int(product_id))
+    product_info = await get_item(session, product_id)
 
     if callback.from_user.username is None:
         await callback.answer(LEXICON_ASSORTIMENT.get("error_unknown_username"), show_alert=True)
@@ -98,6 +97,11 @@ async def on_confirm_buy(callback: CallbackQuery, widget: Any, manager: DialogMa
     if user.balance < product_info.price:
         await callback.answer(LEXICON_ASSORTIMENT.get("error_not_money"), show_alert=True)
         return
+
+    files = await return_and_del_files(session, product_id, amount_user)
+
+    # TODO: Добавить файлы в заказ
+    # Не удаляються последние 2 файла
 
     await reduce_balance(session, product_info.price*amount_user, user.id)
 

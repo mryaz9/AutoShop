@@ -97,6 +97,22 @@ async def get_files(session: AsyncSession, item_id: int) -> Sequence[ItemFiles]:
     return res.scalars().all()
 
 
+async def return_and_del_files(session: AsyncSession, item_id: int, amount: int) -> Sequence[ItemFiles]:
+    """Select COUNT items"""
+
+    q = select(ItemFiles).where(ItemFiles.item_id == item_id).limit(amount)
+
+    res = await session.execute(q)
+    result = res.scalars().all()
+
+    for i in res.scalars().all():
+        await session.delete(i)
+
+    await session.commit()
+
+    return result
+
+
 async def hide_item(session: AsyncSession, item_id: int) -> None:
     """Hide item by id"""
 
