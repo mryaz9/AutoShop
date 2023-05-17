@@ -40,7 +40,7 @@ async def get_category(session: AsyncSession, category_id: int) -> Category:
 async def create_category(session: AsyncSession, category_obj: CategoryModel) -> None:
     """Create the Category instance"""
 
-    category = Category(title=category_obj.title, photo=category_obj.photo, subcategory=category_obj)
+    category = Category(title=category_obj.title, photo=category_obj.photo)
 
     session.add(category)
     await session.commit()

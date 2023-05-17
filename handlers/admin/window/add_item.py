@@ -20,12 +20,6 @@ def menu_window():
             id="add_item",
             on_click=selected.on_select_menu
         ),
-        SwitchTo(
-            Const(lex.get("hide_item")),
-            state=states.AddItem.select_categories,
-            id="hide_item",
-            on_click=selected.on_select_menu
-        ),
         Row(
             Cancel(Const(lex.get("to_menu")))
         ),
@@ -107,7 +101,6 @@ def description_window():
     return Window(
         Const(lex.get("input_description")),
         MessageInput(selected.on_chosen_description, ContentType.TEXT),
-        Next(Const("Пропустить")),
         Row(
             Cancel(Const(lex.get("to_menu"))),
             Back(Const(lex.get("back_input_description"))),
@@ -132,14 +125,5 @@ def confirm_window():
         ),
         state=states.AddItem.confirm,
         getter=getters.getter_confirm_add
-    )
-
-
-def hide_item_window():
-    return Window(
-        Const(lex.get("hide_item")),
-        keyboard.paginated_product(selected.on_hide_item, hide=lambda d, w, m: True),
-        state=states.AddItem.hide_item,
-        getter=getters.getter_product
     )
 

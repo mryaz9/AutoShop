@@ -11,7 +11,6 @@ def admin_dialogs():
         ),
         Dialog(
             add_item.menu_window(),
-            add_item.hide_item_window(),
 
             add_item.categories_window(),
             add_item.subcategories_window(),

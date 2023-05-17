@@ -1,13 +1,9 @@
 import operator
-
-from aiogram_dialog import DialogManager
-from aiogram_dialog.widgets.common import Whenable
 from aiogram_dialog.widgets.kbd import ScrollingGroup, Select, Row, Button, Back, Group, PrevPage, NextPage, Cancel, \
     CurrentPage
 from aiogram_dialog.widgets.text import Format, Const, Multi
-from magic_filter import F
 
-from dictionary.dictionary_ru import LEXICON_MAIN, LEXICON_ASSORTIMENT
+from dictionary.dictionary_ru import LEXICON_ASSORTIMENT
 
 SCROLLING_HEIGHT = 6
 SCROLLING_WIDTH = 1
@@ -18,9 +14,8 @@ def paginated_categories(on_click):
         ScrollingGroup(
             Select(
                 Format(
-                    '{item[0].title}',
-                    when=is_show
-                    ),
+                    '{item[0].title}'
+                ),
                 id="s_scroll_categories",
                 item_id_getter=operator.itemgetter(1),
                 items="categories",
@@ -53,9 +48,8 @@ def paginated_subcategories(on_click):
         ScrollingGroup(
             Select(
                 Format(
-                    '{item[0].title}',
-                    when=is_show
-                       ),
+                    '{item[0].title}'
+                ),
                 id="s_scroll_subcategories",
                 item_id_getter=operator.itemgetter(1),
                 items="subcategories",
@@ -84,17 +78,14 @@ def paginated_subcategories(on_click):
     )
 
 
-def paginated_product(on_click, show=None, hide=lambda d, w, m: False):
+def paginated_product(on_click):
     return Group(
         ScrollingGroup(
             Select(
                 Multi(
-                    Format("{item[0].name}"),
+                    Format("{item[0].title}"),
                     Format("{item[0].price}руб."),
-                    Format("{item[0].show}", when=hide),
-
                     sep="\n",
-                    when=show
                 ),
 
                 id="s_scroll_product",
@@ -123,11 +114,6 @@ def paginated_product(on_click, show=None, hide=lambda d, w, m: False):
             Back(Const(LEXICON_ASSORTIMENT.get("back_select_subcategories"))),
         ),
     )
-
-
-def is_show(dict_when: dict, when: Whenable, dialog_manager: DialogManager) -> bool:
-    items = dict_when.get("item")
-    return items[0].show
 
 
 def paginated_orders(on_click):

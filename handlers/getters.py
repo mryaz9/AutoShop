@@ -5,7 +5,7 @@ from loguru import logger
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from database.command.category import get_categories, get_category
-from database.command.item import get_items, get_items_by_subcategory, get_item, get_files
+from database.command.item import get_items_by_subcategory, get_item, get_files
 from database.command.purchases import get_purchases
 from database.command.subcategory import get_subcategories, get_subcategory
 from database.command.user import get_user
@@ -66,11 +66,13 @@ async def getter_product(dialog_manager: DialogManager, session: AsyncSession, *
         await dialog_manager.back()
         return
 
+    product_tuple = []
+    # TODO: Добавить количество товара и отправлять дату не строкой
+    for product in db_product:
+        product_tuple.append((product, product.id))
+
     data = {
-        "product": [
-            (product, product.id)
-            for product in db_product  # TODO: Добавить количество товара и отправлять дату не строкой
-        ],
+        "product": product_tuple,
         "photo": MediaAttachment(ContentType.PHOTO, file_id=MediaId(subcategory.photo)) if subcategory.photo else None
     }
     return data
@@ -85,12 +87,14 @@ async def getter_product_info(dialog_manager: DialogManager, session: AsyncSessi
         return
 
     db_product_info = await get_item(session, int(product_id))
-    data = {
-        "product": db_product_info,
-        "photo": MediaAttachment(ContentType.PHOTO, file_id=MediaId(db_product_info.photo))
-        if db_product_info.photo else None
-    }
-    return data
+
+    if db_product_info:
+        data = {
+            "product": db_product_info,
+            "photo": MediaAttachment(ContentType.PHOTO, file_id=MediaId(db_product_info.photo))
+            if db_product_info.photo else None
+        }
+        return data
 
 
 async def getter_buy_product(dialog_manager: DialogManager, session: AsyncSession, **kwargs):
@@ -103,17 +107,17 @@ async def getter_buy_product(dialog_manager: DialogManager, session: AsyncSessio
 
     db_product_info = await get_item(session, int(product_id))
 
-    amount = ctx.dialog_data.get("amount")
+    amount_user = ctx.dialog_data.get("amount_user")
 
-    if not ctx.dialog_data.get("amount"):
-        ctx.dialog_data.update(amount=1)
-        amount = 1
+    if ctx.dialog_data.get("amount_user") is None:
+        ctx.dialog_data.update(amount_user=1)
+        amount_user = 1
 
     data = {
         "product": db_product_info,
         "amount": len(await get_files(session, int(product_id))),
-        "amount_user": amount,
-        "total_amount": db_product_info.price * amount if amount else None,
+        "amount_user": amount_user,
+        "total_amount": db_product_info.price * amount_user if amount_user else None,
         "photo": MediaAttachment(ContentType.PHOTO, file_id=MediaId(db_product_info.photo))
         if db_product_info.photo else None
     }
@@ -127,7 +131,7 @@ async def getter_confirm_add(dialog_manager: DialogManager, **kwargs):
     data_ret = {
         "category": int(data.get("subcategory_id")),
         "subcategory": int(data.get("subcategory_id")),
-        "name": data.get("name"),
+        "title": data.get("title"),
         "amount": len(data.get("files", [])),
         "photo": data.get("photo"),
         "price": data.get("price"),

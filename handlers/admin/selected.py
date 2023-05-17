@@ -23,7 +23,7 @@ from utils.mailing_user import mailing
 class DialogData:
     category_id = None
     subcategory_id = None
-    name = None
+    title = None
     amount = None
     photo = None
     price = None
@@ -52,7 +52,7 @@ async def on_chosen_subcategories(callback: CallbackQuery, widget: Select, manag
 
 async def on_chosen_name(message: Message, input_message: MessageInput, manager: DialogManager):
     ctx = manager.current_context()
-    ctx.dialog_data.update(name=message.text)
+    ctx.dialog_data.update(title=message.text)
     await manager.switch_to(AddItem.amount)
 
 
@@ -76,7 +76,7 @@ async def on_chosen_photo(message: Message, input_message: MessageInput, manager
 async def on_chosen_price(message: Message, input_message: MessageInput, manager: DialogManager):
     if message.text.isdigit():
         ctx = manager.current_context()
-        ctx.dialog_data.update(price=int(message.text))
+        ctx.dialog_data.update(price=float(message.text))
         await manager.switch_to(AddItem.description)
 
 
@@ -90,9 +90,7 @@ async def on_chosen_confirm(callback: CallbackQuery, widget: Any, manager: Dialo
     session = manager.middleware_data.get("session")
     ctx = manager.current_context()
     data = ctx.dialog_data
-
     item = ItemModel(**data)
-
     await create_item(session, item)
 
     await callback.answer(LEXICON_ITEM.get("done"))
@@ -188,16 +186,6 @@ async def on_create_mailing(message: Message, input_message: MessageInput, manag
     await manager.event.answer(LEXICON_MAILING.get("successful_add_mailing"))
     await mailing(session, mailing_text)
     await manager.done()
-
-
-async def on_hide_item(callback: CallbackQuery, widget: Any, manager: DialogManager, item_id: str):
-    session = manager.middleware_data.get("session")
-    show = await hide_item(session, int(item_id))
-    if show:
-        await callback.answer(LEXICON_ITEM.get("hide_on"), show_alert=True)
-
-    elif not show:
-        await callback.answer(LEXICON_ITEM.get("hide_off"), show_alert=True)
 
 
 async def on_del_categories(callback: CallbackQuery, widget: Any, manager: DialogManager):

@@ -4,7 +4,7 @@ from typing import Sequence
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from database.command.item import get_item, get_service
+from database.command.item import get_item
 from database.command.user import get_user
 from database.models import Order
 

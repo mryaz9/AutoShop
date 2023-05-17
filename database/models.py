@@ -42,7 +42,6 @@ class SubCategory(Base):
     )
     category = relationship("Category", back_populates="subcategory")
     items = relationship("Item", back_populates="subcategory")
-    services = relationship("Service", back_populates="subcategory")
 
 
 class ItemFiles(Base):
@@ -64,7 +63,7 @@ class Item(Base):
     title = Column(String(50), nullable=False)
     photo = Column(String(250), nullable=True)
     description = Column(Text, nullable=False)
-    price = Column(Numeric(12, 2), nullable=False)
+    price = Column(Float, nullable=False)
 
     subcategory_id = Column(
         Integer, ForeignKey("subcategory.id", ondelete="CASCADE"), nullable=False
@@ -76,23 +75,6 @@ class Item(Base):
     users = relationship("UserItem", back_populates="item")
 
 
-class Service(Base):
-    __tablename__ = "services"
-
-    id = Column(Integer, primary_key=True, autoincrement=True)
-    title = Column(String(50), nullable=False)
-    price = Column(Numeric(12, 2), nullable=False)
-    description = Column(Text, nullable=False)
-    photo = Column(String(250), nullable=True)
-
-    subcategory_id = Column(
-        Integer, ForeignKey("subcategory.id", ondelete="CASCADE"), nullable=False
-    )
-    subcategory = relationship("SubCategory", back_populates="services")
-
-    orders = relationship("Order", back_populates="service")
-
-
 class Order(Base):
     __tablename__ = "orders"
 
@@ -101,16 +83,13 @@ class Order(Base):
     item_id = Column(Integer, ForeignKey("items.id", ondelete="CASCADE"))
     item = relationship("Item", back_populates="orders")
 
-    service_id = Column(Integer, ForeignKey("services.id", ondelete="CASCADE"))
-    service = relationship("Service", back_populates="orders")
-
     user_id = Column(
         Integer, ForeignKey("users.id", ondelete="CASCADE"), nullable=False
     )
     user = relationship("User", back_populates="orders")
 
     paid = Column(Boolean, default=False, nullable=False)
-    summ = Column(Numeric(12, 2), nullable=True)
+    summ = Column(Float, nullable=True)
     quantity = Column(Integer, default=1, nullable=False)
 
 

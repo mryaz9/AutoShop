@@ -5,7 +5,7 @@ from sqlalchemy import select, func, delete
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from database.command.subcategory import get_subcategory
-from database.models import Item, ItemFiles, Service
+from database.models import Item, ItemFiles
 from schemas.admin import ItemModel
 
 
@@ -18,7 +18,7 @@ async def create_item(
     """
 
     item = Item(
-        name=item_obj.name,
+        title=item_obj.title,
         description=item_obj.description,
         price=item_obj.price,
         photo=item_obj.photo,
@@ -44,7 +44,6 @@ async def get_items_by_subcategory(session: AsyncSession, subcategory_id: int) -
     q = select(Item).where(Item.subcategory_id == subcategory_id)
 
     res = await session.execute(q)
-
     return res.scalars().all()
 
 
@@ -115,27 +114,3 @@ async def delete_item(session: AsyncSession, item_id: int) -> None:
     await session.execute(q)
 
     await session.commit()
-
-
-async def create_service(session: AsyncSession, service_obj: ItemModel) -> Service:
-    """Create the ServiceCategory instance"""
-
-    service = Service(title=service_obj.title, description=service_obj.description, price=service_obj.price)
-
-    subcategory = await get_subcategory(session, service_obj.subcategory_id)
-    service.subcategory = subcategory
-
-    session.add(service)
-
-    await session.commit()
-
-    return service
-
-
-async def get_service(session: AsyncSession, service_id: int) -> Service:
-    """Get Service instance"""
-
-    q = select(Service).where(Service.id == service_id)
-    res = await session.execute(q)
-
-    return res.scalar()

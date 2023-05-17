@@ -20,7 +20,7 @@ LEXICON_ASSORTIMENT: dict[str, str] = {
     'error_items': 'Сначала выберете продукт',
 
     'card': 'Товар:\n'
-            '{product.name}\n'
+            '{product.title}\n'
             '{product.price}руб.\n',
 
     'description': 'Описание: {product.description}\n',
@@ -30,7 +30,7 @@ LEXICON_ASSORTIMENT: dict[str, str] = {
 
     'buy_product': 'Купить',
 
-    'buy_product_window': 'Вы выбрали: {product.name}\n'  # Тут так же как выше
+    'buy_product_window': 'Вы выбрали: {product.title}\n'  # Тут так же как выше
                           'Сколько вы хотите купить?',
 
     'error_input_amount': 'Введите число',
@@ -38,7 +38,7 @@ LEXICON_ASSORTIMENT: dict[str, str] = {
 
     'buy_product_amount': 'Имеется {amount}шт.',  # Этот текст отображается только если имеется количество
 
-    'accept_buy_item': 'Вы хотите купить {product.name}\n'
+    'accept_buy_item': 'Вы хотите купить {product.title}\n'
                        'За {total_amount}руб.\n'
                        'Вы уверены?',
 
@@ -48,11 +48,11 @@ LEXICON_ASSORTIMENT: dict[str, str] = {
     'error_unknown_username': 'Создайте username',
     'error_not_money': 'Недостаточно средств',
 
-    'successful_buy_item': 'Вы купили {amount}шт. {name}',
+    'successful_buy_item': 'Вы купили {amount_user}шт. {title}',
 
     'send_admin_buy': 'Номер заказа: #{id}\n'
-                       'Товар: {name}\n'
-                       'Кол-во: {amount}\n'
+                       'Товар: {title}\n'
+                       'Кол-во: {amount_user}\n'
                        'Имя: {full_name}\n'
                        'Покупатель: @{username}\n',
 
@@ -173,7 +173,7 @@ LEXICON_ITEM: dict[str, str] = {
     'confirm': 'Все правильно?\n'
                'Каталог: {category}\n'
                'Подкаталог: {subcategory}\n'
-               'Название: {name}\n'
+               'Название: {title}\n'
                'Кол-во: {amount}\n'
                'Цена {price} руб.\n'
                'Описание: {description}',

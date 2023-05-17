@@ -43,30 +43,34 @@ async def on_chosen_product_info(callback: CallbackQuery, widget: Any, manager: 
 
     if len(files) == 0:
         await manager.start(BuyProduct.confirm, data={
-            "product_id": product_id})
+            "product_id": product_id,
+            "amount_user": 1
+        })
     else:
         await manager.start(BuyProduct.enter_amount, data={
-            "product_id": product_id})
+            "product_id": product_id
+        })
 
 
-async def on_entered_amount(message: Message, widget: TextInput, manager: DialogManager, amount: str):
+async def on_entered_amount(message: Message, widget: TextInput, manager: DialogManager, amount_user: str):
     session = manager.middleware_data.get("session")
     ctx = manager.current_context()
     product_id = ctx.start_data.get("product_id")
 
-    if not amount.isdigit():
+    if not amount_user.isdigit():
         await message.answer(LEXICON_ASSORTIMENT.get("error_input_amount"))
         return
 
-    amount = int(amount)
+    amount_user = int(amount_user)
     product_info = await get_files(session, int(product_id))
 
     if product_info is not None:
-        if len(product_info) < amount:
+        if (len(product_info) < amount_user) and (amount_user > 0):
             await message.answer(LEXICON_ASSORTIMENT.get("error_not_items"))
             return
 
-    ctx.dialog_data.update(amount=amount)
+        ctx.dialog_data.update(amount_user=amount_user)
+
     await manager.switch_to(BuyProduct.confirm)
 
 
@@ -75,7 +79,12 @@ async def on_confirm_buy(callback: CallbackQuery, widget: Any, manager: DialogMa
 
     ctx = manager.current_context()
     product_id = ctx.start_data.get("product_id")
-    amount = ctx.dialog_data.get("amount")
+
+    if ctx.start_data.get("amount_user") is not None:
+        amount_user = ctx.start_data.get("amount_user")
+    else:
+        amount_user = ctx.dialog_data.get("amount_user")
+
     # TODO: Запрос в бд для покупки товара
     user = await get_user(session, int(callback.from_user.id))
 
@@ -90,30 +99,13 @@ async def on_confirm_buy(callback: CallbackQuery, widget: Any, manager: DialogMa
         await callback.answer(LEXICON_ASSORTIMENT.get("error_not_money"), show_alert=True)
         return
 
-    purchases = Order(buyer_id=user.id,
-                          item_id=int(product_id),
-                          amount=int(amount),
-                          purchase_time=datetime.datetime.now())
+    await reduce_balance(session, product_info.price*amount_user, user.id)
 
-    await add_order(session, purchases)
-
-    await reduce_balance(session, product_info.price, user.id)
-
-    await callback.answer(LEXICON_ASSORTIMENT.get("successful_buy_item").format(amount=amount, name=product_info.name),
-                          show_alert=True)
-
-    purchases_get: Sequence[Order] = await get_purchases(session, user.id)
-    purchases_get: Order = purchases_get[-1]
-
-    username = callback.from_user.username
-    full_name = callback.from_user.full_name
-
-    message_text = LEXICON_ASSORTIMENT.get("send_admin_buy").format(
-        id=purchases_get.id, name=product_info.name,
-        amount=purchases_get.amount, full_name=full_name, username=username)
-
-    await new_order(session, message_text)
+    await callback.answer(
+        LEXICON_ASSORTIMENT.get("successful_buy_item").format(amount_user=amount_user, title=product_info.title),
+        show_alert=True)
 
     await manager.done(result={
         "switch_to_window": "select_products"
     })
+

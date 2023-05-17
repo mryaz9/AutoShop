@@ -9,7 +9,6 @@ from aiogram_dialog.widgets.text import Const, Format
 
 from handlers import getters, keyboard
 from handlers.users.assortiment import selected, states
-from handlers.keyboard import is_show
 from dictionary.dictionary_ru import LEXICON_ASSORTIMENT
 
 
@@ -36,7 +35,7 @@ def product_window():
     return Window(
         DynamicMedia("photo"),
         Const(LEXICON_ASSORTIMENT.get("items")),
-        keyboard.paginated_product(selected.on_chosen_product, show=is_show),
+        keyboard.paginated_product(selected.on_chosen_product),
         state=states.BotMenu.select_product,
         getter=getters.getter_product
     )
@@ -46,7 +45,7 @@ def product_info_window():
     return Window(
         DynamicMedia("photo"),
         Format(LEXICON_ASSORTIMENT.get("card")),
-        Format(LEXICON_ASSORTIMENT.get("description"), when=is_when_description),
+        Format(LEXICON_ASSORTIMENT.get("description")),
 
         Button(
             Const(LEXICON_ASSORTIMENT.get("buy_product")),
@@ -60,10 +59,6 @@ def product_info_window():
         state=states.BotMenu.select_product_info,
         getter=getters.getter_product_info
     )
-
-
-def is_when_description(data: Dict, widget: Whenable, manager: DialogManager):
-    return data.get("product").description is not None
 
 
 def buy_product_window():
