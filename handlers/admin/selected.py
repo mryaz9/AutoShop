@@ -5,11 +5,12 @@ from aiogram.types import CallbackQuery, Message
 from aiogram_dialog import DialogManager
 from aiogram_dialog.widgets.input import MessageInput
 from aiogram_dialog.widgets.kbd import Select
+from sqlalchemy.exc import DBAPIError
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from database.command.category import create_category
+from database.command.category import create_category, delete_category
 from database.command.item import create_item, hide_item
-from database.command.subcategory import create_subcategory
+from database.command.subcategory import create_subcategory, delete_subcategory
 from database.command.user import create_admin
 from handlers.admin.states import AddItem, AddCategories
 from dictionary.dictionary_ru import LEXICON_ITEM, LEXICON_CATEGORIES, LEXICON_ADMIN, LEXICON_MAILING
@@ -33,7 +34,7 @@ class DialogData:
 
 async def on_chosen_category(callback: CallbackQuery, widget: Any, manager: DialogManager, item_id: str):
     ctx = manager.current_context()
-    ctx.dialog_data.update(category_id=item_id)
+    ctx.dialog_data.update(category_id=int(item_id))
     await manager.switch_to(AddItem.select_subcategories)
 
 
@@ -94,14 +95,28 @@ async def on_chosen_confirm(callback: CallbackQuery, widget: Any, manager: Dialo
 
     await create_item(session, item)
 
-    await manager.event.answer(LEXICON_ITEM.get("done"))
+    await callback.answer(LEXICON_ITEM.get("done"))
     await manager.done()
 
 
-async def on_select_add_category(callback: CallbackQuery, widget: Any, manager: DialogManager, item_id: str):
+async def on_select_category(callback: CallbackQuery, widget: Any, manager: DialogManager, item_id: str):
     ctx = manager.current_context()
     ctx.dialog_data.update(category_id=item_id)
-    await manager.switch_to(AddCategories.add_subcategories)
+
+    if ctx.dialog_data.get("menu") == "add_subcategory":
+        await manager.switch_to(AddCategories.add_subcategories)
+
+    elif ctx.dialog_data.get("menu") == "del_categories":
+        await manager.switch_to(AddCategories.del_categories)
+
+    elif ctx.dialog_data.get("menu") == "del_subcategories":
+        await manager.switch_to(AddCategories.select_subcategories)
+
+
+async def on_select_subcategory(callback: CallbackQuery, widget: Any, manager: DialogManager, item_id: str):
+    ctx = manager.current_context()
+    ctx.dialog_data.update(subcategory_id=item_id)
+    await manager.switch_to(AddCategories.del_subcategories)
 
 
 async def on_add_category(message: Message, input_message: MessageInput, manager: DialogManager):
@@ -154,12 +169,39 @@ async def on_hide_item(callback: CallbackQuery, widget: Any, manager: DialogMana
     session = manager.middleware_data.get("session")
     show = await hide_item(session, int(item_id))
     if show:
-        await manager.event.answer(LEXICON_ITEM.get("hide_on"), show_alert=True)
+        await callback.answer(LEXICON_ITEM.get("hide_on"), show_alert=True)
 
     elif not show:
-        await manager.event.answer(LEXICON_ITEM.get("hide_off"), show_alert=True)
+        await callback.answer(LEXICON_ITEM.get("hide_off"), show_alert=True)
+
+
+async def on_del_categories(callback: CallbackQuery, widget: Any, manager: DialogManager):
+    session = manager.middleware_data.get("session")
+    ctx = manager.current_context()
+    category_id = int(ctx.dialog_data.get("category_id"))
+
+    await delete_category(session, category_id)
+    await callback.answer(LEXICON_CATEGORIES.get("successful_del_categories"))
+
+    await manager.done()
+
+
+async def on_del_subcategories(callback: CallbackQuery, widget: Any, manager: DialogManager):
+    session = manager.middleware_data.get("session")
+    ctx = manager.current_context()
+    subcategory_id = int(ctx.dialog_data.get("subcategory_id"))
+
+    await delete_subcategory(session, subcategory_id)
+    await callback.answer(LEXICON_CATEGORIES.get("successful_del_subcategories"))
+
+    await manager.done()
 
 
 async def on_select_menu(callback: CallbackQuery, widget: Any, manager: DialogManager):
     ctx = manager.current_context()
     ctx.dialog_data.update(menu=widget.widget_id)
+
+
+# TODO: Обернуть все запросы в бд
+#except DBAPIError:
+    #    await callback.answer(LEXICON_CATEGORIES.get("error_db"))

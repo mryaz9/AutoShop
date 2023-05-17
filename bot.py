@@ -7,7 +7,7 @@ from aiogram import Bot, Dispatcher
 from sqlalchemy.ext.asyncio import async_sessionmaker
 
 from database import get_async_sessionmaker
-from database.command.user import create_admin
+from database.command.user import create_admin, add_admin
 from handlers import error
 from handlers.admin import admin_dialogs
 from handlers.users.assortiment import items_dialogs
@@ -74,7 +74,7 @@ async def main():
 
     async with sessionmaker() as session:
         for admin in config.bot.admins:
-            await create_admin(session, admin)
+            await add_admin(session, admin)
 
     register_middleware(dp, db_middleware)
     register_middleware(dp, config_middleware)

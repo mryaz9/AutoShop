@@ -106,15 +106,29 @@ LEXICON_ADMIN: dict[str, str] = {
 
 LEXICON_CATEGORIES: dict[str, str] = {
     'categories_menu': 'Редактирование категорий',
+
     'add_categories': 'Добавить категорию',
+    'del_categories': 'Удалить категорию',
+    'del_categories_confirm': 'Вы уверены? При удалении потеряются все подкатегории и товары',
+    'back_del_categories_confirm': 'Изменить категорию',
+    'successful_del_categories': 'Категория удалена успешно',
+
     'add_subcategories': 'Добавить подкатегорию',
+    'del_subcategories': 'Удалить подкатегорию',
+    'del_subcategories_confirm': 'Вы уверены? При удалении потеряются все товары',
+    'back_del_subcategories_confirm': 'Изменить подкатегорию',
+    'successful_del_subcategories': 'Подкатегория удалена успешно',
+
     'select_category': 'Выберите категорию',
+    'select_subcategory': 'Выберите подкатегорию',
 
     'input_new_category': 'Введите название новой категории',
     'input_new_subcategory': 'Введите название новой подкатегории',
 
     'successful_add_category': 'Категория {category} добавлена успешно!',
     'successful_add_subcategory': 'Подкатегория {subcategory} добавлена успешно!',
+
+    'error_db': 'Произошла ошибка при работе с бд',
 
     'to_menu': 'В основное меню',
     'to_category_menu': 'В меню категорий'

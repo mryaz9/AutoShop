@@ -24,8 +24,13 @@ class AddItem(StatesGroup):
 class AddCategories(StatesGroup):
     categories_menu = State()
     select_categories = State()
+    select_subcategories = State()
+
     add_categories = State()
+    del_categories = State()
+
     add_subcategories = State()
+    del_subcategories = State()
 
 
 class AddAdmin(StatesGroup):

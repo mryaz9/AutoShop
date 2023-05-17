@@ -73,8 +73,8 @@ class Payment(BaseSettings):
 class Config(BaseModel):
     """App config"""
 
-    bot: Bot = Bot()
     db: DB = DB()
+    bot: Bot = Bot()
     payment: Payment = Payment()
 
 
