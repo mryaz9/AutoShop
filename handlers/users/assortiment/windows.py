@@ -4,6 +4,7 @@ from aiogram_dialog import Window, Data, DialogManager
 from aiogram_dialog.widgets.common import Whenable
 from aiogram_dialog.widgets.input import TextInput
 from aiogram_dialog.widgets.kbd import Cancel, Back, Button, Row
+from aiogram_dialog.widgets.media import DynamicMedia
 from aiogram_dialog.widgets.text import Const, Format
 
 from handlers import getters, keyboard
@@ -17,30 +18,33 @@ def categories_window():
         Const(LEXICON_ASSORTIMENT.get("categories")),
         keyboard.paginated_categories(selected.on_chosen_category),
         state=states.BotMenu.select_categories,
-        getter=getters.get_category
+        getter=getters.getter_category
     )
 
 
 def subcategories_window():
     return Window(
+        DynamicMedia("photo"),
         Const(LEXICON_ASSORTIMENT.get("subcategories")),
         keyboard.paginated_subcategories(selected.on_chosen_subcategories),
         state=states.BotMenu.select_subcategories,
-        getter=getters.get_subcategory
+        getter=getters.getter_subcategory
     )
 
 
 def product_window():
     return Window(
+        DynamicMedia("photo"),
         Const(LEXICON_ASSORTIMENT.get("items")),
         keyboard.paginated_product(selected.on_chosen_product, show=is_show),
         state=states.BotMenu.select_product,
-        getter=getters.get_product
+        getter=getters.getter_product
     )
 
 
 def product_info_window():
     return Window(
+        DynamicMedia("photo"),
         Format(LEXICON_ASSORTIMENT.get("card")),
         Format(LEXICON_ASSORTIMENT.get("description"), when=is_when_description),
 
@@ -54,7 +58,7 @@ def product_info_window():
             Back(Const(LEXICON_ASSORTIMENT.get("back_select_items"))),
         ),
         state=states.BotMenu.select_product_info,
-        getter=getters.get_product_info
+        getter=getters.getter_product_info
     )
 
 
@@ -81,7 +85,7 @@ def buy_product_window():
                    result={"switch_to_window": "select_products"}),
         ),
         state=states.BuyProduct.enter_amount,
-        getter=getters.get_buy_product
+        getter=getters.getter_buy_product
     )
 
 
@@ -100,7 +104,7 @@ def confirm_buy_window():
                    result={"switch_to_window": "select_products"}),
         ),
         state=states.BuyProduct.confirm,
-        getter=getters.get_buy_product
+        getter=getters.getter_buy_product
     )
 
 

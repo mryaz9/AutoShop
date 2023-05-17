@@ -38,7 +38,7 @@ def categories_window():
         Const(lex.get("select_category")),
         keyboard.paginated_categories(selected.on_chosen_category),
         state=states.AddItem.select_categories,
-        getter=getters.get_category
+        getter=getters.getter_category
     )
 
 
@@ -47,7 +47,7 @@ def subcategories_window():
         Const(lex.get("select_subcategory")),
         keyboard.paginated_subcategories(selected.on_chosen_subcategories),
         state=states.AddItem.select_subcategories,
-        getter=getters.get_subcategory
+        getter=getters.getter_subcategory
     )
 
 
@@ -131,7 +131,7 @@ def confirm_window():
             ),
         ),
         state=states.AddItem.confirm,
-        getter=getters.get_confirm_add
+        getter=getters.getter_confirm_add
     )
 
 
@@ -140,6 +140,6 @@ def hide_item_window():
         Const(lex.get("hide_item")),
         keyboard.paginated_product(selected.on_hide_item, hide=lambda d, w, m: True),
         state=states.AddItem.hide_item,
-        getter=getters.get_product
+        getter=getters.getter_product
     )
 

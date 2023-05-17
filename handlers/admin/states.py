@@ -26,9 +26,13 @@ class AddCategories(StatesGroup):
     select_categories = State()
     select_subcategories = State()
 
+    input_name_categories = State()
+    input_photo_categories = State()
     add_categories = State()
     del_categories = State()
 
+    input_name_subcategories = State()
+    input_photo_subcategories = State()
     add_subcategories = State()
     del_subcategories = State()
 

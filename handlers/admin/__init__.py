@@ -24,11 +24,20 @@ def admin_dialogs():
         ),
         Dialog(
             add_categories.menu_window(),
+
             add_categories.select_categories_window(),
             add_categories.select_subcategories_window(),
-            add_categories.add_categories_window(),
+
+            add_categories.input_name_category_window(),
+            add_categories.photo_categories_window(),
+            add_categories.add_categories_confirm_window(),
+
             add_categories.del_categories_confirm_window(),
-            add_categories.add_subcategories_window(),
+
+            add_categories.input_name_subcategory_window(),
+            add_categories.photo_subcategories_window(),
+            add_categories.add_subcategories_confirm_window(),
+
             add_categories.del_subcategories_confirm_window()
         ),
         Dialog(

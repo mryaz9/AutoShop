@@ -104,7 +104,7 @@ async def on_select_category(callback: CallbackQuery, widget: Any, manager: Dial
     ctx.dialog_data.update(category_id=item_id)
 
     if ctx.dialog_data.get("menu") == "add_subcategory":
-        await manager.switch_to(AddCategories.add_subcategories)
+        await manager.switch_to(AddCategories.input_name_subcategories)
 
     elif ctx.dialog_data.get("menu") == "del_categories":
         await manager.switch_to(AddCategories.del_categories)
@@ -119,29 +119,54 @@ async def on_select_subcategory(callback: CallbackQuery, widget: Any, manager: D
     await manager.switch_to(AddCategories.del_subcategories)
 
 
-async def on_add_category(message: Message, input_message: MessageInput, manager: DialogManager):
+async def on_input_name_category(message: Message, input_message: MessageInput, manager: DialogManager):
+    ctx = manager.current_context()
+    ctx.dialog_data.update(title=message.text)
+    await manager.switch_to(AddCategories.input_photo_categories)
+
+
+async def on_input_photo_category(message: Message, input_message: MessageInput, manager: DialogManager):
+    ctx = manager.current_context()
+    ctx.dialog_data.update(photo=message.photo[-1].file_id)
+    await manager.switch_to(AddCategories.add_categories)
+
+
+async def on_add_categories(callback: CallbackQuery, widget: Any, manager: DialogManager):
     session = manager.middleware_data.get("session")
-    category = CategoryModel(
-        title=message.text,
-        photo="none"
-    )
+    ctx = manager.current_context()
+    data = ctx.dialog_data
+
+    category = CategoryModel(**data)
 
     await create_category(session, category)
 
-    await manager.event.answer(LEXICON_CATEGORIES.get("successful_add_category").format(category=message.text))
+    await callback.answer(LEXICON_CATEGORIES.get("successful_add_category"))
     await manager.done()
 
 
-async def on_add_subcategory(message: Message, input_message: MessageInput, manager: DialogManager):
+async def on_input_name_subcategory(message: Message, input_message: MessageInput, manager: DialogManager):
+    ctx = manager.current_context()
+    ctx.dialog_data.update(title=message.text)
+    await manager.switch_to(AddCategories.input_photo_subcategories)
+
+
+async def on_input_photo_subcategory(message: Message, input_message: MessageInput, manager: DialogManager):
+    ctx = manager.current_context()
+    ctx.dialog_data.update(photo=message.photo[-1].file_id)
+    await manager.switch_to(AddCategories.add_subcategories)
+
+
+async def on_add_subcategories(callback: CallbackQuery, widget: Any, manager: DialogManager):
     session = manager.middleware_data.get("session")
     ctx = manager.current_context()
-    subcategory = SubCategoryModel(title=message.text,
-                                   category_id=ctx.dialog_data.get("category_id"),
-                                   photo="none")
+    data = ctx.dialog_data
+
+    subcategory = SubCategoryModel(**data)
 
     await create_subcategory(session, subcategory)
 
-    await manager.event.answer(LEXICON_CATEGORIES.get("successful_add_subcategory").format(subcategory=message.text))
+    await callback.answer(
+        LEXICON_CATEGORIES.get("successful_add_subcategory"))
     await manager.done()
 
 
