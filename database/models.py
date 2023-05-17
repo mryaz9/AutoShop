@@ -1,31 +1,33 @@
 from sqlalchemy import (Column, Integer, BigInteger, String,
-                        Sequence, TIMESTAMP, Boolean, JSON, Float, ForeignKey, DateTime)
-from sqlalchemy import sql
+                        Sequence, TIMESTAMP, Boolean, JSON, Float, ForeignKey, DateTime, Text, Numeric)
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship
 
 Base = declarative_base()
 
 
-class Users(Base):
-    __tablename__ = 'users'
+class UserItem(Base):
+    __tablename__ = "user_item"
 
-    id = Column(BigInteger, primary_key=True, autoincrement=False, nullable=False)
-    admin = Column(Boolean, default=False, nullable=False)
-    balance = Column(Float, default=0, nullable=False)
-    register_time = Column(DateTime, nullable=False)
+    user_id = Column(
+        Integer, ForeignKey("users.id", ondelete="CASCADE"), primary_key=True
+    )
+    item_id = Column(
+        Integer, ForeignKey("items.id", ondelete="CASCADE"), primary_key=True
+    )
+    quantity = Column(Integer, default=1, nullable=False)
 
-    items = relationship("UserItem", back_populates="user")
-    orders = relationship("Order", back_populates="user")
+    user = relationship("User", back_populates="items")
+    item = relationship("Item", back_populates="users")
 
 
 class Category(Base):
-    __tablename__ = 'category'
+    __tablename__ = "categories"
 
     id = Column(Integer, primary_key=True, autoincrement=True)
+    title = Column(String(50), nullable=False)
     photo = Column(String(250), nullable=True)
-    show = Column(Boolean, default=True, nullable=False)
-    title = Column(String(250), nullable=False)
+    subcategory = relationship("SubCategory", back_populates="category")
 
 
 class SubCategory(Base):
@@ -35,21 +37,12 @@ class SubCategory(Base):
     photo = Column(String(250), nullable=True)
     show = Column(Boolean, default=True, nullable=False)
     title = Column(String(250), nullable=False)
-    category_id = Column(Integer, ForeignKey("category.id", ondelete="CASCADE"))
-
-
-class Items(Base):
-    __tablename__ = 'items'
-
-    id = Column(Integer, primary_key=True, autoincrement=True)
-    show = Column(Boolean, default=True, nullable=False)
-    subcategory_id = Column(Integer, ForeignKey("subcategory.id", ondelete="CASCADE"))
-    name = Column(String(250), nullable=False)
-    photo = Column(String(250), nullable=True)
-    price = Column(Integer, nullable=False)
-    description = Column(String(255), nullable=True)
-
-    files = relationship("ItemFiles", back_populates="item")
+    category_id = Column(
+        Integer, ForeignKey("categories.id", ondelete="CASCADE"), nullable=False
+    )
+    category = relationship("Category", back_populates="subcategory")
+    items = relationship("Item", back_populates="subcategory")
+    services = relationship("Service", back_populates="subcategory")
 
 
 class ItemFiles(Base):
@@ -58,8 +51,46 @@ class ItemFiles(Base):
     id = Column(Integer, primary_key=True, autoincrement=True)
     file_id = Column(String(150), nullable=False)
 
-    item_id = Column(Integer, ForeignKey("items.id", ondelete="CASCADE"), nullable=False)
-    item = relationship("Items", back_populates="files")
+    item_id = Column(
+        Integer, ForeignKey("items.id", ondelete="CASCADE"), nullable=False
+    )
+    item = relationship("Item", back_populates="files")
+
+
+class Item(Base):
+    __tablename__ = "items"
+
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    title = Column(String(50), nullable=False)
+    photo = Column(String(250), nullable=True)
+    description = Column(Text, nullable=False)
+    price = Column(Numeric(12, 2), nullable=False)
+
+    subcategory_id = Column(
+        Integer, ForeignKey("subcategory.id", ondelete="CASCADE"), nullable=False
+    )
+    subcategory = relationship("SubCategory", back_populates="items")
+
+    orders = relationship("Order", back_populates="item")
+    files = relationship("ItemFiles", back_populates="item")
+    users = relationship("UserItem", back_populates="item")
+
+
+class Service(Base):
+    __tablename__ = "services"
+
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    title = Column(String(50), nullable=False)
+    price = Column(Numeric(12, 2), nullable=False)
+    description = Column(Text, nullable=False)
+    photo = Column(String(250), nullable=True)
+
+    subcategory_id = Column(
+        Integer, ForeignKey("subcategory.id", ondelete="CASCADE"), nullable=False
+    )
+    subcategory = relationship("SubCategory", back_populates="services")
+
+    orders = relationship("Order", back_populates="service")
 
 
 class Order(Base):
@@ -70,28 +101,27 @@ class Order(Base):
     item_id = Column(Integer, ForeignKey("items.id", ondelete="CASCADE"))
     item = relationship("Item", back_populates="orders")
 
+    service_id = Column(Integer, ForeignKey("services.id", ondelete="CASCADE"))
+    service = relationship("Service", back_populates="orders")
+
     user_id = Column(
         Integer, ForeignKey("users.id", ondelete="CASCADE"), nullable=False
     )
-    user = relationship("Users", back_populates="orders")
-
-    purchase_time = Column(DateTime)
+    user = relationship("User", back_populates="orders")
 
     paid = Column(Boolean, default=False, nullable=False)
-    summ = Column(Integer, nullable=True)
+    summ = Column(Numeric(12, 2), nullable=True)
     quantity = Column(Integer, default=1, nullable=False)
 
 
-class UsersItem(Base):
-    __tablename__ = "users_item"
+class User(Base):
+    __tablename__ = "users"
 
-    user_id = Column(
-        Integer, ForeignKey("users.id", ondelete="CASCADE"), primary_key=True
-    )
-    item_id = Column(
-        Integer, ForeignKey("items.id", ondelete="CASCADE"), primary_key=True
-    )
-    quantity = Column(Integer, default=1, nullable=False)
+    id = Column(BigInteger, primary_key=True, autoincrement=False)
 
-    user = relationship("Users", back_populates="items")
-    item = relationship("Item", back_populates="users")
+    admin = Column(Boolean, default=False, nullable=False)
+    balance = Column(Float, default=0, nullable=False)
+    register_time = Column(DateTime, nullable=False)
+
+    items = relationship("UserItem", back_populates="user")
+    orders = relationship("Order", back_populates="user")

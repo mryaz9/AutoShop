@@ -20,7 +20,6 @@ class CategoryModel(BaseModel):
 
     title: str = Field(max_length=50)
     photo: str = ''
-    show: bool = True
 
     _must_not_digit_title = validator("title", allow_reuse=True, check_fields=False)(must_not_digit)
 
@@ -30,7 +29,6 @@ class SubCategoryModel(BaseModel):
 
     title: str = Field(max_length=50)
     photo: str = ''
-    show: bool = True
     category_id: int
 
     _must_not_digit_title = validator("title", allow_reuse=True, check_fields=False)(must_not_digit)
@@ -39,12 +37,11 @@ class SubCategoryModel(BaseModel):
 class ItemModel(BaseModel):
     """Item schema"""
 
-    name: str = Field(max_length=50)
+    title: str = Field(max_length=50)
     description: str = ""
     photo: str = ''
     price: condecimal(max_digits=12, decimal_places=2)
     subcategory_id: int
-    show: bool = True
     files: list[str] = ''
 
     _must_not_digit_title = validator("title", allow_reuse=True, check_fields=False)(must_not_digit)

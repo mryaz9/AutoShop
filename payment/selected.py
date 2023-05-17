@@ -8,7 +8,6 @@ from aiogram_dialog.widgets.kbd import Button
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from database.command.user import get_user, add_balance
-from database.models import Users
 from payment import states
 from utils.init_payment import init_qiwi_client, init_crypto_client
 

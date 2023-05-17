@@ -4,6 +4,7 @@ from typing import Sequence
 from sqlalchemy import select, func, delete
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from database.command.category import get_category
 from database.models import SubCategory
 from schemas.admin import SubCategoryModel
 
@@ -40,10 +41,14 @@ async def get_subcategory(session: AsyncSession, subcategory_id: int) -> SubCate
 async def create_subcategory(session: AsyncSession, subcategory_obj: SubCategoryModel) -> None:
     """Create the SubCategory instance"""
 
-    category = SubCategory(title=subcategory_obj.title, photo=subcategory_obj.photo,
-                           category_id=subcategory_obj.category_id)
+    subcategory = SubCategory(title=subcategory_obj.title, photo=subcategory_obj.photo,
+                              category_id=subcategory_obj.category_id)
 
-    session.add(category)
+    category = await get_category(session, subcategory_obj.category_id)
+
+    subcategory.category = category
+
+    session.add(subcategory)
     await session.commit()
 
 

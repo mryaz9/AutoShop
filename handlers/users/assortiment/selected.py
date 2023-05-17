@@ -7,7 +7,7 @@ from aiogram_dialog.widgets.input import TextInput
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from database.command.item import get_item, get_files
-from database.command.purchases import add_purchases, get_purchases
+from database.command.purchases import add_order, get_purchases
 from database.command.user import get_user, reduce_balance
 from database.models import Order
 from handlers.users.assortiment.states import BotMenu, BuyProduct
@@ -95,7 +95,7 @@ async def on_confirm_buy(callback: CallbackQuery, widget: Any, manager: DialogMa
                           amount=int(amount),
                           purchase_time=datetime.datetime.now())
 
-    await add_purchases(session, purchases)
+    await add_order(session, purchases)
 
     await reduce_balance(session, product_info.price, user.id)
 
