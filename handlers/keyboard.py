@@ -83,7 +83,7 @@ def paginated_product(on_click):
         ScrollingGroup(
             Select(
                 Multi(
-                    Format("{item[0].title}"),
+                    Format("{item[0].title} | "),
                     Format("{item[0].price}руб."),
                     sep="\n",
                 ),

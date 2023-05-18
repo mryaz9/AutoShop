@@ -45,8 +45,6 @@ def product_info_window():
     return Window(
         DynamicMedia("photo"),
         Format(LEXICON_ASSORTIMENT.get("card")),
-        Format(LEXICON_ASSORTIMENT.get("description")),
-
         Button(
             Const(LEXICON_ASSORTIMENT.get("buy_product")),
             id="buy_product",

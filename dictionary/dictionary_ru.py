@@ -1,36 +1,36 @@
 LEXICON_MAIN: dict[str, str] = {
     'start': 'Вас приветствует команда TGC!\n'
-             'Добро пожаловать!',
-    'assortment': '⚡Ассортимент',
-    'profile': '💳Профиль',
-    '️orders': '⚙️Заказы',
-    'admin': 'ℹ️Меню админа',
+             'Добро пожаловать, {username}!',
+    'assortment': '🛍️ Каталог товаров',
+    'profile': '💳 Профиль',
+    '️orders': '⚙️ Заказы',
+    'admin': 'ℹ️ Меню админа',
 }
 
 LEXICON_ASSORTIMENT: dict[str, str] = {
-    'categories': 'Каталог:',
+    'categories': '"Каталог товаров" 🛍️',
     'error_categories': 'Сначала выберете категорию',
 
-    'subcategories': 'Подкаталог:',
+    'subcategories': '"Подкаталог товаров" 🛍️',
     'not_subcategories': 'Нет подкатегорий',
     'error_subcategories': 'Сначала выберете подкатегорию',
 
-    'items': 'Товары:',
+    'items': '"Товары" 🛍️',
     'not_items': 'Нет товаров',
     'error_items': 'Сначала выберете продукт',
 
-    'card': 'Товар:\n'
-            '{product.title}\n'
-            '{product.price}руб.\n',
+    'card': '🎁 Покупка товара:\n➖➖➖➖➖➖➖➖➖➖➖➖➖\n'
+            '🏷 Название: {product.title}\n'
+            '💵 Стоимость: {product.price}руб.\n'
+            '📜 Описание: {product.description}\n',
 
-    'description': 'Описание: {product.description}\n',
     # У product есть атрибуты:
     # amount, price, name, id, show, subcategory_id,
     # admin_id_add, description, photo, time_action
 
-    'buy_product': 'Купить',
+    'buy_product': '"Купить" 💰',
 
-    'buy_product_window': 'Вы выбрали: {product.title}\n'  # Тут так же как выше
+    'buy_product_window': '✅ Вы выбрали: {product.title}\n'  # Тут так же как выше
                           'Сколько вы хотите купить?',
 
     'error_input_amount': 'Введите число',
@@ -38,17 +38,18 @@ LEXICON_ASSORTIMENT: dict[str, str] = {
 
     'buy_product_amount': 'Имеется {amount}шт.',  # Этот текст отображается только если имеется количество
 
-    'accept_buy_item': 'Вы хотите купить {product.title}\n'
-                       'За {total_amount}руб.\n'
-                       'Вы уверены?',
+    'accept_buy_item': 'Вы хотите купить: {product.title}\n'
+                       'За {total_amount}руб.\n\n'
+                       'Все верно?',
 
-    'accept_buy_item_amount': 'Вы выбрали {amount_user} шт\n',
+    'accept_buy_item_amount': 'Вы выбрали {amount_user}шт.\n',
 
     'confirm_buy': 'Да',
     'error_unknown_username': 'Создайте username',
     'error_not_money': 'Недостаточно средств',
 
-    'successful_buy_item': 'Вы купили {amount_user}шт. {title}',
+    'successful_buy_item': '✅Вы купили {title}\n'
+                           'Спасибо за покупку!',
 
     'send_admin_buy': 'Номер заказа: #{id}\n'
                        'Товар: {title}\n'
@@ -203,4 +204,9 @@ LEXICON_MAILING: dict[str, str] = {
 LEXICON_ADMIN_INFO: dict[str, str] = {
     'startup': 'Бот запущен!',
     'shutdown': 'Бот остановлен!'
+}
+
+BUTTON_MENU: dict[str, str] = {
+    'back': "⬅️ Назад ↩️",
+    'to_menu': "🏠 Меню 🏠"
 }
