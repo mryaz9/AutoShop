@@ -84,13 +84,19 @@ async def main():
 
     await bot.delete_webhook(drop_pending_updates=True)
 
-    await dp.start_polling(bot)
-
-    # Проверяет станые апдейты с учетом имеющихся хендлеров
-    # await dp.start_polling(bot, allowed_updates=dp.resolve_used_update_types())
+    try:
+        await dp.start_polling(bot)
+    except Exception as ex:
+        logging.error(f"[!!! Exception] - {ex}", exc_info=True)
+    finally:
+        await bot.session.close()
 
 
 if __name__ == '__main__':
-    logging.basicConfig(filename='logs/debug.log', level=logging.DEBUG)
+    logging.basicConfig(filename='logs/debug.log',
+                        level=logging.DEBUG,
+                        format="%(asctime)s - [%(levelname)s] -  %(name)s - "
+                               "(%(filename)s).%(funcName)s(%(lineno)d) - %(message)s"
+                        )
     logging.getLogger().addHandler(logging.StreamHandler())
     asyncio.run(main())

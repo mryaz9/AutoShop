@@ -51,10 +51,8 @@ LEXICON_ASSORTIMENT: dict[str, str] = {
     'successful_buy_item': '✅Вы купили {title}\n'
                            'Спасибо за покупку!',
 
-    'send_admin_buy': 'Номер заказа: #{id}\n'
-                       'Товар: {title}\n'
+    'send_admin_buy': 'Товар: {title}\n'
                        'Кол-во: {amount_user}\n'
-                       'Имя: {full_name}\n'
                        'Покупатель: @{username}\n',
 
     'back_select_categories': 'Изменить категорию',

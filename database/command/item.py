@@ -134,6 +134,8 @@ async def add_files(session: AsyncSession, item_id: int, files: list) -> None:
         obj = ItemFiles(file_id=files_id, item_id=item.id)
         item_files_objects.append(obj)
 
+    item.quantity += len(item_files_objects)
+
     session.add_all(item_files_objects)
 
     await session.commit()

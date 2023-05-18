@@ -44,3 +44,4 @@ class ConfigMiddleware(BaseMiddleware):
         data["config"] = self.config
         result = await handler(event, data)
         return result
+

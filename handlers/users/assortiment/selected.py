@@ -92,7 +92,7 @@ async def on_confirm_buy(callback: CallbackQuery, widget: Any, manager: DialogMa
 
     product_info = await get_item(session, product_id)
 
-    summ = product_info.price*amount_user
+    summ = product_info.price * amount_user
 
     if callback.from_user.username is None:
         await callback.answer(LEXICON_ASSORTIMENT.get("error_unknown_username"), show_alert=True)
@@ -116,6 +116,20 @@ async def on_confirm_buy(callback: CallbackQuery, widget: Any, manager: DialogMa
             for i in part:
                 await callback.message.answer_media_group(media=i)
 
+        message_text = LEXICON_ASSORTIMENT.get("send_admin_buy").format(
+            title=product_info.title,
+            amount_user=amount_user,
+            username=callback.from_user.username)
+
+        await new_order(session, message_text, notify=True)
+
+    elif not files:
+        message_text = LEXICON_ASSORTIMENT.get("send_admin_buy").format(
+            title=product_info.title,
+            amount_user=amount_user,
+            username=callback.from_user.username)
+
+        await new_order(session, message_text, notify=False)
 
     # TODO: Добавить файлы в заказ
 
@@ -128,4 +142,3 @@ async def on_confirm_buy(callback: CallbackQuery, widget: Any, manager: DialogMa
     await manager.done(result={
         "switch_to_window": "select_products"
     })
-
