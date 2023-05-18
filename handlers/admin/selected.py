@@ -5,11 +5,12 @@ from aiogram.types import CallbackQuery, Message
 from aiogram_dialog import DialogManager
 from aiogram_dialog.widgets.input import MessageInput
 from aiogram_dialog.widgets.kbd import Select
+from loguru import logger
 from sqlalchemy.exc import DBAPIError
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from database.command.category import create_category, delete_category
-from database.command.item import create_item, delete_item
+from database.command.item import create_item, delete_item, add_files
 from database.command.subcategory import create_subcategory, delete_subcategory
 from database.command.user import create_admin
 from handlers.admin.states import AddItem, AddCategories
@@ -49,11 +50,21 @@ async def on_chosen_subcategories(callback: CallbackQuery, widget: Select, manag
     if menu == "del_item":
         await manager.switch_to(AddItem.select_item)
 
+    if menu == "add_files":
+        await manager.switch_to(AddItem.select_item)
+
 
 async def on_chosen_items(callback: CallbackQuery, widget: Select, manager: DialogManager, item_id: str):
     ctx = manager.current_context()
     ctx.dialog_data.update(item_id=item_id)
-    await manager.switch_to(AddItem.del_item)
+
+    menu = ctx.dialog_data.get("menu")
+
+    if menu == "del_item":
+        await manager.switch_to(AddItem.del_item)
+
+    if menu == "add_files":
+        await manager.switch_to(AddItem.add_files)
 
 
 async def on_chosen_name(message: Message, input_message: MessageInput, manager: DialogManager):
@@ -71,6 +82,7 @@ async def on_chosen_amount(message: Message, input_message: MessageInput, manage
         ctx.dialog_data["files"] = []
 
     ctx.dialog_data.get("files").extend([message.document.file_id])
+    ctx.dialog_data.update(quantity=len(ctx.dialog_data["files"]))
 
 
 async def on_chosen_photo(message: Message, input_message: MessageInput, manager: DialogManager):
@@ -96,10 +108,22 @@ async def on_chosen_confirm(callback: CallbackQuery, widget: Any, manager: Dialo
     session = manager.middleware_data.get("session")
     ctx = manager.current_context()
     data = ctx.dialog_data
+    logger.info(data)
     item = ItemModel(**data)
     await create_item(session, item)
 
     await callback.answer(LEXICON_ITEM.get("done"))
+    await manager.done()
+
+
+async def on_add_files_confirm(callback: CallbackQuery, widget: Any, manager: DialogManager):
+    session = manager.middleware_data.get("session")
+    ctx = manager.current_context()
+    data = ctx.dialog_data
+    item_id = data.get("item_id")
+    files = data.get("files")
+
+    await add_files(session, int(item_id), files)
     await manager.done()
 
 

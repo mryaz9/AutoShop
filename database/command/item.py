@@ -22,7 +22,8 @@ async def create_item(
         description=item_obj.description,
         price=item_obj.price,
         photo=item_obj.photo,
-        subcategory_id=item_obj.subcategory_id
+        subcategory_id=item_obj.subcategory_id,
+        quantity=item_obj.quantity
     )
 
     item_files_objects = []
@@ -121,4 +122,18 @@ async def delete_item(session: AsyncSession, item_id: int) -> None:
 
     q = delete(Item).where(Item.id == item_id)
     await session.execute(q)
+    await session.commit()
+
+
+async def add_files(session: AsyncSession, item_id: int, files: list) -> None:
+    item = await get_item(session, item_id)
+
+    item_files_objects = []
+
+    for files_id in files:
+        obj = ItemFiles(file_id=files_id, item_id=item.id)
+        item_files_objects.append(obj)
+
+    session.add_all(item_files_objects)
+
     await session.commit()

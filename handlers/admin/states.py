@@ -7,6 +7,8 @@ class AdminMenu(StatesGroup):
 
 class AddItem(StatesGroup):
     menu = State()
+    add_files = State()
+    confirm_add_files = State()
     del_item = State()
 
     select_categories = State()

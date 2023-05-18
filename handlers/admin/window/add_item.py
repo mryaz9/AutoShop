@@ -21,6 +21,12 @@ def menu_window():
             on_click=selected.on_select_menu
         ),
         SwitchTo(
+            Const(lex.get("add_files")),
+            state=states.AddItem.select_categories,
+            id="add_files",
+            on_click=selected.on_select_menu
+        ),
+        SwitchTo(
             Const(lex.get("del_item")),
             state=states.AddItem.select_categories,
             id="del_item",
@@ -57,6 +63,26 @@ def items_window():
         keyboard.paginated_product(selected.on_chosen_items),
         state=states.AddItem.select_item,
         getter=getters.getter_product
+    )
+
+
+def add_files_window():
+    return Window(
+        Const(lex.get("input_amount")),
+        Format("Получено {files_count} файлов", when="files_count"),
+        MessageInput(selected.on_chosen_amount, content_types=types.ContentType.DOCUMENT),
+        SwitchTo(
+            Const("Далее"),
+            id="sw_t_add_files",
+            state=states.AddItem.confirm_add_files,
+            when="files_count"
+        ),
+        Row(
+            Cancel(Const(lex.get("to_menu"))),
+            Back(Const("Назад")),
+        ),
+        state=states.AddItem.add_files,
+        getter=getters.item_files_getter,
     )
 
 
@@ -127,16 +153,14 @@ def description_window():
 def confirm_window():
     return Window(
         Format(lex.get("confirm")),
+        Button(
+            Const("Да"),
+            id="confirm_yes",
+            on_click=selected.on_chosen_confirm
+        ),
         Row(
-            Button(
-                Const("Да"),
-                id="confirm_yes",
-                on_click=selected.on_chosen_confirm
-            ),
-            Row(
-                Cancel(Const(lex.get("to_menu"))),
-                Back(Const(lex.get("back_input_confirm"))),
-            ),
+            Cancel(Const(lex.get("to_menu"))),
+            Back(Const(lex.get("back_input_confirm"))),
         ),
         state=states.AddItem.confirm,
         getter=getters.getter_confirm_add
@@ -155,4 +179,20 @@ def del_item_confirm_window():
         ),
         Back(Const(lex.get("to_item_menu"))),
         state=states.AddItem.del_item,
+    )
+
+
+def add_files_confirm_window():
+    return Window(
+        Format(lex.get("add_files_confirm")),
+        Button(
+            Const("Да"),
+            id="add_files_confirm",
+            on_click=selected.on_add_files_confirm
+        ),
+        Row(
+            Cancel(Const(lex.get("to_menu"))),
+            Back(Const(lex.get("back_input_confirm"))),
+        ),
+        state=states.AddItem.confirm_add_files,
     )

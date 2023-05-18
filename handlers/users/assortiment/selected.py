@@ -2,6 +2,7 @@ import datetime
 from typing import Any, Sequence
 
 from aiogram.enums import ContentType
+from aiogram.exceptions import TelegramBadRequest
 from aiogram.types import CallbackQuery, Message, InputMediaDocument
 from aiogram_dialog import DialogManager
 from aiogram_dialog.api.entities import MediaAttachment, MediaId
@@ -13,6 +14,7 @@ from database.command.user import get_user, reduce_balance
 from handlers.users.assortiment.states import BotMenu, BuyProduct
 from dictionary.dictionary_ru import LEXICON_ASSORTIMENT
 from utils.notify_admin import new_order
+from utils.other import parting
 
 
 async def on_chosen_category(callback: CallbackQuery, widget: Any, manager: DialogManager, item_id: str):
@@ -107,7 +109,12 @@ async def on_confirm_buy(callback: CallbackQuery, widget: Any, manager: DialogMa
         for i in files:
             list_files.append(InputMediaDocument(media=i))
 
-        await callback.message.answer_media_group(media=list_files)
+        try:
+            await callback.message.answer_media_group(media=list_files)
+        except TelegramBadRequest:
+            part = parting(list_files, 9)
+            for i in part:
+                await callback.message.answer_media_group(media=i)
 
 
     # TODO: Добавить файлы в заказ

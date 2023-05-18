@@ -148,6 +148,8 @@ LEXICON_ITEM: dict[str, str] = {
     'item_menu': 'Редактирование товара',
 
     'add_item': 'Добавить товар',
+    'add_files': 'Добавить файлы',
+    'add_files_confirm': 'Добавить файлы?',
     'del_item': 'Удалить товар',
 
     'del_item_confirm': 'Удалить товар?',
