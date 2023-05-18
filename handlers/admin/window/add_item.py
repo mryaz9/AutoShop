@@ -20,6 +20,12 @@ def menu_window():
             id="add_item",
             on_click=selected.on_select_menu
         ),
+        SwitchTo(
+            Const(lex.get("del_item")),
+            state=states.AddItem.select_categories,
+            id="del_item",
+            on_click=selected.on_select_menu
+        ),
         Row(
             Cancel(Const(lex.get("to_menu")))
         ),
@@ -42,6 +48,15 @@ def subcategories_window():
         keyboard.paginated_subcategories(selected.on_chosen_subcategories),
         state=states.AddItem.select_subcategories,
         getter=getters.getter_subcategory
+    )
+
+
+def items_window():
+    return Window(
+        Const(lex.get("select_item")),
+        keyboard.paginated_product(selected.on_chosen_items),
+        state=states.AddItem.select_item,
+        getter=getters.getter_product
     )
 
 
@@ -127,3 +142,17 @@ def confirm_window():
         getter=getters.getter_confirm_add
     )
 
+
+def del_item_confirm_window():
+    return Window(
+        Const(lex.get("del_item_confirm")),
+        Button(
+            Const(
+                "Да"
+            ),
+            id="del_item",
+            on_click=selected.on_del_item
+        ),
+        Back(Const(lex.get("to_item_menu"))),
+        state=states.AddItem.del_item,
+    )

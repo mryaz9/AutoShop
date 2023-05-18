@@ -145,15 +145,19 @@ LEXICON_CATEGORIES: dict[str, str] = {
 
 LEXICON_ITEM: dict[str, str] = {
     'item_menu': 'Редактирование товара',
-    'add_item': 'Добавить товар',
 
-    'hide_item': 'Скрыть или показать товары',
-    'hide_on': 'Товар показывается',
-    'hide_off': 'Товар скрыт',
+    'add_item': 'Добавить товар',
+    'del_item': 'Удалить товар',
+
+    'del_item_confirm': 'Удалить товар?',
+    'successful_del_item': 'Товар удален успешно',
 
     'select_category': 'Выберите категорию',
 
     'select_subcategory': 'Выберите подкатегорию',
+
+    'select_item': 'Выберите продукт',
+
 
     'input_name': 'Введите имя',
     'back_input_name': 'Изменить подкатегорию',

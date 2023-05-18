@@ -11,9 +11,11 @@ def admin_dialogs():
         ),
         Dialog(
             add_item.menu_window(),
+            add_item.del_item_confirm_window(),
 
             add_item.categories_window(),
             add_item.subcategories_window(),
+            add_item.items_window(),
             add_item.name_window(),
             add_item.amount_window(),
             add_item.photo_window(),

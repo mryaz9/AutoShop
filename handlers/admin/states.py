@@ -7,10 +7,11 @@ class AdminMenu(StatesGroup):
 
 class AddItem(StatesGroup):
     menu = State()
+    del_item = State()
 
     select_categories = State()
     select_subcategories = State()
-    type_item = State()
+    select_item = State()
     name = State()
     amount = State()
     photo = State()

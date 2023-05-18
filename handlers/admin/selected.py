@@ -9,7 +9,7 @@ from sqlalchemy.exc import DBAPIError
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from database.command.category import create_category, delete_category
-from database.command.item import create_item
+from database.command.item import create_item, delete_item
 from database.command.subcategory import create_subcategory, delete_subcategory
 from database.command.user import create_admin
 from handlers.admin.states import AddItem, AddCategories
@@ -45,6 +45,15 @@ async def on_chosen_subcategories(callback: CallbackQuery, widget: Select, manag
 
     if menu == "add_item":
         await manager.switch_to(AddItem.name)
+
+    if menu == "del_item":
+        await manager.switch_to(AddItem.select_item)
+
+
+async def on_chosen_items(callback: CallbackQuery, widget: Select, manager: DialogManager, item_id: str):
+    ctx = manager.current_context()
+    ctx.dialog_data.update(item_id=item_id)
+    await manager.switch_to(AddItem.del_item)
 
 
 async def on_chosen_name(message: Message, input_message: MessageInput, manager: DialogManager):
@@ -212,6 +221,17 @@ async def on_del_subcategories(callback: CallbackQuery, widget: Any, manager: Di
 
     await delete_subcategory(session, subcategory_id)
     await callback.answer(LEXICON_CATEGORIES.get("successful_del_subcategories"))
+
+    await manager.done()
+
+
+async def on_del_item(callback: CallbackQuery, widget: Any, manager: DialogManager):
+    session = manager.middleware_data.get("session")
+    ctx = manager.current_context()
+    item_id = int(ctx.dialog_data.get("item_id"))
+
+    await delete_item(session, item_id)
+    await callback.answer(LEXICON_ITEM.get("successful_del_item"))
 
     await manager.done()
 
