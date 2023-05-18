@@ -39,6 +39,7 @@ class AddCategories(StatesGroup):
 class AddAdmin(StatesGroup):
     admin_menu = State()
     add_admin = State()
+    view_admin = State()
 
 
 class Mailing(StatesGroup):

@@ -116,33 +116,32 @@ def paginated_product(on_click):
     )
 
 
-def paginated_orders(on_click):
+def paginated_admins(on_click):
     return Group(
         ScrollingGroup(
             Select(
-                Format('{item[0].name} {item[1]}'),
-                id="s_scroll_orders",
+                Format(
+                    '{item[0].id}'
+                ),
+                id="s_scroll_admins",
                 item_id_getter=operator.itemgetter(1),
-                items="orders",
-                on_click=on_click
+                items="admins",
+                on_click=on_click,
             ),
             hide_pager=True,
-            id="orders_id",
+            id="admins_id",
             width=SCROLLING_WIDTH,
             height=SCROLLING_HEIGHT,
         ),
         Row(
             PrevPage(
-                scroll="orders_id", text=Format("◀️"),
+                scroll="admins_id", text=Format("◀️"),
             ),
             CurrentPage(
-                scroll="orders_id", text=Format("{current_page1}"),
+                scroll="admins_id", text=Format("{current_page1}"),
             ),
             NextPage(
-                scroll="orders_id", text=Format("▶️"),
+                scroll="admins_id", text=Format("▶️"),
             ),
-        ),
-        Row(
-            Cancel(Const(LEXICON_ASSORTIMENT.get("to_menu"))),
         ),
     )

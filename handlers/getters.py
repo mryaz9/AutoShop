@@ -7,7 +7,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from database.command.category import get_categories, get_category
 from database.command.item import get_items_by_subcategory, get_item, get_files
 from database.command.subcategory import get_subcategories, get_subcategory
-from database.command.user import get_user
+from database.command.user import get_user, get_all_admin
 from dictionary.dictionary_ru import LEXICON_ASSORTIMENT
 
 
@@ -149,6 +149,17 @@ async def getter_profile(dialog_manager: DialogManager, session: AsyncSession, *
         "username": dialog_manager.event.from_user.username,
         "balance": user.balance,
         "register_time": user.register_time
+    }
+    return data
+
+
+async def getter_admins(dialog_manager: DialogManager, session: AsyncSession, **kwargs):
+    db_admins = await get_all_admin(session)
+    data = {
+        "admins": [
+            (admin, admin.id)
+            for admin in db_admins
+        ]
     }
     return data
 

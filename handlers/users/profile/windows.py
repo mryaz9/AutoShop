@@ -3,7 +3,6 @@ from aiogram_dialog.widgets.kbd import Cancel, Row, Start
 from aiogram_dialog.widgets.text import Const, Multi, Format
 
 from handlers.getters import getter_profile
-from handlers.keyboard import paginated_orders
 from handlers.users.profile.states import Profile
 from dictionary.dictionary_ru import LEXICON_PROFILE
 from payment.states import Payment

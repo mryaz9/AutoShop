@@ -42,6 +42,7 @@ def admin_dialogs():
         Dialog(
             add_admin.menu_window(),
             add_admin.add_admin_window(),
+            add_admin.view_admin_window(),
         ),
         Dialog(
             mailing.menu_window(),
