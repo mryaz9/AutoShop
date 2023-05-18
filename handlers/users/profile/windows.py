@@ -2,9 +2,9 @@ from aiogram_dialog import Window
 from aiogram_dialog.widgets.kbd import Cancel, Row, Start
 from aiogram_dialog.widgets.text import Const, Multi, Format
 
-from handlers.getters import getter_profile, getter_orders
+from handlers.getters import getter_profile
 from handlers.keyboard import paginated_orders
-from handlers.users.profile.states import Profile, Purchases
+from handlers.users.profile.states import Profile
 from dictionary.dictionary_ru import LEXICON_PROFILE
 from payment.states import Payment
 
@@ -31,14 +31,5 @@ def profile_window():
         ),
         state=Profile.profile,
         getter=getter_profile
-    )
-
-
-def orders_window():
-    return Window(
-        Const("Заказы:"),
-        paginated_orders(on_click=None),  # Todo: Добавить поддержку нажатия на кнопку
-        state=Purchases.purchases,
-        getter=getter_orders
     )
 

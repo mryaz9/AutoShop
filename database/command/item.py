@@ -101,26 +101,19 @@ async def return_and_del_files(session: AsyncSession, item_id: int, amount: int)
     """Select COUNT items"""
 
     q = select(ItemFiles).where(ItemFiles.item_id == item_id).limit(amount)
-
     res = await session.execute(q)
-    result = res.scalars().all()
 
-    for i in res:
-        await session.delete(i)
+    result = []
+
+    for i in res.scalars().all():
+        res_id: int = i.id
+        result.append(i.file_id)
+        d = delete(ItemFiles).where(ItemFiles.id == res_id)
+        await session.execute(d)
 
     await session.commit()
 
     return result
-
-
-async def hide_item(session: AsyncSession, item_id: int) -> None:
-    """Hide item by id"""
-
-    item = await get_item(session, item_id)
-    show = not item.show
-    item.show = show
-
-    await session.commit()
 
 
 async def delete_item(session: AsyncSession, item_id: int) -> None:
@@ -128,5 +121,4 @@ async def delete_item(session: AsyncSession, item_id: int) -> None:
 
     q = delete(Item).where(Item.id == item_id)
     await session.execute(q)
-
     await session.commit()

@@ -9,7 +9,7 @@ from sqlalchemy.exc import DBAPIError
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from database.command.category import create_category, delete_category
-from database.command.item import create_item, hide_item
+from database.command.item import create_item
 from database.command.subcategory import create_subcategory, delete_subcategory
 from database.command.user import create_admin
 from handlers.admin.states import AddItem, AddCategories
@@ -45,9 +45,6 @@ async def on_chosen_subcategories(callback: CallbackQuery, widget: Select, manag
 
     if menu == "add_item":
         await manager.switch_to(AddItem.name)
-
-    elif menu == "hide_item":
-        await manager.switch_to(AddItem.hide_item)
 
 
 async def on_chosen_name(message: Message, input_message: MessageInput, manager: DialogManager):

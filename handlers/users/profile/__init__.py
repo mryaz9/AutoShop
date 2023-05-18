@@ -8,8 +8,4 @@ def profile_dialogs():
         Dialog(
             windows.profile_window(),
         ),
-        Dialog(
-            windows.orders_window(),
-
-        ),
     ]
