@@ -105,7 +105,7 @@ async def return_and_del_files(session: AsyncSession, item_id: int, amount: int)
     res = await session.execute(q)
     result = res.scalars().all()
 
-    for i in res.scalars().all():
+    for i in res:
         await session.delete(i)
 
     await session.commit()

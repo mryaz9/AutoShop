@@ -6,21 +6,6 @@ from sqlalchemy.orm import relationship
 Base = declarative_base()
 
 
-class UserItem(Base):
-    __tablename__ = "user_item"
-
-    user_id = Column(
-        Integer, ForeignKey("users.id", ondelete="CASCADE"), primary_key=True
-    )
-    item_id = Column(
-        Integer, ForeignKey("items.id", ondelete="CASCADE"), primary_key=True
-    )
-    quantity = Column(Integer, default=1, nullable=False)
-
-    user = relationship("User", back_populates="items")
-    item = relationship("Item", back_populates="users")
-
-
 class Category(Base):
     __tablename__ = "categories"
 
@@ -88,9 +73,29 @@ class Order(Base):
     )
     user = relationship("User", back_populates="orders")
 
+    files_id = Column(
+        Integer, ForeignKey("user_item.files_id", ondelete="CASCADE"), nullable=False
+    )
+    files_user = relationship("UserItem", back_populates="orders")
+
     paid = Column(Boolean, default=False, nullable=False)
     summ = Column(Float, nullable=True)
     quantity = Column(Integer, default=1, nullable=False)
+
+
+class UserItem(Base):
+    __tablename__ = "user_item"
+
+    user_id = Column(
+        Integer, ForeignKey("users.id", ondelete="CASCADE"), primary_key=True
+    )
+    item_id = Column(
+        Integer, ForeignKey("items.id", ondelete="CASCADE"), primary_key=True
+    )
+    files_id = Column(String(150), nullable=False)
+
+    user = relationship("User", back_populates="items")
+    item = relationship("Item", back_populates="users")
 
 
 class User(Base):

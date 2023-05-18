@@ -6,7 +6,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from database.command.category import get_categories, get_category
 from database.command.item import get_items_by_subcategory, get_item, get_files
-from database.command.purchases import get_purchases
+from database.command.order import get_purchases
 from database.command.subcategory import get_subcategories, get_subcategory
 from database.command.user import get_user
 from dictionary.dictionary_ru import LEXICON_ASSORTIMENT

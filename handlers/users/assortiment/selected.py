@@ -1,15 +1,17 @@
 import datetime
 from typing import Any, Sequence
 
-from aiogram.types import CallbackQuery, Message
+from aiogram.enums import ContentType
+from aiogram.types import CallbackQuery, Message, InputMediaDocument
 from aiogram_dialog import DialogManager
+from aiogram_dialog.api.entities import MediaAttachment, MediaId
 from aiogram_dialog.widgets.input import TextInput
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from database.command.item import get_item, get_files, return_and_del_files
-from database.command.purchases import add_order, get_purchases
+from database.command.order import add_order, get_purchases, add_user_item
 from database.command.user import get_user, reduce_balance
-from database.models import Order
+from database.models import Order, UserItem
 from handlers.users.assortiment.states import BotMenu, BuyProduct
 from dictionary.dictionary_ru import LEXICON_ASSORTIMENT
 from utils.notify_admin import new_order
@@ -89,21 +91,30 @@ async def on_confirm_buy(callback: CallbackQuery, widget: Any, manager: DialogMa
 
     product_info = await get_item(session, product_id)
 
+    summ = product_info.price*amount_user
+
     if callback.from_user.username is None:
         await callback.answer(LEXICON_ASSORTIMENT.get("error_unknown_username"), show_alert=True)
         return
 
     # TODO: Выбор способа оплаты
-    if user.balance < product_info.price:
+    if user.balance < summ:
         await callback.answer(LEXICON_ASSORTIMENT.get("error_not_money"), show_alert=True)
         return
 
     files = await return_and_del_files(session, product_id, amount_user)
+    if files is not None:
+        list_files: list = []
+        for i in files:
+            list_files.append(InputMediaDocument(media=i))
+
+        await callback.message.answer_media_group(media=list_files)
+
 
     # TODO: Добавить файлы в заказ
     # Не удаляються последние 2 файла
 
-    await reduce_balance(session, product_info.price*amount_user, user.id)
+    await reduce_balance(session, summ, user.id)
 
     await callback.answer(
         LEXICON_ASSORTIMENT.get("successful_buy_item").format(amount_user=amount_user, title=product_info.title),
