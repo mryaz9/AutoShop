@@ -17,7 +17,6 @@ def input_photo_window(text: str, state, id_input):
         Next(Const("Пропустить")),
         Row(
             Cancel(Const(LEXICON_CHANGE_MENU.get("to_menu"))),
-            Back(Const(LEXICON_CHANGE_MENU.get("back"))),
         ),
         state=state,
     )
@@ -30,7 +29,6 @@ def input_text_window(text: str, state, id_input):
         Next(Const("Пропустить")),
         Row(
             Cancel(Const(LEXICON_CHANGE_MENU.get("to_menu"))),
-            Back(Const(LEXICON_CHANGE_MENU.get("back"))),
         ),
         state=state,
     )
@@ -45,7 +43,6 @@ def confirm_change_menu_window():
             id="confirm_change_menu"),
         Row(
             Cancel(Const(LEXICON_CHANGE_MENU.get("to_menu"))),
-            Back(Const(LEXICON_CHANGE_MENU.get("back"))),
         ),
         state=states.ChangeMenu.confirm,
         getter=change_menu_getter

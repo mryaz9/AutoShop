@@ -7,6 +7,8 @@ from aiogram.types import CallbackQuery, Message, InputMediaDocument
 from aiogram_dialog import DialogManager
 from aiogram_dialog.api.entities import MediaAttachment, MediaId
 from aiogram_dialog.widgets.input import TextInput
+from aiogram_dialog.widgets.kbd import ManagedCounterAdapter, Button
+from loguru import logger
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from database.command.item import get_item, get_files, return_and_del_files
@@ -55,16 +57,36 @@ async def on_chosen_product_info(callback: CallbackQuery, widget: Any, manager: 
         })
 
 
-async def on_entered_amount(message: Message, widget: TextInput, manager: DialogManager, amount_user: str):
+async def on_entered_amount_counter(message: CallbackQuery, widget: Button, manager: DialogManager, ):
     session = manager.middleware_data.get("session")
     ctx = manager.current_context()
     product_id = ctx.start_data.get("product_id")
 
-    if not amount_user.isdigit():
+    amount_user = manager.find("counter_amount").get_value()
+
+    product_info = await get_files(session, int(product_id))
+
+    if product_info is not None:
+        if (len(product_info) < amount_user) and (amount_user > 0):
+            await message.answer(LEXICON_ASSORTIMENT.get("error_not_items"))
+            return
+
+        ctx.dialog_data.update(amount_user=amount_user)
+
+    await manager.switch_to(BuyProduct.confirm)
+
+
+async def on_entered_amount(message: CallbackQuery, widget: TextInput, manager: DialogManager, item_id: str):
+    session = manager.middleware_data.get("session")
+    ctx = manager.current_context()
+    product_id = ctx.start_data.get("product_id")
+
+    if not item_id.isdigit():
         await message.answer(LEXICON_ASSORTIMENT.get("error_input_amount"))
         return
 
-    amount_user = int(amount_user)
+    amount_user = int(item_id)
+
     product_info = await get_files(session, int(product_id))
 
     if product_info is not None:

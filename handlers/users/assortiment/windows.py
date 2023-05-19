@@ -3,9 +3,9 @@ from typing import Dict
 from aiogram_dialog import Window, Data, DialogManager
 from aiogram_dialog.widgets.common import Whenable
 from aiogram_dialog.widgets.input import TextInput
-from aiogram_dialog.widgets.kbd import Cancel, Back, Button, Row
+from aiogram_dialog.widgets.kbd import Cancel, Back, Button, Row, Counter
 from aiogram_dialog.widgets.media import DynamicMedia
-from aiogram_dialog.widgets.text import Const, Format
+from aiogram_dialog.widgets.text import Const, Format, Progress
 
 from handlers import getters, keyboard
 from handlers.users.assortiment import selected, states
@@ -70,10 +70,21 @@ def buy_product_window():
             id="enter_amount",
             on_success=selected.on_entered_amount,
         ),
+
+        Counter(
+            id="counter_amount",
+            default=1,
+            min_value=1,
+            max_value=40,
+        ),
+        Button(
+            Const("Готово"),
+            id='enter_amount',
+            on_click=selected.on_entered_amount_counter
+        ),
+
         Row(
             Cancel(Const(LEXICON_ASSORTIMENT.get("back_items_info"))),
-            Cancel(Const(LEXICON_ASSORTIMENT.get("back_items_names")), id="cancel_sw_to_select",
-                   result={"switch_to_window": "select_products"}),
         ),
         state=states.BuyProduct.enter_amount,
         getter=getters.getter_buy_product
@@ -91,17 +102,7 @@ def confirm_buy_window():
                on_click=selected.on_confirm_buy),
         Row(
             Cancel(Const(LEXICON_ASSORTIMENT.get("back_items_amount"))),
-            Cancel(Const(LEXICON_ASSORTIMENT.get("back_items_names")),
-                   id="cancel_sw_to_select",
-                   result={"switch_to_window": "select_products"}),
         ),
         state=states.BuyProduct.confirm,
         getter=getters.getter_buy_product
     )
-
-
-async def on_process_result(data: Data, result: dict, manager: DialogManager, **kwargs):
-    if result:
-        switch_to_window = result.get("switch_to_window")
-        if switch_to_window == "select_products":
-            await manager.switch_to(state=states.BotMenu.select_product)

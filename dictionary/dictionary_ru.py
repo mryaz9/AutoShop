@@ -23,7 +23,7 @@ LEXICON_ASSORTIMENT: dict[str, str] = {
     'card': '🎁 Покупка товара:\n➖➖➖➖➖➖➖➖➖➖➖➖➖\n'
             '🏷 Название: {product.title}\n'
             '💵 Стоимость: {product.price}руб.\n'
-            '📜 Описание:\n{product.description}\n',
+            '📜 Описание:\n\n{product.description}\n',
 
     # У product есть атрибуты:
     # amount, price, name, id, show, subcategory_id,
@@ -56,18 +56,18 @@ LEXICON_ASSORTIMENT: dict[str, str] = {
                        'Кол-во: {amount_user}\n'
                        'Покупатель: @{username}\n',
 
-    'back_select_categories': 'Изменить категорию',
-    'back_select_subcategories': 'Изменить подкатегорию',
-    'back_select_items': 'Изменить товар',
-    'back_items_info': 'Вернуться к описанию товара',
-    'back_items_names': 'Выбрать другой продукт',
-    'back_items_amount': 'Изменить количество',
+    'back_select_categories': '⬅️ Назад ↩️',
+    'back_select_subcategories': '⬅️ Назад ↩️',
+    'back_select_items': '⬅️ Назад ↩️',
+    'back_items_info': '⬅️ Назад ↩️',
+    'back_items_names': '⬅️ Назад ↩️',
+    'back_items_amount': '⬅️ Назад ↩️',
 
-    'to_menu': 'В основное меню'
+    'to_menu': '🏠 Меню 🏠'
 }
 
 LEXICON_PROFILE: dict[str, str] = {
-    'to_menu': 'В основное меню'
+    'to_menu': '🏠 Меню 🏠'
 }
 
 LEXICON_PAYMENT: dict[str, str] = {
@@ -80,17 +80,17 @@ LEXICON_PAYMENT: dict[str, str] = {
     'input_amount': 'Введите сумму',
     'select_assets': 'Выберите валюту',
 
-    'back_input_amount': 'Изменить сумму',
-    'back_select_assets': 'Изменить валюту',
+    'back_input_amount': '⬅️ Назад ↩️',
+    'back_select_assets': '⬅️ Назад ↩️',
 
-    'to_payment_menu': 'В меню выбора оплаты',
-    'to_menu': 'В основное меню',
+    'to_payment_menu': '⬅️ Назад ↩️',
+    'to_menu': '🏠 Меню 🏠',
 }
 
 
 LEXICON_ADMIN_MENU: dict[str, str] = {
     'admin_menu': 'Меню администратора',
-    'to_menu': 'В основное меню',
+    'to_menu': '🏠 Меню 🏠',
 }
 
 LEXICON_ADMIN: dict[str, str] = {
@@ -102,8 +102,8 @@ LEXICON_ADMIN: dict[str, str] = {
     'successful_add_admin': 'Администратор {admin_id} добавлен успешно!',
     'successful_del_admin': 'Администратор {admin_id} удален успешно!',
 
-    'to_menu': 'В основное меню',
-    'to_admin_menu': 'В меню администратора'
+    'to_menu': '🏠 Меню 🏠',
+    'to_admin_menu': '⬅️ Назад ↩️'
 }
 
 LEXICON_CATEGORIES: dict[str, str] = {
@@ -112,13 +112,13 @@ LEXICON_CATEGORIES: dict[str, str] = {
     'input_name_categories': 'Добавить категорию',
     'del_categories': 'Удалить категорию',
     'del_categories_confirm': 'Вы уверены? При удалении потеряются все подкатегории и товары',
-    'back_del_categories_confirm': 'Изменить категорию',
+    'back_del_categories_confirm': '⬅️ Назад ↩️',
     'successful_del_categories': 'Категория удалена успешно',
 
     'add_subcategories': 'Добавить подкатегорию',
     'del_subcategories': 'Удалить подкатегорию',
     'del_subcategories_confirm': 'Вы уверены? При удалении потеряются все товары',
-    'back_del_subcategories_confirm': 'Изменить подкатегорию',
+    'back_del_subcategories_confirm': '⬅️ Назад ↩️',
     'successful_del_subcategories': 'Подкатегория удалена успешно',
 
     'select_category': 'Выберите категорию',
@@ -139,8 +139,8 @@ LEXICON_CATEGORIES: dict[str, str] = {
 
     'error_db': 'Произошла ошибка при работе с бд',
 
-    'to_menu': 'В основное меню',
-    'to_category_menu': 'В меню категорий'
+    'to_menu': '🏠 Меню 🏠',
+    'to_category_menu': '⬅️ Назад ↩️'
 }
 
 LEXICON_ITEM: dict[str, str] = {
@@ -162,21 +162,21 @@ LEXICON_ITEM: dict[str, str] = {
 
 
     'input_name': 'Введите имя',
-    'back_input_name': 'Изменить подкатегорию',
+    'back_input_name': '⬅️ Назад ↩️',
 
     'input_amount': 'Загрузите документы',
-    'back_input_amount': 'Изменить имя',
+    'back_input_amount': '⬅️ Назад ↩️',
 
     'input_photo': 'Загрузите фото',
-    'back_input_photo': 'Изменить количество',
+    'back_input_photo': '⬅️ Назад ↩️',
 
     'input_price': 'Введите цену',
-    'back_input_price': 'Изменить фото',
+    'back_input_price': '⬅️ Назад ↩️',
 
     'input_description': 'Введите описание',
-    'back_input_description': 'Изменить цену',
+    'back_input_description': '⬅️ Назад ↩️',
 
-    'back_input_confirm': 'Изменить описание',
+    'back_input_confirm': '⬅️ Назад ↩️',
 
     'confirm': 'Все правильно?\n'
                'Каталог: {category}\n'
@@ -188,8 +188,8 @@ LEXICON_ITEM: dict[str, str] = {
 
     'done': 'Товар добавлен в магазин',
 
-    'to_menu': 'В основное меню',
-    'to_item_menu': 'В меню товара'
+    'to_menu': '🏠 Меню 🏠',
+    'to_item_menu': '⬅️ Назад ↩️'
 }
 
 LEXICON_MAILING: dict[str, str] = {
@@ -197,8 +197,8 @@ LEXICON_MAILING: dict[str, str] = {
     'create_mailing': 'Создать рассылку',
     'successful_add_mailing': 'Сообщение добавлено успешно!',
 
-    'to_menu': 'В основное меню',
-    'to_mailing_menu': 'В меню рассылки'
+    'to_menu': '🏠 Меню 🏠',
+    'to_mailing_menu': '⬅️ Назад ↩️'
 
 }
 
