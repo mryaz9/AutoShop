@@ -5,7 +5,7 @@ from aiogram_dialog import DialogManager, StartMode
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from database.command.user import create_user
-from handlers.menu.windows import MainMenu
+from handlers.menu.main_windows import MainMenu
 
 router = Router()
 

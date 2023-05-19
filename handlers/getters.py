@@ -163,6 +163,17 @@ async def getter_profile(dialog_manager: DialogManager, session: AsyncSession, *
     return data
 
 
+async def getter_info(dialog_manager: DialogManager, session: AsyncSession, **kwargs):
+    menu = await get_menu(session)
+
+    data = {
+        "info": (menu.info_about if menu.info_about else None) if menu else None,
+        "photo": (MediaAttachment(ContentType.PHOTO, file_id=MediaId(menu.info))
+                  if menu.info else None) if menu else None
+    }
+    return data
+
+
 async def getter_admins(dialog_manager: DialogManager, session: AsyncSession, **kwargs):
     db_admins = await get_all_admin(session)
     data = {
