@@ -14,6 +14,7 @@ from dictionary.dictionary_ru import LEXICON_ASSORTIMENT
 
 def categories_window():
     return Window(
+        DynamicMedia("photo"),
         Const(LEXICON_ASSORTIMENT.get("categories")),
         keyboard.paginated_categories(selected.on_chosen_category),
         state=states.BotMenu.select_categories,

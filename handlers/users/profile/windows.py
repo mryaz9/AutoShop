@@ -1,5 +1,6 @@
 from aiogram_dialog import Window
 from aiogram_dialog.widgets.kbd import Cancel, Row, Start
+from aiogram_dialog.widgets.media import DynamicMedia
 from aiogram_dialog.widgets.text import Const, Multi, Format
 
 from handlers.getters import getter_profile
@@ -10,6 +11,7 @@ from payment.states import Payment
 
 def profile_window():
     return Window(
+        DynamicMedia("photo"),
         Multi(
             Const("📱 Ваш профиль:"),
             Const("➖➖➖➖➖➖➖➖➖➖➖➖➖"),

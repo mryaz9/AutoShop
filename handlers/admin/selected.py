@@ -2,20 +2,21 @@ from dataclasses import dataclass
 from typing import Any
 
 from aiogram.types import CallbackQuery, Message
-from aiogram_dialog import DialogManager
+from aiogram_dialog import DialogManager, DialogProtocol
 from aiogram_dialog.widgets.input import MessageInput
-from aiogram_dialog.widgets.kbd import Select
+from aiogram_dialog.widgets.kbd import Select, Button
 from loguru import logger
 from sqlalchemy.exc import DBAPIError
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from database.command.category import create_category, delete_category
 from database.command.item import create_item, delete_item, add_files
+from database.command.main_menu import create_menu
 from database.command.subcategory import create_subcategory, delete_subcategory
 from database.command.user import create_admin
 from handlers.admin.states import AddItem, AddCategories
 from dictionary.dictionary_ru import LEXICON_ITEM, LEXICON_CATEGORIES, LEXICON_ADMIN, LEXICON_MAILING
-from schemas.admin import ItemModel, CategoryModel, SubCategoryModel
+from schemas.admin import ItemModel, CategoryModel, SubCategoryModel, MenuModel
 from utils.mailing_user import mailing_user
 
 
@@ -263,6 +264,21 @@ async def on_del_item(callback: CallbackQuery, widget: Any, manager: DialogManag
 async def on_select_menu(callback: CallbackQuery, widget: Any, manager: DialogManager):
     ctx = manager.current_context()
     ctx.dialog_data.update(menu=widget.widget_id)
+
+
+async def confirm_change_menu(callback: CallbackQuery, btn: Button, manager: DialogManager):
+    session = manager.middleware_data.get("session")
+    ctx = manager.current_context()
+
+    logger.info(ctx.widget_data)
+
+    menu = MenuModel(**ctx.widget_data)
+    logger.info(menu)
+    await create_menu(session, menu)
+
+    await manager.done()
+
+
 
 
 # TODO: Обернуть все запросы в бд

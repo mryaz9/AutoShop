@@ -46,3 +46,14 @@ class ItemModel(BaseModel):
     quantity: int = -1
 
     _must_not_digit_title = validator("title", allow_reuse=True, check_fields=False)(must_not_digit)
+
+
+class MenuModel(BaseModel):
+    """Menu schema"""
+
+    main_menu: str = None
+    catalog: str = None
+    order: str = None
+    profile: str = None
+    info: str = None
+    info_about: str = None

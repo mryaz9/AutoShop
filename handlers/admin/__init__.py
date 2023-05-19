@@ -1,6 +1,9 @@
 from aiogram_dialog import Dialog
 
-from handlers.admin.window import menu, add_item, add_categories, mailing
+from dictionary.dictionary_ru import LEXICON_CHANGE_MENU
+from handlers.admin import selected
+from handlers.admin.states import ChangeMenu
+from handlers.admin.window import menu, add_item, add_categories, mailing, change_menu
 from handlers.admin.window import add_admin
 
 
@@ -8,6 +11,39 @@ def admin_dialogs():
     return [
         Dialog(
             menu.admin_menu_window(),
+        ),
+        Dialog(
+            change_menu.input_photo_window(
+                text=LEXICON_CHANGE_MENU.get("main_menu"),
+                state=ChangeMenu.main_menu,
+                id_input="main_menu"
+            ),
+            change_menu.input_photo_window(
+                text=LEXICON_CHANGE_MENU.get("catalog"),
+                state=ChangeMenu.catalog,
+                id_input="catalog"
+            ),
+            change_menu.input_photo_window(
+                text=LEXICON_CHANGE_MENU.get("order"),
+                state=ChangeMenu.order,
+                id_input="order"
+            ),
+            change_menu.input_photo_window(
+                text=LEXICON_CHANGE_MENU.get("profile"),
+                state=ChangeMenu.profile,
+                id_input="profile"
+            ),
+            change_menu.input_photo_window(
+                text=LEXICON_CHANGE_MENU.get("info"),
+                state=ChangeMenu.info,
+                id_input="info"
+            ),
+            change_menu.input_text_window(
+                text=LEXICON_CHANGE_MENU.get("info_about"),
+                state=ChangeMenu.info_about,
+                id_input="info_about"
+            ),
+            change_menu.confirm_change_menu_window()
         ),
         Dialog(
             add_item.menu_window(),

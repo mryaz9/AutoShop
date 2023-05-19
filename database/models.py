@@ -67,3 +67,17 @@ class User(Base):
     admin = Column(Boolean, default=False, nullable=False)
     balance = Column(Float, default=0, nullable=False)
     register_time = Column(DateTime, nullable=False)
+
+
+class MainMenu(Base):
+    __tablename__ = "main_menu"
+
+    id = Column(Integer, primary_key=True, autoincrement=True)
+
+    main_menu = Column(String(250), default=None, nullable=True)
+    catalog = Column(String(250), default=None, nullable=True)
+    order = Column(String(250), default=None, nullable=True)
+    profile = Column(String(250), default=None, nullable=True)
+    info = Column(String(250), default=None, nullable=True)
+    info_about = Column(String(250), default=None, nullable=True)
+

@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from aiogram.enums import ContentType
 from aiogram_dialog import DialogManager
 from aiogram_dialog.api.entities import MediaAttachment, MediaId
@@ -6,6 +8,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from database.command.category import get_categories, get_category
 from database.command.item import get_items_by_subcategory, get_item, get_files
+from database.command.main_menu import get_menu
 from database.command.subcategory import get_subcategories, get_subcategory
 from database.command.user import get_user, get_all_admin
 from dictionary.dictionary_ru import LEXICON_ASSORTIMENT
@@ -13,11 +16,14 @@ from dictionary.dictionary_ru import LEXICON_ASSORTIMENT
 
 async def getter_category(dialog_manager: DialogManager, session: AsyncSession, **kwargs):
     db_categories = await get_categories(session)
+    menu = await get_menu(session)
     data = {
         "categories": [
             (categories, categories.id)
             for categories in db_categories
-        ]
+        ],
+        "photo": (MediaAttachment(ContentType.PHOTO, file_id=MediaId(menu.catalog))
+                  if menu.catalog else None) if menu else None
     }
     return data
 
@@ -143,12 +149,16 @@ async def getter_confirm_add(dialog_manager: DialogManager, **kwargs):
 async def getter_profile(dialog_manager: DialogManager, session: AsyncSession, **kwargs):
     id_user = dialog_manager.event.from_user.id
     user = await get_user(session, id_user)
+    menu = await get_menu(session)
+
     data = {
         "user_id": user.id,
         "full_name": dialog_manager.event.from_user.full_name,
         "username": dialog_manager.event.from_user.username,
         "balance": user.balance,
-        "register_time": user.register_time
+        "register_time": user.register_time.date(),
+        "photo": (MediaAttachment(ContentType.PHOTO, file_id=MediaId(menu.profile))
+                  if menu.profile else None) if menu else None
     }
     return data
 
@@ -170,3 +180,9 @@ async def item_files_getter(dialog_manager: DialogManager, **kwargs) -> dict:
     selected_files = dialog_manager.dialog_data.get("files", [])
 
     return {"files_count": len(selected_files)}
+
+
+async def change_menu_getter(dialog_manager: DialogManager, **kwargs) -> dict:
+    ctx = dialog_manager.current_context()
+    data = ctx.widget_data
+    return {"change_menu": data.keys()}

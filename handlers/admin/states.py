@@ -5,6 +5,16 @@ class AdminMenu(StatesGroup):
     admin_menu = State()
 
 
+class ChangeMenu(StatesGroup):
+    main_menu = State()
+    catalog = State()
+    order = State()
+    profile = State()
+    info = State()
+    info_about = State()
+    confirm = State()
+
+
 class AddItem(StatesGroup):
     menu = State()
     add_files = State()

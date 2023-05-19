@@ -1,7 +1,7 @@
 from aiogram.fsm.state import StatesGroup, State
 from aiogram_dialog import Window
 from aiogram_dialog.widgets.kbd import Start
-from aiogram_dialog.widgets.media import StaticMedia
+from aiogram_dialog.widgets.media import StaticMedia, DynamicMedia
 from aiogram_dialog.widgets.text import Const, Format
 
 from handlers.admin.states import AdminMenu
@@ -17,6 +17,7 @@ class MainMenu(StatesGroup):
 
 def main_menu_window():
     return Window(
+        DynamicMedia("photo"),
         Format(LEXICON_MAIN.get("start").format(username="{event.from_user.username}")),
         Start(Const(LEXICON_MAIN.get("assortment")), id="assortment", state=BotMenu.select_categories),
         Start(Const(LEXICON_MAIN.get("profile")), id="profile", state=Profile.profile),
