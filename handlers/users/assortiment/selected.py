@@ -76,7 +76,7 @@ async def on_entered_amount_counter(message: CallbackQuery, widget: Button, mana
     await manager.switch_to(BuyProduct.confirm)
 
 
-async def on_entered_amount(message: CallbackQuery, widget: TextInput, manager: DialogManager, item_id: str):
+async def on_entered_amount(message: Message, widget: TextInput, manager: DialogManager, item_id: str):
     session = manager.middleware_data.get("session")
     ctx = manager.current_context()
     product_id = ctx.start_data.get("product_id")

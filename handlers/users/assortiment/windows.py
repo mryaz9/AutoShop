@@ -75,7 +75,7 @@ def buy_product_window():
             id="counter_amount",
             default=1,
             min_value=1,
-            max_value=40,
+            cycle=True
         ),
         Button(
             Const("Готово"),

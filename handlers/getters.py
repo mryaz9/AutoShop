@@ -125,6 +125,7 @@ async def getter_buy_product(dialog_manager: DialogManager, session: AsyncSessio
         amount_user = 1
 
     counter: ManagedCounterAdapter = dialog_manager.find("counter_amount")
+    counter.widget.max = len(amount)
 
     data = {
         "product": db_product_info,
