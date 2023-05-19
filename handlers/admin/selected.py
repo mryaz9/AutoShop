@@ -16,7 +16,7 @@ from database.command.user import create_admin
 from handlers.admin.states import AddItem, AddCategories
 from dictionary.dictionary_ru import LEXICON_ITEM, LEXICON_CATEGORIES, LEXICON_ADMIN, LEXICON_MAILING
 from schemas.admin import ItemModel, CategoryModel, SubCategoryModel
-from utils.mailing_user import mailing
+from utils.mailing_user import mailing_user
 
 
 # TODO: Добавить дата класс в контексный менеджер
@@ -223,7 +223,7 @@ async def on_create_mailing(message: Message, input_message: MessageInput, manag
     session = manager.middleware_data.get("session")
     mailing_text = message.text
     await manager.event.answer(LEXICON_MAILING.get("successful_add_mailing"))
-    await mailing(session, mailing_text)
+    await mailing_user(session, mailing_text)
     await manager.done()
 
 
