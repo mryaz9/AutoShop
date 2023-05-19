@@ -19,10 +19,10 @@ async def get_subcategories(session: AsyncSession, category_id: int) -> Sequence
     return res.scalars().all()
 
 
-async def get_subcategories_count(session: AsyncSession) -> int:
+async def get_subcategories_count(session: AsyncSession, category_id: int) -> int:
     """Get count of subcategories"""
 
-    q = select(func.count(SubCategory.id))
+    q = select(func.count(SubCategory.id)).where(SubCategory.category_id == category_id)
 
     res = await session.execute(q)
 

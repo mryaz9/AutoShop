@@ -23,7 +23,7 @@ LEXICON_ASSORTIMENT: dict[str, str] = {
     'card': '🎁 Покупка товара:\n➖➖➖➖➖➖➖➖➖➖➖➖➖\n'
             '🏷 Название: {product.title}\n'
             '💵 Стоимость: {product.price}руб.\n'
-            '📜 Описание: {product.description}\n',
+            '📜 Описание:\n{product.description}\n',
 
     # У product есть атрибуты:
     # amount, price, name, id, show, subcategory_id,

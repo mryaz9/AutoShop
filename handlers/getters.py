@@ -17,11 +17,13 @@ from dictionary.dictionary_ru import LEXICON_ASSORTIMENT
 async def getter_category(dialog_manager: DialogManager, session: AsyncSession, **kwargs):
     db_categories = await get_categories(session)
     menu = await get_menu(session)
+
+    categories = []
+    for category in db_categories:
+        categories.append((category, category.id))
+
     data = {
-        "categories": [
-            (categories, categories.id)
-            for categories in db_categories
-        ],
+        "categories": categories,
         "photo": (MediaAttachment(ContentType.PHOTO, file_id=MediaId(menu.catalog))
                   if menu.catalog else None) if menu else None
     }
@@ -44,11 +46,12 @@ async def getter_subcategory(dialog_manager: DialogManager, session: AsyncSessio
         await dialog_manager.back()
         return
 
+    subcategories = []
+    for subcategory in db_subcategories:
+        subcategories.append((subcategory, subcategory.id))
+
     data = {
-        "subcategories": [
-            (subcategories, subcategories.id)
-            for subcategories in db_subcategories
-        ],
+        "subcategories": subcategories,
         "photo": MediaAttachment(ContentType.PHOTO, file_id=MediaId(category.photo)) if category.photo else None
     }
     return data
@@ -71,13 +74,13 @@ async def getter_product(dialog_manager: DialogManager, session: AsyncSession, *
         await dialog_manager.back()
         return
 
-    product_tuple = []
+    products = []
     # TODO: Добавить количество товара и отправлять дату не строкой
     for product in db_product:
-        product_tuple.append((product, product.id))
+        products.append((product, product.id))
 
     data = {
-        "product": product_tuple,
+        "product": products,
         "photo": MediaAttachment(ContentType.PHOTO, file_id=MediaId(subcategory.photo)) if subcategory.photo else None
     }
     return data
