@@ -39,6 +39,45 @@ async def create_item(
     await session.commit()
 
 
+async def update_item(session: AsyncSession, item_id: int, item_obj: ItemModel) -> None:
+    """
+    Create the Item instance, shops are list of (shop_id, quantity), photos are list of (file_id)
+    """
+
+    item = await get_item(session, item_id)
+
+    if item_obj.title:
+        item.title = item_obj.title
+
+    if item_obj.description:
+        item.description = item_obj.description
+
+    if item_obj.price:
+        item.price = item_obj.price
+
+    if item_obj.photo:
+        item.photo = item_obj.photo
+
+    if item_obj.subcategory_id:
+        item.subcategory_id = item_obj.subcategory_id
+
+    if item_obj.quantity:
+        item.quantity = item_obj.quantity
+
+    if item_obj.files:
+        item_files_objects = []
+
+        for files_id in item_obj.files:
+            obj = ItemFiles(file_id=files_id)
+            item_files_objects.append(obj)
+
+        item.files.extend(item_files_objects)
+
+    session.add(item)
+
+    await session.commit()
+
+
 async def get_items_by_subcategory(session: AsyncSession, subcategory_id: int) -> Sequence[Item]:
     """Select items by category_id"""
 

@@ -52,6 +52,25 @@ async def create_subcategory(session: AsyncSession, subcategory_obj: SubCategory
     await session.commit()
 
 
+async def update_subcategory(session: AsyncSession, subcategory_id: int, subcategory_obj: SubCategoryModel) -> None:
+    """Update the Category instance"""
+
+    subcategory = await get_subcategory(session, subcategory_id)
+
+    if subcategory_obj.title:
+        subcategory.title = subcategory_obj.title
+
+    if subcategory_obj.photo:
+        subcategory.photo = subcategory_obj.photo
+
+    if subcategory_obj.category_id:
+        category = await get_category(session, subcategory_obj.category_id)
+        subcategory.category = category
+
+    session.add(subcategory)
+    await session.commit()
+
+
 async def delete_subcategory(session: AsyncSession, subcategory_id: int) -> None:
     """Delete subcategory by id"""
 

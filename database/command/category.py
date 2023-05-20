@@ -4,7 +4,7 @@ from typing import Sequence
 from sqlalchemy import select, func, delete
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from database.models import Category, SubCategory
+from database.models import Category
 from schemas.admin import CategoryModel
 
 
@@ -41,6 +41,21 @@ async def create_category(session: AsyncSession, category_obj: CategoryModel) ->
     """Create the Category instance"""
 
     category = Category(title=category_obj.title, photo=category_obj.photo)
+
+    session.add(category)
+    await session.commit()
+
+
+async def update_category(session: AsyncSession, category_id: int, category_obj: CategoryModel) -> None:
+    """Updata the Category instance"""
+
+    category = await get_category(session, category_id)
+
+    if category_obj.title:
+        category.title = category_obj.title
+
+    if category_obj.photo:
+        category.photo = category_obj.photo
 
     session.add(category)
     await session.commit()
