@@ -184,15 +184,7 @@ async def getter_info(dialog_manager: DialogManager, session: AsyncSession, **kw
     return data
 
 
-async def getter_admins(dialog_manager: DialogManager, session: AsyncSession, **kwargs):
-    db_admins = await get_all_admin(session)
-    data = {
-        "admins": [
-            (admin, admin.id)
-            for admin in db_admins
-        ]
-    }
-    return data
+
 
 
 async def item_files_getter(dialog_manager: DialogManager, **kwargs) -> dict:
@@ -203,7 +195,4 @@ async def item_files_getter(dialog_manager: DialogManager, **kwargs) -> dict:
     return {"files_count": len(selected_files)}
 
 
-async def change_menu_getter(dialog_manager: DialogManager, **kwargs) -> dict:
-    ctx = dialog_manager.current_context()
-    data = ctx.widget_data
-    return {"change_menu": data.keys()}
+

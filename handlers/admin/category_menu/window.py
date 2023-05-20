@@ -1,17 +1,16 @@
 from aiogram.enums import ContentType
+from aiogram.fsm.state import State
 from aiogram_dialog import Window
-from aiogram_dialog.api.entities import MediaAttachment, MediaId
-from aiogram_dialog.api.protocols import MediaIdStorageProtocol
-from aiogram_dialog.widgets.input import MessageInput
+from aiogram_dialog.widgets.input import MessageInput, TextInput
 from aiogram_dialog.widgets.kbd import Cancel, SwitchTo, Back, Row, Button, Next
-from aiogram_dialog.widgets.media import StaticMedia, DynamicMedia
 from aiogram_dialog.widgets.text import Const, Format
 
 from handlers import getters, keyboard
-from handlers.admin import states
+from handlers.admin.category_menu.state import Categories
+from handlers.admin.menu import states
 from handlers.admin import selected
 from dictionary.dictionary_ru import LEXICON_CATEGORIES as lex
-from handlers.admin.selected import on_select_menu
+from handlers.admin.menu.selected import on_select_menu
 
 
 def menu_window():
@@ -20,31 +19,19 @@ def menu_window():
         SwitchTo(
             Const(lex.get("input_name_categories")),
             id="add_category",
-            state=states.AddCategories.input_name_categories,
-            on_click=on_select_menu
-        ),
-        SwitchTo(
-            Const(lex.get("add_subcategories")),
-            id="add_subcategory",
-            state=states.AddCategories.select_categories,
+            state=Categories.input_name_categories,
             on_click=on_select_menu
         ),
         SwitchTo(
             Const(lex.get("del_categories")),
             id="del_categories",
-            state=states.AddCategories.select_categories,
-            on_click=on_select_menu
-        ),
-        SwitchTo(
-            Const(lex.get("del_subcategories")),
-            id="del_subcategories",
-            state=states.AddCategories.select_categories,
+            state=Categories.select_categories,
             on_click=on_select_menu
         ),
         Row(
             Cancel(Const(lex.get("to_menu"))),
         ),
-        state=states.AddCategories.categories_menu
+        state=Categories.categories_menu
     )
 
 
@@ -57,15 +44,18 @@ def select_categories_window():
     )
 
 
-def input_name_category_window():
+def input_text_window(text: str, id_text_input: str, state: State):
     return Window(
-        Const(lex.get("input_new_category")),
-        MessageInput(selected.on_input_name_category, ContentType.TEXT),
+        Const(text=text),
+        TextInput(
+            id=id_text_input,
+            on_success=selected
+        ),
         Row(
             Cancel(Const(lex.get("to_menu"))),
             Back(Const(lex.get("to_category_menu"))),
         ),
-        state=states.AddCategories.input_name_categories,
+        state=state
     )
 
 

@@ -8,7 +8,7 @@ from aiogram_dialog.widgets.text import Const, Format
 
 from filters.filters import is_admin
 from dictionary.dictionary_ru import LEXICON_PAYMENT as lex
-from handlers.admin.selected import on_select_menu
+from handlers.admin import on_select_menu
 from payment import states, getters, selected
 
 

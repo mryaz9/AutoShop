@@ -1,7 +1,7 @@
 from aiogram.fsm.state import StatesGroup, State
 
 
-class AddItem(StatesGroup):
+class Item(StatesGroup):
     menu = State()
     add_files = State()
     confirm_add_files = State()

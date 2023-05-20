@@ -1,13 +1,11 @@
 from aiogram.enums import ContentType
 from aiogram_dialog import Window
 from aiogram_dialog.widgets.input import MessageInput
-from aiogram_dialog.widgets.kbd import SwitchTo, Row, Cancel, Back
+from aiogram_dialog.widgets.kbd import SwitchTo, Row, Cancel
 from aiogram_dialog.widgets.text import Const
 
-from database.command.user import add_admin
-from handlers import getters
-from handlers.admin import states
-from handlers.admin import selected
+from handlers.admin.admin_menu.getter import getter_admins
+from handlers.admin.admin_menu.state import Admin
 from dictionary.dictionary_ru import LEXICON_ADMIN
 from handlers.keyboard import paginated_admins
 
@@ -18,17 +16,17 @@ def menu_window():
         SwitchTo(
             Const(LEXICON_ADMIN['add_admin']),
             id="add_category",
-            state=states.AddAdmin.add_admin
+            state=Admin.add_admin
         ),
         SwitchTo(
             Const(LEXICON_ADMIN['view_admin']),
             id="view_admin",
-            state=states.AddAdmin.view_admin
+            state=Admin.view_admin
         ),
         Row(
             Cancel(Const(LEXICON_ADMIN["to_menu"])),
         ),
-        state=states.AddAdmin.admin_menu
+        state=Admin.admin_menu
     )
 
 
@@ -39,7 +37,7 @@ def add_admin_window():
         Row(
             Cancel(Const(LEXICON_ADMIN["to_menu"])),
         ),
-        state=states.AddAdmin.add_admin,
+        state=Admin.add_admin,
     )
 
 
@@ -50,6 +48,6 @@ def view_admin_window():
         Row(
             Cancel(Const(LEXICON_ADMIN["to_menu"])),
         ),
-        state=states.AddAdmin.view_admin,
-        getter=getters.getter_admins
+        state=Admin.view_admin,
+        getter=getter_admins
     )
