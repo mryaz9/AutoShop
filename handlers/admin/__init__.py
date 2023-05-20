@@ -1,10 +1,13 @@
 from aiogram_dialog import Dialog
 
 from dictionary.dictionary_ru import LEXICON_CHANGE_MENU
-from handlers.admin import selected
+from handlers.admin import selected, window
 from handlers.admin.states import ChangeMenu
-from handlers.admin.window import menu, add_item, add_categories, mailing, change_menu
-from handlers.admin.window import add_admin
+from handlers.admin.mailing_menu import window
+from handlers.admin.change_menu import window
+from handlers.admin.item_menu import window
+from handlers.admin.category_menu import window
+from handlers.admin.admin_menu import window
 
 
 def admin_dialogs():
