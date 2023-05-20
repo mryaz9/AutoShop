@@ -44,21 +44,6 @@ def select_categories_window():
     )
 
 
-def input_text_window(text: str, id_text_input: str, state: State):
-    return Window(
-        Const(text=text),
-        TextInput(
-            id=id_text_input,
-            on_success=selected
-        ),
-        Row(
-            Cancel(Const(lex.get("to_menu"))),
-            Back(Const(lex.get("to_category_menu"))),
-        ),
-        state=state
-    )
-
-
 def input_name_subcategory_window():
     return Window(
         Const(lex.get("input_new_subcategory")),

@@ -5,7 +5,7 @@ from aiogram.enums import ContentType
 from aiogram.types import Message
 from aiogram_dialog import DialogProtocol, DialogManager
 from aiogram_dialog.widgets.input import BaseInput
-from aiogram_dialog.widgets.input.text import OnSuccess, ManagedTextInputAdapter
+from aiogram_dialog.widgets.input.text import ManagedTextInputAdapter
 from aiogram_dialog.widgets.widget_event import WidgetEventProcessor, ensure_event_processor
 
 T = TypeVar("T")

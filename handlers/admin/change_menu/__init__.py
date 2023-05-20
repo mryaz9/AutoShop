@@ -2,7 +2,8 @@ from aiogram_dialog import Dialog
 
 from dictionary.dictionary_ru import LEXICON_CHANGE_MENU
 from handlers.admin.change_menu.state import ChangeMenu
-from handlers.admin.change_menu.window import input_photo_window, input_text_window, confirm_change_menu_window
+from handlers.admin.change_menu.window import confirm_change_menu_window
+from utils.widget import input_photo_window, input_text_window
 
 
 def change_menu_dialogs():

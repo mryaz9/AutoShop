@@ -1,9 +1,3 @@
-async def on_chosen_category(callback: CallbackQuery, widget: Any, manager: DialogManager, item_id: str):
-    ctx = manager.current_context()
-    ctx.dialog_data.update(category_id=int(item_id))
-    await manager.switch_to(AddItem.select_subcategories)
-
-
 async def on_chosen_subcategories(callback: CallbackQuery, widget: Select, manager: DialogManager, item_id: str):
     ctx = manager.current_context()
     ctx.dialog_data.update(subcategory_id=item_id)
@@ -32,12 +26,6 @@ async def on_chosen_items(callback: CallbackQuery, widget: Select, manager: Dial
         await manager.switch_to(AddItem.add_files)
 
 
-async def on_chosen_name(message: Message, input_message: MessageInput, manager: DialogManager):
-    ctx = manager.current_context()
-    ctx.dialog_data.update(title=message.text)
-    await manager.switch_to(AddItem.amount)
-
-
 async def on_chosen_amount(message: Message, input_message: MessageInput, manager: DialogManager):
     ctx = manager.current_context()
 
@@ -50,30 +38,10 @@ async def on_chosen_amount(message: Message, input_message: MessageInput, manage
     ctx.dialog_data.update(quantity=len(ctx.dialog_data["files"]))
 
 
-async def on_chosen_photo(message: Message, input_message: MessageInput, manager: DialogManager):
-    ctx = manager.current_context()
-    ctx.dialog_data.update(photo=message.photo[-1].file_id)
-    await manager.switch_to(AddItem.price)
-
-
-async def on_chosen_price(message: Message, input_message: MessageInput, manager: DialogManager):
-    if message.text.isdigit():
-        ctx = manager.current_context()
-        ctx.dialog_data.update(price=float(message.text))
-        await manager.switch_to(AddItem.description)
-
-
-async def on_chosen_description(message: Message, input_message: MessageInput, manager: DialogManager):
-    ctx = manager.current_context()
-    ctx.dialog_data.update(description=message.text)
-    await manager.switch_to(AddItem.confirm)
-
-
-async def on_chosen_confirm(callback: CallbackQuery, widget: Any, manager: DialogManager):
+async def on_confirm_add_item(callback: CallbackQuery, widget: Any, manager: DialogManager):
     session = manager.middleware_data.get("session")
     ctx = manager.current_context()
     data = ctx.dialog_data
-    logger.info(data)
     item = ItemModel(**data)
     await create_item(session, item)
 
