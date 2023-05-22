@@ -11,6 +11,5 @@ def payment_dialogs():
             windows.payment_qiwi_window(),
             windows.payment_crypto_window(),
             windows.select_assets_window(),
-            #windows.payment_admin_window(),
         )
     ]

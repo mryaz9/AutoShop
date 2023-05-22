@@ -16,6 +16,12 @@ def payment_select_window():
     return Window(
         Const(lex.get("payment_menu")),
         SwitchTo(
+            Const(lex.get("lava")),
+            id="lava_select",
+            state=states.Payment.payment_input_amount,
+            on_click=on_select_menu
+        ),
+        SwitchTo(
             Const(lex.get("qiwi")),
             id="qiwi_select",
             state=states.Payment.payment_input_amount,
@@ -124,4 +130,3 @@ def payment_crypto_window():
         state=states.Payment.payment_crypto,
         getter=getters.get_payment_crypto
     )
-

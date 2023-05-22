@@ -1,5 +1,5 @@
 from aiocryptopay import AioCryptoPay, Networks
-from glQiwiApi import QiwiP2PClient
+from glQiwiApi import QiwiP2PClient, YooMoneyAPI
 
 from config.config import Config, load_config
 

@@ -1,7 +1,7 @@
 from aiogram.enums import ContentType
 from aiogram_dialog import Window
 from aiogram_dialog.widgets.input import MessageInput
-from aiogram_dialog.widgets.kbd import Cancel, SwitchTo, Back, Row, Button, Next
+from aiogram_dialog.widgets.kbd import Cancel, SwitchTo, Back, Row, Button, Next, Column
 from aiogram_dialog.widgets.text import Const, Format
 
 from dictionary.dictionary_ru import LEXICON_CATEGORIES as lex
@@ -27,6 +27,12 @@ def menu_window():
             on_click=on_select_menu
         ),
         SwitchTo(
+            Const(lex.get("del_categories")),
+            id="del_categories",
+            state=states.AddCategories.select_categories,
+            on_click=on_select_menu
+        ),
+        SwitchTo(
             Const(lex.get("add_subcategories")),
             id="add_subcategory",
             state=states.AddCategories.select_categories,
@@ -35,12 +41,6 @@ def menu_window():
         SwitchTo(
             Const(lex.get("change_subcategories")),
             id="change_subcategory",
-            state=states.AddCategories.select_categories,
-            on_click=on_select_menu
-        ),
-        SwitchTo(
-            Const(lex.get("del_categories")),
-            id="del_categories",
             state=states.AddCategories.select_categories,
             on_click=on_select_menu
         ),
@@ -183,4 +183,3 @@ def del_categories_confirm_window():
         Back(Const(lex.get("back_del_categories_confirm"))),
         state=states.AddCategories.del_categories,
     )
-
