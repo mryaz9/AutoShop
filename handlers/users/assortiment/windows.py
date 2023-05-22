@@ -1,15 +1,12 @@
-from typing import Dict
-
-from aiogram_dialog import Window, Data, DialogManager
-from aiogram_dialog.widgets.common import Whenable
+from aiogram_dialog import Window
 from aiogram_dialog.widgets.input import TextInput
 from aiogram_dialog.widgets.kbd import Cancel, Back, Button, Row, Counter
 from aiogram_dialog.widgets.media import DynamicMedia
-from aiogram_dialog.widgets.text import Const, Format, Progress
+from aiogram_dialog.widgets.text import Const, Format
 
+from dictionary.dictionary_ru import LEXICON_ASSORTIMENT
 from handlers import getters, keyboard
 from handlers.users.assortiment import selected, states
-from dictionary.dictionary_ru import LEXICON_ASSORTIMENT
 
 
 def categories_window():

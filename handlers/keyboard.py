@@ -1,5 +1,6 @@
 import operator
-from aiogram_dialog.widgets.kbd import ScrollingGroup, Select, Row, Button, Back, Group, PrevPage, NextPage, Cancel, \
+
+from aiogram_dialog.widgets.kbd import ScrollingGroup, Select, Row, Back, Group, PrevPage, NextPage, Cancel, \
     CurrentPage
 from aiogram_dialog.widgets.text import Format, Const, Multi
 

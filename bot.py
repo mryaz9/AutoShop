@@ -1,20 +1,19 @@
 import asyncio
 import logging
 
+from aiogram import Bot, Dispatcher
 from aiogram.fsm.storage.memory import MemoryStorage, SimpleEventIsolation
 from aiogram_dialog import setup_dialogs
-from aiogram import Bot, Dispatcher
 from sqlalchemy.ext.asyncio import async_sessionmaker
 
+from config.config import Config, load_config
 from database import get_async_sessionmaker
 from database.command.user import add_admin
 from handlers.admin import admin_dialogs
-from handlers.users.assortiment import items_dialogs
 from handlers.menu import main_menu_dialogs
-from handlers.users.profile import profile_dialogs
 from handlers.users import other, user
-from config.config import Config, load_config
-
+from handlers.users.assortiment import items_dialogs
+from handlers.users.profile import profile_dialogs
 from middleware import DBSessionMiddleware, ConfigMiddleware
 from payment import payment_dialogs
 from utils.notify_admin import startup, shutdown

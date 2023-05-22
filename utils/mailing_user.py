@@ -1,12 +1,7 @@
 import asyncio
-from operator import attrgetter
 
-from aiogram import types, Bot, exceptions
-from aiogram.enums import ParseMode
-from aiogram.exceptions import TelegramBadRequest
-from aiogram_broadcaster import TextBroadcaster
+from aiogram import Bot, exceptions
 from loguru import logger
-from sqlalchemy.ext.asyncio import AsyncSession
 
 from config.config import Config, load_config
 from database.command.user import get_all_user

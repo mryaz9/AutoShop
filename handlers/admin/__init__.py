@@ -3,8 +3,8 @@ from aiogram_dialog import Dialog
 from dictionary.dictionary_ru import LEXICON_CHANGE_MENU
 from handlers.admin import selected
 from handlers.admin.states import ChangeMenu
-from handlers.admin.window import menu, add_item, add_categories, mailing, change_menu
 from handlers.admin.window import add_admin
+from handlers.admin.window import menu, add_item, add_categories, mailing, change_menu
 
 
 def admin_dialogs():

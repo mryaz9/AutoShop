@@ -1,20 +1,15 @@
-import datetime
-from typing import Any, Sequence
+from typing import Any
 
-from aiogram.enums import ContentType
 from aiogram.exceptions import TelegramBadRequest
 from aiogram.types import CallbackQuery, Message, InputMediaDocument
 from aiogram_dialog import DialogManager
-from aiogram_dialog.api.entities import MediaAttachment, MediaId
 from aiogram_dialog.widgets.input import TextInput
-from aiogram_dialog.widgets.kbd import ManagedCounterAdapter, Button
-from loguru import logger
-from sqlalchemy.ext.asyncio import AsyncSession
+from aiogram_dialog.widgets.kbd import Button
 
 from database.command.item import get_item, get_files, return_and_del_files
 from database.command.user import get_user, reduce_balance
-from handlers.users.assortiment.states import BotMenu, BuyProduct
 from dictionary.dictionary_ru import LEXICON_ASSORTIMENT
+from handlers.users.assortiment.states import BotMenu, BuyProduct
 from utils.notify_admin import new_order
 from utils.other import parting
 
@@ -38,23 +33,16 @@ async def on_chosen_product(callback: CallbackQuery, widget: Any, manager: Dialo
 
 
 async def on_chosen_product_info(callback: CallbackQuery, widget: Any, manager: DialogManager):
-    session = manager.middleware_data.get("session")
     ctx = manager.current_context()
     product_id = ctx.dialog_data.get("product_id")
     # Todo: Добавить проверку на тип товара
     # Todo: Проверка на наличие файлов, если нет, то сразу перекидывает в покупку
-    files = await get_files(session, int(product_id))
-    item = await get_item(session, int(product_id))
 
-    if len(files) == 0 and item.quantity == -1:
-        await manager.start(BuyProduct.confirm, data={
-            "product_id": product_id,
-            "amount_user": 1
-        })
-    else:
-        await manager.start(BuyProduct.enter_amount, data={
-            "product_id": product_id
-        })
+    await manager.start(BuyProduct.enter_amount,
+                        data={
+                            "product_id": product_id
+                              }
+                        )
 
 
 async def on_entered_amount_counter(message: CallbackQuery, widget: Button, manager: DialogManager, ):
@@ -122,32 +110,17 @@ async def on_confirm_buy(callback: CallbackQuery, widget: Any, manager: DialogMa
         return
 
     files = await return_and_del_files(session, product_id, amount_user)
-    if files:
-        list_files: list = []
-        for i in files:
-            list_files.append(InputMediaDocument(media=i))
 
-        try:
-            await callback.message.answer_media_group(media=list_files)
-        except TelegramBadRequest:
-            part = parting(list_files, 9)
-            for i in part:
-                await callback.message.answer_media_group(media=i)
+    list_files: list = []
+    for i in files:
+        list_files.append(InputMediaDocument(media=i))
 
-        message_text = LEXICON_ASSORTIMENT.get("send_admin_buy").format(
-            title=product_info.title,
-            amount_user=amount_user,
-            username=callback.from_user.username)
-
-        await new_order(session, message_text, callback.from_user.id, notify=True)
-
-    elif not files:
-        message_text = LEXICON_ASSORTIMENT.get("send_admin_buy").format(
-            title=product_info.title,
-            amount_user=amount_user,
-            username=callback.from_user.username)
-
-        await new_order(session, message_text, callback.from_user.id, notify=False)
+    try:
+        await callback.message.answer_media_group(media=list_files)
+    except TelegramBadRequest:
+        part = parting(list_files, 9)
+        for i in part:
+            await callback.message.answer_media_group(media=i)
 
     # TODO: Добавить файлы в заказ
 

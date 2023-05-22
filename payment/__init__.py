@@ -1,7 +1,5 @@
 from aiogram_dialog import Dialog
-from glQiwiApi import QiwiP2PClient
 
-from config.config import Config, load_config
 from payment import windows
 
 

@@ -1,15 +1,15 @@
 from aiogram.fsm.state import StatesGroup, State
 from aiogram_dialog import Window
 from aiogram_dialog.widgets.kbd import Start
-from aiogram_dialog.widgets.media import StaticMedia, DynamicMedia
+from aiogram_dialog.widgets.media import DynamicMedia
 from aiogram_dialog.widgets.text import Const, Format
 
+from dictionary.dictionary_ru import LEXICON_MAIN
+from filters.filters import is_admin
 from handlers.admin.states import AdminMenu
 from handlers.menu.info_window import Info
 from handlers.users.assortiment.states import BotMenu
 from handlers.users.profile.states import Profile
-from filters.filters import is_admin
-from dictionary.dictionary_ru import LEXICON_MAIN
 
 
 class MainMenu(StatesGroup):

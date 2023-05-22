@@ -1,7 +1,6 @@
 import datetime
 from typing import Sequence
 
-from aiogram import types
 from sqlalchemy import select, exists
 from sqlalchemy.ext.asyncio import AsyncSession
 

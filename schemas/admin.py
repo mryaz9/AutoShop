@@ -1,7 +1,5 @@
 """Admin-side pydantic schemas"""
 
-import datetime
-
 from typing import TypeVar
 
 from pydantic import BaseModel, Field, condecimal, validator

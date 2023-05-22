@@ -1,10 +1,8 @@
 from typing import Sequence
 
-from loguru import logger
 from sqlalchemy import select, func, delete
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from database.command.subcategory import get_subcategory
 from database.models import Item, ItemFiles
 from schemas.admin import ItemModel
 
@@ -140,6 +138,8 @@ async def get_files(session: AsyncSession, item_id: int) -> Sequence[ItemFiles]:
 async def return_and_del_files(session: AsyncSession, item_id: int, amount: int) -> Sequence[ItemFiles]:
     """Select COUNT items"""
 
+    item = await get_item(session, item_id)
+
     q = select(ItemFiles).where(ItemFiles.item_id == item_id).limit(amount)
     res = await session.execute(q)
 
@@ -150,6 +150,8 @@ async def return_and_del_files(session: AsyncSession, item_id: int, amount: int)
         result.append(i.file_id)
         d = delete(ItemFiles).where(ItemFiles.id == res_id)
         await session.execute(d)
+
+    item.quantity -= len(result)
 
     await session.commit()
 

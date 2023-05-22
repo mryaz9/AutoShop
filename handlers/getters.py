@@ -1,10 +1,7 @@
-from datetime import datetime
-
 from aiogram.enums import ContentType
 from aiogram_dialog import DialogManager
 from aiogram_dialog.api.entities import MediaAttachment, MediaId
 from aiogram_dialog.widgets.kbd import ManagedCounterAdapter
-from loguru import logger
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from database.command.category import get_categories, get_category
@@ -120,17 +117,12 @@ async def getter_buy_product(dialog_manager: DialogManager, session: AsyncSessio
 
     amount_user = ctx.dialog_data.get("amount_user")
 
-    if ctx.dialog_data.get("amount_user") is None:
-        ctx.dialog_data.update(amount_user=1)
-        amount_user = 1
-
     counter: ManagedCounterAdapter = dialog_manager.find("counter_amount")
     counter.widget.max = len(amount)
 
     data = {
         "product": db_product_info,
         "amount": len(amount),
-        "progress": counter.get_value() / len(amount) * 100,
         "amount_user": amount_user,
         "total_amount": db_product_info.price * amount_user if amount_user else None,
         "photo": MediaAttachment(ContentType.PHOTO, file_id=MediaId(db_product_info.photo))

@@ -1,18 +1,16 @@
 import asyncio
 import logging
-from typing import Any
 
 from aiogram import Bot, Dispatcher, Router
 from aiogram.enums import ContentType
 from aiogram.filters import CommandStart
 from aiogram.fsm.state import StatesGroup, State
 from aiogram.fsm.storage.memory import MemoryStorage
-from aiogram.types import CallbackQuery, Message
+from aiogram.types import Message
 from aiogram_dialog import DialogManager, Window, Dialog, setup_dialogs, StartMode
-from aiogram_dialog.widgets.input import TextInput, MessageInput
-from aiogram_dialog.widgets.kbd import Button, Url, Group, Cancel, Row, SwitchTo
+from aiogram_dialog.widgets.input import MessageInput
+from aiogram_dialog.widgets.kbd import Button, Group, Cancel, Row, SwitchTo
 from aiogram_dialog.widgets.text import Const, Format
-from loguru import logger
 
 from dictionary.dictionary_ru import LEXICON_MAIN
 

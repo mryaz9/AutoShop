@@ -6,8 +6,8 @@ from aiogram_dialog.widgets.input import MessageInput
 from aiogram_dialog.widgets.kbd import Row, Button, Cancel, SwitchTo, Back, Url, Select
 from aiogram_dialog.widgets.text import Const, Format
 
-from filters.filters import is_admin
 from dictionary.dictionary_ru import LEXICON_PAYMENT as lex
+from filters.filters import is_admin
 from handlers.admin.selected import on_select_menu
 from payment import states, getters, selected
 

@@ -1,7 +1,7 @@
-from aiogram.enums import ContentType
 from aiogram_dialog import Window
-from aiogram_dialog.widgets.input import MessageInput, TextInput
-from aiogram_dialog.widgets.kbd import Next, Row, Cancel, Back, Button
+from aiogram_dialog import Window
+from aiogram_dialog.widgets.input import TextInput
+from aiogram_dialog.widgets.kbd import Next, Row, Cancel, Button
 from aiogram_dialog.widgets.text import Const, Format
 
 from dictionary.dictionary_ru import LEXICON_CHANGE_MENU

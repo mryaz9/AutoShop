@@ -1,16 +1,13 @@
 from aiogram.enums import ContentType
 from aiogram_dialog import Window
-from aiogram_dialog.api.entities import MediaAttachment, MediaId
-from aiogram_dialog.api.protocols import MediaIdStorageProtocol
 from aiogram_dialog.widgets.input import MessageInput
 from aiogram_dialog.widgets.kbd import Cancel, SwitchTo, Back, Row, Button, Next
-from aiogram_dialog.widgets.media import StaticMedia, DynamicMedia
 from aiogram_dialog.widgets.text import Const, Format
 
-from handlers import getters, keyboard
-from handlers.admin import states
-from handlers.admin import selected
 from dictionary.dictionary_ru import LEXICON_CATEGORIES as lex
+from handlers import getters, keyboard
+from handlers.admin import selected
+from handlers.admin import states
 from handlers.admin.selected import on_select_menu
 
 

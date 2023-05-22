@@ -1,17 +1,11 @@
 import asyncio
-from operator import attrgetter
 
-from aiogram import Bot, types, exceptions
-from aiogram.client.session.base import BaseSession
-from aiogram.enums import ParseMode
-from aiogram.exceptions import TelegramBadRequest
+from aiogram import Bot, exceptions
 from aiogram.utils.keyboard import InlineKeyboardBuilder
-from aiogram_broadcaster import TextBroadcaster
 from loguru import logger
 
 from config.config import Config, load_config
 from database.command.user import get_all_admin
-from dictionary.dictionary_ru import LEXICON_ADMIN_INFO
 
 
 async def startup(bot):

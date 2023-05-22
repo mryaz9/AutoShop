@@ -2,10 +2,9 @@ from aiogram_dialog import Window
 from aiogram_dialog.widgets.kbd import Start, Cancel, Group
 from aiogram_dialog.widgets.text import Const
 
-
-from handlers.admin.states import AdminMenu, AddItem, AddCategories, AddAdmin, Mailing, ChangeMenu
 from dictionary.dictionary_ru import LEXICON_ADMIN_MENU, LEXICON_ADMIN, LEXICON_CATEGORIES, LEXICON_ITEM, \
     LEXICON_MAILING, LEXICON_CHANGE_MENU
+from handlers.admin.states import AdminMenu, AddItem, AddCategories, AddAdmin, Mailing, ChangeMenu
 
 
 def admin_menu_window():

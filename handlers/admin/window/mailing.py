@@ -4,9 +4,9 @@ from aiogram_dialog.widgets.input import MessageInput
 from aiogram_dialog.widgets.kbd import SwitchTo, Row, Cancel, Back
 from aiogram_dialog.widgets.text import Const
 
-from handlers.admin import states
-from handlers.admin import selected
 from dictionary.dictionary_ru import LEXICON_MAILING as lex
+from handlers.admin import selected
+from handlers.admin import states
 
 
 def menu_window():

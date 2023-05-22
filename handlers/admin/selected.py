@@ -2,36 +2,20 @@ from dataclasses import dataclass
 from typing import Any
 
 from aiogram.types import CallbackQuery, Message
-from aiogram_dialog import DialogManager, DialogProtocol
+from aiogram_dialog import DialogManager
 from aiogram_dialog.widgets.input import MessageInput
 from aiogram_dialog.widgets.kbd import Select, Button
 from loguru import logger
-from sqlalchemy.exc import DBAPIError
-from sqlalchemy.ext.asyncio import AsyncSession
 
 from database.command.category import create_category, delete_category
 from database.command.item import create_item, delete_item, add_files
 from database.command.main_menu import create_menu
 from database.command.subcategory import create_subcategory, delete_subcategory
 from database.command.user import create_admin
-from handlers.admin.states import AddItem, AddCategories
 from dictionary.dictionary_ru import LEXICON_ITEM, LEXICON_CATEGORIES, LEXICON_ADMIN, LEXICON_MAILING
+from handlers.admin.states import AddItem, AddCategories
 from schemas.admin import ItemModel, CategoryModel, SubCategoryModel, MenuModel
 from utils.mailing_user import mailing_user
-
-
-# TODO: Добавить дата класс в контексный менеджер
-@dataclass()
-class DialogData:
-    category_id = None
-    subcategory_id = None
-    title = None
-    amount = None
-    photo = None
-    price = None
-    time_action = None
-    description = None
-    admin_id_add = None
 
 
 async def on_chosen_category(callback: CallbackQuery, widget: Any, manager: DialogManager, item_id: str):

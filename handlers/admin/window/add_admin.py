@@ -1,14 +1,13 @@
 from aiogram.enums import ContentType
 from aiogram_dialog import Window
 from aiogram_dialog.widgets.input import MessageInput
-from aiogram_dialog.widgets.kbd import SwitchTo, Row, Cancel, Back
+from aiogram_dialog.widgets.kbd import SwitchTo, Row, Cancel
 from aiogram_dialog.widgets.text import Const
 
-from database.command.user import add_admin
-from handlers import getters
-from handlers.admin import states
-from handlers.admin import selected
 from dictionary.dictionary_ru import LEXICON_ADMIN
+from handlers import getters
+from handlers.admin import selected
+from handlers.admin import states
 from handlers.keyboard import paginated_admins
 
 

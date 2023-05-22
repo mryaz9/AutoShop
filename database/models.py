@@ -1,5 +1,5 @@
 from sqlalchemy import (Column, Integer, BigInteger, String,
-                        Sequence, TIMESTAMP, Boolean, JSON, Float, ForeignKey, DateTime, Text, Numeric)
+                        Boolean, Float, ForeignKey, DateTime, Text)
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship
 
@@ -49,7 +49,7 @@ class Item(Base):
     photo = Column(String(250), nullable=True)
     description = Column(Text, nullable=False)
     price = Column(Float, nullable=False)
-    quantity = Column(Integer, default=-1, nullable=False)
+    quantity = Column(Integer, default=0, nullable=False)
 
     subcategory_id = Column(
         Integer, ForeignKey("subcategory.id", ondelete="CASCADE"), nullable=False

@@ -1,13 +1,12 @@
 from typing import Any
 
-from aiocryptopay.const import Assets, InvoiceStatus
+from aiocryptopay.const import InvoiceStatus
 from aiogram.types import Message, CallbackQuery
 from aiogram_dialog import DialogManager
 from aiogram_dialog.widgets.input import MessageInput
 from aiogram_dialog.widgets.kbd import Button
-from sqlalchemy.ext.asyncio import AsyncSession
 
-from database.command.user import get_user, add_balance
+from database.command.user import add_balance
 from payment import states
 from utils.init_payment import init_qiwi_client, init_crypto_client
 
