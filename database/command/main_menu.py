@@ -19,12 +19,23 @@ async def create_menu(
     else:
         menu = MainMenu()
 
-    menu.main_menu = menu_obj.main_menu
-    menu.catalog = menu_obj.catalog
-    menu.order = menu_obj.order
-    menu.profile = menu_obj.profile
-    menu.info = menu_obj.info
-    menu.info_about = menu_obj.info_about
+    if menu_obj.main_menu:
+        menu.main_menu = menu_obj.main_menu
+
+    if menu_obj.catalog:
+        menu.catalog = menu_obj.catalog
+
+    if menu_obj.order:
+        menu.order = menu_obj.order
+
+    if menu_obj.profile:
+        menu.profile = menu_obj.profile
+
+    if menu_obj.info:
+        menu.info = menu_obj.info
+
+    if menu_obj.info_about:
+        menu.info_about = menu_obj.info_about
 
     session.add(menu)
 

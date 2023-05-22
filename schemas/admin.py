@@ -41,7 +41,7 @@ class ItemModel(BaseModel):
     price: condecimal(max_digits=12, decimal_places=2)
     subcategory_id: int
     files: list[str] = ''
-    quantity: int = -1
+    quantity: int = 0
 
     _must_not_digit_title = validator("title", allow_reuse=True, check_fields=False)(must_not_digit)
 

@@ -109,13 +109,15 @@ LEXICON_ADMIN: dict[str, str] = {
 LEXICON_CATEGORIES: dict[str, str] = {
     'categories_menu': 'Категории/подкатегории',
 
-    'input_name_categories': 'Добавить категорию',
+    'add_categories': 'Добавить категорию',
+    'change_categories': 'Изменить категорию',
     'del_categories': 'Удалить категорию',
     'del_categories_confirm': 'Вы уверены? При удалении потеряются все подкатегории и товары',
     'back_del_categories_confirm': '⬅️ Назад ↩️',
     'successful_del_categories': 'Категория удалена успешно',
 
     'add_subcategories': 'Добавить подкатегорию',
+    'change_subcategories': 'Изменить подкатегорию',
     'del_subcategories': 'Удалить подкатегорию',
     'del_subcategories_confirm': 'Вы уверены? При удалении потеряются все товары',
     'back_del_subcategories_confirm': '⬅️ Назад ↩️',
@@ -147,6 +149,7 @@ LEXICON_ITEM: dict[str, str] = {
     'item_menu': 'Товары',
 
     'add_item': 'Добавить товар',
+    'change_item': 'Изменить товар',
     'add_files': 'Добавить файлы',
     'add_files_confirm': 'Добавить файлы?',
     'del_item': 'Удалить товар',

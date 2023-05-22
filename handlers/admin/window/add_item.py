@@ -21,6 +21,12 @@ def menu_window():
             on_click=selected.on_select_menu
         ),
         SwitchTo(
+            Const(lex.get("change_item")),
+            state=states.AddItem.select_categories,
+            id="change_item",
+            on_click=selected.on_select_menu
+        ),
+        SwitchTo(
             Const(lex.get("add_files")),
             state=states.AddItem.select_categories,
             id="add_files",

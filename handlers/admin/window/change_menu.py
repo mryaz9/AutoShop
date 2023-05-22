@@ -1,5 +1,4 @@
 from aiogram_dialog import Window
-from aiogram_dialog import Window
 from aiogram_dialog.widgets.input import TextInput
 from aiogram_dialog.widgets.kbd import Next, Row, Cancel, Button
 from aiogram_dialog.widgets.text import Const, Format

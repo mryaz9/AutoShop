@@ -15,14 +15,26 @@ def menu_window():
     return Window(
         Const(lex.get("categories_menu")),
         SwitchTo(
-            Const(lex.get("input_name_categories")),
+            Const(lex.get("add_categories")),
             id="add_category",
             state=states.AddCategories.input_name_categories,
             on_click=on_select_menu
         ),
         SwitchTo(
+            Const(lex.get("change_categories")),
+            id="change_category",
+            state=states.AddCategories.select_categories,
+            on_click=on_select_menu
+        ),
+        SwitchTo(
             Const(lex.get("add_subcategories")),
             id="add_subcategory",
+            state=states.AddCategories.select_categories,
+            on_click=on_select_menu
+        ),
+        SwitchTo(
+            Const(lex.get("change_subcategories")),
+            id="change_subcategory",
             state=states.AddCategories.select_categories,
             on_click=on_select_menu
         ),

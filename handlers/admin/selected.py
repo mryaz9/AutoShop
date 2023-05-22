@@ -7,10 +7,10 @@ from aiogram_dialog.widgets.input import MessageInput
 from aiogram_dialog.widgets.kbd import Select, Button
 from loguru import logger
 
-from database.command.category import create_category, delete_category
-from database.command.item import create_item, delete_item, add_files
+from database.command.category import create_category, delete_category, update_category
+from database.command.item import create_item, delete_item, add_files, update_item
 from database.command.main_menu import create_menu
-from database.command.subcategory import create_subcategory, delete_subcategory
+from database.command.subcategory import create_subcategory, delete_subcategory, update_subcategory
 from database.command.user import create_admin
 from dictionary.dictionary_ru import LEXICON_ITEM, LEXICON_CATEGORIES, LEXICON_ADMIN, LEXICON_MAILING
 from handlers.admin.states import AddItem, AddCategories
@@ -32,11 +32,7 @@ async def on_chosen_subcategories(callback: CallbackQuery, widget: Select, manag
     if menu == "add_item":
         await manager.switch_to(AddItem.name)
 
-    if menu == "del_item":
-        await manager.switch_to(AddItem.select_item)
-
-    if menu == "add_files":
-        await manager.switch_to(AddItem.select_item)
+    await manager.switch_to(AddItem.select_item)
 
 
 async def on_chosen_items(callback: CallbackQuery, widget: Select, manager: DialogManager, item_id: str):
@@ -50,6 +46,8 @@ async def on_chosen_items(callback: CallbackQuery, widget: Select, manager: Dial
 
     if menu == "add_files":
         await manager.switch_to(AddItem.add_files)
+
+    await manager.switch_to(AddItem.name)
 
 
 async def on_chosen_name(message: Message, input_message: MessageInput, manager: DialogManager):
@@ -93,9 +91,14 @@ async def on_chosen_confirm(callback: CallbackQuery, widget: Any, manager: Dialo
     session = manager.middleware_data.get("session")
     ctx = manager.current_context()
     data = ctx.dialog_data
-    logger.info(data)
     item = ItemModel(**data)
-    await create_item(session, item)
+
+    if data.get("menu") == "change_item":
+        item_id = int(data.get("item_id"))
+        await update_item(session, item_id, item)
+
+    else:
+        await create_item(session, item)
 
     await callback.answer(LEXICON_ITEM.get("done"))
     await manager.done()
@@ -119,17 +122,28 @@ async def on_select_category(callback: CallbackQuery, widget: Any, manager: Dial
     if ctx.dialog_data.get("menu") == "add_subcategory":
         await manager.switch_to(AddCategories.input_name_subcategories)
 
-    elif ctx.dialog_data.get("menu") == "del_categories":
+    if ctx.dialog_data.get("menu") == "change_subcategory":
+        await manager.switch_to(AddCategories.select_subcategories)
+
+    if ctx.dialog_data.get("menu") == "change_category":
+        await manager.switch_to(AddCategories.input_name_categories)
+
+    if ctx.dialog_data.get("menu") == "del_categories":
         await manager.switch_to(AddCategories.del_categories)
 
-    elif ctx.dialog_data.get("menu") == "del_subcategories":
+    if ctx.dialog_data.get("menu") == "del_subcategories":
         await manager.switch_to(AddCategories.select_subcategories)
 
 
 async def on_select_subcategory(callback: CallbackQuery, widget: Any, manager: DialogManager, item_id: str):
     ctx = manager.current_context()
     ctx.dialog_data.update(subcategory_id=item_id)
-    await manager.switch_to(AddCategories.del_subcategories)
+
+    if ctx.dialog_data.get("menu") == "del_categories":
+        await manager.switch_to(AddCategories.del_subcategories)
+
+    if ctx.dialog_data.get("menu") == "change_subcategory":
+        await manager.switch_to(AddCategories.input_name_subcategories)
 
 
 async def on_input_name_category(message: Message, input_message: MessageInput, manager: DialogManager):
@@ -151,7 +165,12 @@ async def on_add_categories(callback: CallbackQuery, widget: Any, manager: Dialo
 
     category = CategoryModel(**data)
 
-    await create_category(session, category)
+    if ctx.dialog_data.get("menu") == "change_category":
+        category_id = ctx.dialog_data.get("category_id")
+        await update_category(session, int(category_id), category)
+
+    if ctx.dialog_data.get("menu") == "add_category":
+        await create_category(session, category)
 
     await callback.answer(LEXICON_CATEGORIES.get("successful_add_category"))
     await manager.done()
@@ -176,7 +195,12 @@ async def on_add_subcategories(callback: CallbackQuery, widget: Any, manager: Di
 
     subcategory = SubCategoryModel(**data)
 
-    await create_subcategory(session, subcategory)
+    if ctx.dialog_data.get("menu") == "change_subcategory":
+        subcategory_id = ctx.dialog_data.get("subcategory_id")
+        await update_subcategory(session, int(subcategory_id), subcategory)
+
+    if ctx.dialog_data.get("menu") == "add_subcategory":
+        await create_subcategory(session, subcategory)
 
     await callback.answer(
         LEXICON_CATEGORIES.get("successful_add_subcategory"))
@@ -254,10 +278,7 @@ async def confirm_change_menu(callback: CallbackQuery, btn: Button, manager: Dia
     session = manager.middleware_data.get("session")
     ctx = manager.current_context()
 
-    logger.info(ctx.widget_data)
-
     menu = MenuModel(**ctx.widget_data)
-    logger.info(menu)
     await create_menu(session, menu)
 
     await manager.done()
