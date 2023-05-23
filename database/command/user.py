@@ -10,7 +10,7 @@ from database.models import User
 async def add_balance(session: AsyncSession, amount: float, user_id: int):
     user = await get_user(session, user_id)
     old_balance = user.balance
-    balance = old_balance+amount
+    balance = old_balance + amount
     user.balance = balance
 
     session.add(user)
@@ -20,7 +20,7 @@ async def add_balance(session: AsyncSession, amount: float, user_id: int):
 async def reduce_balance(session: AsyncSession, amount: float, user_id: int):
     user = await get_user(session, user_id)
     old_balance = user.balance
-    balance = old_balance-amount
+    balance = old_balance - amount
     user.balance = balance
 
     session.add(user)

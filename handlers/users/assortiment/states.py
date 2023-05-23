@@ -12,5 +12,3 @@ class BuyProduct(StatesGroup):
     enter_amount = State()
     confirm = State()
     successful = State()
-
-

@@ -53,8 +53,8 @@ LEXICON_ASSORTIMENT: dict[str, str] = {
                            'Спасибо за покупку!',
 
     'send_admin_buy': 'Товар: {title}\n'
-                       'Кол-во: {amount_user}\n'
-                       'Покупатель: @{username}\n',
+                      'Кол-во: {amount_user}\n'
+                      'Покупатель: @{username}\n',
 
     'back_select_categories': '⬅️ Назад ↩️',
     'back_select_subcategories': '⬅️ Назад ↩️',
@@ -86,7 +86,6 @@ LEXICON_PAYMENT: dict[str, str] = {
     'to_payment_menu': '⬅️ Назад ↩️',
     'to_menu': '🏠 Меню 🏠',
 }
-
 
 LEXICON_ADMIN_MENU: dict[str, str] = {
     'admin_menu': 'Меню администратора',
@@ -162,7 +161,6 @@ LEXICON_ITEM: dict[str, str] = {
     'select_subcategory': 'Выберите подкатегорию',
 
     'select_item': 'Выберите продукт',
-
 
     'input_name': 'Введите имя',
     'back_input_name': '⬅️ Назад ↩️',

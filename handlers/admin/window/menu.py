@@ -15,7 +15,8 @@ def admin_menu_window():
 
             Start(Const(LEXICON_ITEM.get("item_menu")), id="item", state=AddItem.menu),
 
-            Start(Const(LEXICON_CATEGORIES.get("categories_menu")), id="categories", state=AddCategories.categories_menu),
+            Start(Const(LEXICON_CATEGORIES.get("categories_menu")), id="categories",
+                  state=AddCategories.categories_menu),
 
             Start(Const(LEXICON_ADMIN.get("admin_menu")), id="admin", state=AddAdmin.admin_menu),
 
@@ -27,4 +28,3 @@ def admin_menu_window():
 
         state=AdminMenu.admin_menu
     )
-

@@ -1,11 +1,9 @@
-from dataclasses import dataclass
 from typing import Any
 
 from aiogram.types import CallbackQuery, Message
 from aiogram_dialog import DialogManager
 from aiogram_dialog.widgets.input import MessageInput
 from aiogram_dialog.widgets.kbd import Select, Button
-from loguru import logger
 
 from database.command.category import create_category, delete_category, update_category
 from database.command.item import create_item, delete_item, add_files, update_item
@@ -283,9 +281,6 @@ async def confirm_change_menu(callback: CallbackQuery, btn: Button, manager: Dia
 
     await manager.done()
 
-
-
-
 # TODO: Обернуть все запросы в бд
-#except DBAPIError:
-    #    await callback.answer(LEXICON_CATEGORIES.get("error_db"))
+# except DBAPIError:
+#    await callback.answer(LEXICON_CATEGORIES.get("error_db"))

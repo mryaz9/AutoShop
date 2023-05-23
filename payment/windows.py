@@ -103,7 +103,7 @@ def select_assets_window():
             on_click=selected.on_select_asset,
         ),
         Row(
-            Cancel(Const(lex.get("to_menu")),),
+            Cancel(Const(lex.get("to_menu")), ),
             Back(Const(lex.get("back_input_amount"))),
         ),
         state=states.Payment.payment_select_assets,

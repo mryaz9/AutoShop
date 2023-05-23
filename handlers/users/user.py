@@ -35,11 +35,12 @@ async def on_unknown_state(event, dialog_manager: DialogManager):
         MainMenu.main_menu, mode=StartMode.RESET_STACK, show_mode=ShowMode.SEND,
     )
 
+
 router.errors.register(
-        on_unknown_intent,
-        ExceptionTypeFilter(UnknownIntent),
-    )
+    on_unknown_intent,
+    ExceptionTypeFilter(UnknownIntent),
+)
 router.errors.register(
-        on_unknown_state,
-        ExceptionTypeFilter(UnknownState),
-    )
+    on_unknown_state,
+    ExceptionTypeFilter(UnknownState),
+)

@@ -10,7 +10,6 @@ from database.command.item import get_item, get_files, return_and_del_files
 from database.command.user import get_user, reduce_balance
 from dictionary.dictionary_ru import LEXICON_ASSORTIMENT
 from handlers.users.assortiment.states import BotMenu, BuyProduct
-from utils.notify_admin import new_order
 from utils.other import parting
 
 
@@ -41,7 +40,7 @@ async def on_chosen_product_info(callback: CallbackQuery, widget: Any, manager: 
     await manager.start(BuyProduct.enter_amount,
                         data={
                             "product_id": product_id
-                              }
+                        }
                         )
 
 

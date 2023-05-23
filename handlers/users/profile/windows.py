@@ -33,4 +33,3 @@ def profile_window():
         state=Profile.profile,
         getter=getter_profile
     )
-

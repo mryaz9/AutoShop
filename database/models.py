@@ -80,4 +80,3 @@ class MainMenu(Base):
     profile = Column(String(250), default=None, nullable=True)
     info = Column(String(250), default=None, nullable=True)
     info_about = Column(String(250), default=None, nullable=True)
-

@@ -8,8 +8,8 @@ from schemas.admin import ItemModel
 
 
 async def create_item(
-    session: AsyncSession,
-    item_obj: ItemModel,
+        session: AsyncSession,
+        item_obj: ItemModel,
 ) -> None:
     """
     Create the Item instance, shops are list of (shop_id, quantity), photos are list of (file_id)

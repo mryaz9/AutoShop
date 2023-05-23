@@ -4,5 +4,3 @@ venv
 logs
 *.db
 tests
-alembic.ini
-migration

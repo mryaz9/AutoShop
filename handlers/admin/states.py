@@ -58,4 +58,3 @@ class AddAdmin(StatesGroup):
 class Mailing(StatesGroup):
     mailing_menu = State()
     create_mailing = State()
-

@@ -1,7 +1,7 @@
 from aiogram.enums import ContentType
 from aiogram_dialog import Window
 from aiogram_dialog.widgets.input import MessageInput
-from aiogram_dialog.widgets.kbd import Cancel, SwitchTo, Back, Row, Button, Next, Column
+from aiogram_dialog.widgets.kbd import Cancel, SwitchTo, Back, Row, Button, Next
 from aiogram_dialog.widgets.text import Const, Format
 
 from dictionary.dictionary_ru import LEXICON_CATEGORIES as lex

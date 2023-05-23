@@ -3,8 +3,7 @@ from datetime import datetime, timedelta
 from aiocryptopay.const import Assets
 from aiogram_dialog import DialogManager
 
-from config.config import Config
-from utils.init_payment import init_qiwi_client, init_crypto_client, init_lava_client, init_yoomoney_client
+from utils.init_payment import init_qiwi_client, init_crypto_client
 
 
 async def get_payment_qiwi(dialog_manager: DialogManager, **kwargs):
