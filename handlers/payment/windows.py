@@ -9,18 +9,13 @@ from aiogram_dialog.widgets.text import Const, Format
 from dictionary.dictionary_ru import LEXICON_PAYMENT as lex
 from filters.filters import is_admin
 from handlers.admin.selected import on_select_menu
-from payment import states, getters, selected
+from handlers.payment import states, selected
+from handlers.payment import getters
 
 
 def payment_select_window():
     return Window(
         Const(lex.get("payment_menu")),
-        SwitchTo(
-            Const(lex.get("lava")),
-            id="lava_select",
-            state=states.Payment.payment_input_amount,
-            on_click=on_select_menu
-        ),
         SwitchTo(
             Const(lex.get("qiwi")),
             id="qiwi_select",

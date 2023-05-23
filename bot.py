@@ -15,7 +15,7 @@ from handlers.users import other, user
 from handlers.users.assortiment import items_dialogs
 from handlers.users.profile import profile_dialogs
 from middleware import DBSessionMiddleware, ConfigMiddleware
-from payment import payment_dialogs
+from handlers.payment import payment_dialogs
 from utils.notify_admin import startup, shutdown
 
 

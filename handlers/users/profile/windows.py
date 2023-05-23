@@ -6,7 +6,7 @@ from aiogram_dialog.widgets.text import Const, Multi, Format
 from dictionary.dictionary_ru import LEXICON_PROFILE
 from handlers.getters import getter_profile
 from handlers.users.profile.states import Profile
-from payment.states import Payment
+from handlers.payment.states import Payment
 
 
 def profile_window():

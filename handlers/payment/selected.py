@@ -7,7 +7,7 @@ from aiogram_dialog.widgets.input import MessageInput
 from aiogram_dialog.widgets.kbd import Button
 
 from database.command.user import add_balance
-from payment import states
+from handlers.payment import states
 from utils.init_payment import init_qiwi_client, init_crypto_client
 
 

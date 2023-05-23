@@ -1,6 +1,6 @@
 from aiogram_dialog import Dialog
 
-from payment import windows
+from handlers.payment import windows
 
 
 def payment_dialogs():

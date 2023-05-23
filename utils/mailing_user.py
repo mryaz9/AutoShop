@@ -1,7 +1,7 @@
 import asyncio
+import logging
 
 from aiogram import Bot, exceptions
-from loguru import logger
 
 from config.config import Config, load_config
 from database.command.user import get_all_user
@@ -20,6 +20,6 @@ async def mailing_user(sessionmaker, mailing_text):
             await asyncio.sleep(e.retry_after)
             await bot.send_message(chat_id=int(admin.id), text=mailing_text)
         except exceptions.TelegramBadRequest as e:
-            logger.info(f"Не получилось отправить сообщение {admin.id}\n{e}")
+            logging.info(f"Не получилось отправить сообщение {admin.id}\n{e}")
 
     await bot.session.close()
