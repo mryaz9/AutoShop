@@ -15,6 +15,6 @@ def init_qiwi_client():
 
 def init_crypto_client():
     config: Config = load_config()
-    crypto = AioCryptoPay(token=config.payment.crypto_token, network=Networks.TEST_NET)
+    crypto = AioCryptoPay(token=config.payment.crypto_token, network=Networks.MAIN_NET)
 
     return crypto
