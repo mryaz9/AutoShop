@@ -1,6 +1,6 @@
-.env
+bot_tgc/.env
 .idea/
 venv
-logs
+bot_tgc/logs
 *.db
-tests
+bot_tgc/tests
